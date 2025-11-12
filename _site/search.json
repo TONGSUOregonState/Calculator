@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "pyscript.html",
+    "href": "pyscript.html",
+    "title": "匀加速位移计算（Python + JS）",
+    "section": "",
+    "text": "演示两种实现方式： - 构建时（Quarto Python 引擎）计算出静态结果； - 网页端（原生 JS）提供交互式输入，实时显示结果。\n\n物理公式：匀加速直线运动，初速度为 0 时，位移 d = 0.5 × a × t²\n\n\n\n下面的代码在构建时执行，并把结果渲染到 HTML 页面中：\n\na = 2.5  # m/s^2\nt = 3.0  # s\nd = 0.5 * a * (t ** 2)\nd\n\n11.25\n\n\n你可以把上面的 a 和 t 改成你想展示的默认示例值，然后重新渲染网站即可更新静态结果。\n\n\n\n在同一页面底部加入一个原生 JS 交互计算器，读者可以输入 a 与 t 并立即看到结果。\n\n\n\n  \n  公式：d = 0.5 × a × t²（假设初速度为 0）\n\n  \n    a (m/s²)\n    \n  \n  \n    t (s)\n    \n  \n\n  计算 d = 0.5 · a · t²\n  位移 d：— m\n\n  提示：输入为空或非法时会给出提示；结果使用 6 位有效数字。\n\n\n\n\n\n\n上面的 Python 代码在构建时运行，适合生成稳定、可复现的演示结果；\n下面的 JS 交互模块不依赖外部 CDN，兼容 Quarto Pub 的 CSP；\n如需更复杂的交互，也可以把 JS 另外拆到本地脚本文件中再引用。"
+  },
+  {
+    "objectID": "pyscript.html#构建时计算python-静态输出",
+    "href": "pyscript.html#构建时计算python-静态输出",
+    "title": "匀加速位移计算（Python + JS）",
+    "section": "",
+    "text": "下面的代码在构建时执行，并把结果渲染到 HTML 页面中：\n\na = 2.5  # m/s^2\nt = 3.0  # s\nd = 0.5 * a * (t ** 2)\nd\n\n11.25\n\n\n你可以把上面的 a 和 t 改成你想展示的默认示例值，然后重新渲染网站即可更新静态结果。"
+  },
+  {
+    "objectID": "pyscript.html#网页端交互js-实时计算",
+    "href": "pyscript.html#网页端交互js-实时计算",
+    "title": "匀加速位移计算（Python + JS）",
+    "section": "",
+    "text": "在同一页面底部加入一个原生 JS 交互计算器，读者可以输入 a 与 t 并立即看到结果。\n\n\n\n  \n  公式：d = 0.5 × a × t²（假设初速度为 0）\n\n  \n    a (m/s²)\n    \n  \n  \n    t (s)\n    \n  \n\n  计算 d = 0.5 · a · t²\n  位移 d：— m\n\n  提示：输入为空或非法时会给出提示；结果使用 6 位有效数字。\n\n\n\n\n\n\n上面的 Python 代码在构建时运行，适合生成稳定、可复现的演示结果；\n下面的 JS 交互模块不依赖外部 CDN，兼容 Quarto Pub 的 CSP；\n如需更复杂的交互，也可以把 JS 另外拆到本地脚本文件中再引用。"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "This is my first Quarto website. Here I can publish notes, code, and experiments.\n\n\n\n\n\n\n\n\n\n\nC programming Modern Approach\nC solutions\nThe C answer book\nlogic circuit visualizer DigitalJS\n\n\n\n\n\nBuilt with Quarto\nPublished on Quarto Pub\n\nSource code available on GitHub rn## 更新日志rn{{&lt; include _includes/updates-badge.html &gt;}}rnrn ## è”ç³»æ–¹å¼ Contact\nðŸŒ GitHub: @TONGSUOregonState\n\n\n\n\n\nUpdates"
+  },
+  {
+    "objectID": "index.html#åšååˆç",
+    "href": "index.html#åšååˆç",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "C programming Modern Approach\nC solutions\nThe C answer book\nlogic circuit visualizer DigitalJS\n\n\n\n\n\nBuilt with Quarto\nPublished on Quarto Pub\n\nSource code available on GitHub rn## 更新日志rn{{&lt; include _includes/updates-badge.html &gt;}}rnrn ## è”ç³»æ–¹å¼ Contact\nðŸŒ GitHub: @TONGSUOregonState\n\n\n\n\n\nUpdates"
+  },
+  {
+    "objectID": "index.html#about-this-site",
+    "href": "index.html#about-this-site",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "Built with Quarto\nPublished on Quarto Pub\n\nSource code available on GitHub rn## 更新日志rn{{&lt; include _includes/updates-badge.html &gt;}}rnrn ## è”ç³»æ–¹å¼ Contact\nðŸŒ GitHub: @TONGSUOregonState"
+  },
+  {
+    "objectID": "index.html#更新日志",
+    "href": "index.html#更新日志",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "Updates"
+  }
+]
