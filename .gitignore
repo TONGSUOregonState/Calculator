@@ -17,3 +17,6 @@ __pycache__/
 # Node (if used later)
 node_modules/
 
+
+/.quarto/
+**/*.quarto_ipynb

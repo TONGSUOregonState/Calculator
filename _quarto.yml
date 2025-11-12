@@ -9,6 +9,8 @@ website:
         text: Home
       - href: pyscript.qmd
         text: Calculator (Py+JS)
+      - href: donkey.html
+        text: Python Runner
       - href: pyscript.html
         text: Calculator
 

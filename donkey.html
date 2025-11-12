@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Python 在线运行（浏览器端 · Pyodide）</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; }
+      .wrap { max-width: 920px; margin: 0 auto; }
+      h1 { font-size: 1.5rem; margin: 0 0 1rem; }
+      .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+      textarea { width: 100%; min-height: 260px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; padding: .75rem; border: 1px solid #d1d5db; border-radius: 8px; }
+      .controls { margin: .75rem 0; display: flex; gap: .5rem; align-items: center; }
+      button { padding: .45rem .8rem; border: 1px solid #2563eb; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; }
+      button.secondary { border-color: #6b7280; background: #6b7280; }
+      button:disabled { opacity: .6; cursor: not-allowed; }
+      .status { color: #6b7280; font-size: .9rem; }
+      .out, .err { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; padding: .75rem; border-radius: 8px; }
+      .out { background: #f8fafc; border: 1px solid #e5e7eb; }
+      .err { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Python 在线运行（Pyodide 无服务端）</h1>
+      <p>代码在浏览器中执行（WebAssembly）。适合 Render 静态站点托管；不需要服务器。</p>
+
+      <div class="row">
+        <textarea id="code" spellcheck="false"># 示例：计算匀加速直线运动（初速度 0）
+def distance(a, t):
+    return 0.5 * a * t * t
+
+print("d(9.8, 2.5) =", distance(9.8, 2.5))
+
+# 也可以写任意 Python 代码
+for i in range(3):
+    print("hello", i)
+</textarea>
+      </div>
+
+      <div class="controls">
+        <button id="run">运行 (Shift+Enter)</button>
+        <button id="clear" class="secondary">清空输出</button>
+        <span class="status" id="status">正在加载 Pyodide…</span>
+      </div>
+
+      <div class="out" id="stdout" aria-label="标准输出"></div>
+      <div class="err" id="stderr" aria-label="错误输出" style="display:none;"></div>
+    </div>
+
+    <!-- 直接使用 Pyodide CDN，更通用、与 Render 静态站兼容 -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <script>
+      let pyodideReadyPromise = null;
+      let pyodide = null;
+
+      async function initPyodide() {
+        if (pyodideReadyPromise) return pyodideReadyPromise;
+        pyodideReadyPromise = (async () => {
+          const status = document.getElementById('status');
+          status.textContent = '正在加载 Pyodide…（首次较慢，后续会缓存）';
+          pyodide = await loadPyodide();
+          status.textContent = '已加载 Pyodide，准备就绪。';
+          return pyodide;
+        })();
+        return pyodideReadyPromise;
+      }
+
+      function setRunning(running) {
+        const status = document.getElementById('status');
+        const runBtn = document.getElementById('run');
+        runBtn.disabled = running;
+        status.textContent = running ? '正在执行…' : '已加载 Pyodide，准备就绪。';
+      }
+
+      async function runUserCode() {
+        await initPyodide();
+        setRunning(true);
+        const code = document.getElementById('code').value;
+        const out = document.getElementById('stdout');
+        const err = document.getElementById('stderr');
+        err.style.display = 'none';
+        try {
+          // 在 Python 侧重定向 stdout/stderr，执行用户代码
+          const wrapped = `\nimport sys, io, traceback\n_stdout = io.StringIO()\n_stderr = io.StringIO()\nsys_stdout_bak, sys_stderr_bak = sys.stdout, sys.stderr\nsys.stdout, sys.stderr = _stdout, _stderr\ntry:\n    exec(compile(\n        source=${JSON.stringify(code)},\n        filename='<user>', mode='exec'\n    ), globals(), globals())\nexcept Exception:\n    traceback.print_exc()\nfinally:\n    sys.stdout, sys.stderr = sys_stdout_bak, sys_stderr_bak\nout = _stdout.getvalue()\nerr = _stderr.getvalue()\n`;
+          await pyodide.runPythonAsync(wrapped);
+          const outText = pyodide.globals.get('out');
+          const errText = pyodide.globals.get('err');
+          out.textContent = outText || '';
+          if (errText) { err.style.display = 'block'; err.textContent = errText; }
+        } catch (e) {
+          err.style.display = 'block';
+          err.textContent = String(e && e.message ? e.message : e);
+        } finally {
+          setRunning(false);
+        }
+      }
+
+      function clearOutput() {
+        document.getElementById('stdout').textContent = '';
+        const err = document.getElementById('stderr');
+        err.textContent = ''; err.style.display = 'none';
+      }
+
+      document.getElementById('run').addEventListener('click', runUserCode);
+      document.getElementById('clear').addEventListener('click', clearOutput);
+      document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' && ev.shiftKey) { ev.preventDefault(); runUserCode(); }
+      });
+
+      // 预加载
+      initPyodide();
+    </script>
+  </body>
+  </html>
+
