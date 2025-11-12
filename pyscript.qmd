@@ -1,0 +1,169 @@
+---
+title: "匀加速位移计算（Python + JS）"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  warning: false
+---
+
+# 目标
+
+演示两种实现方式：
+- 构建时（Quarto Python 引擎）计算出静态结果；
+- 网页端（原生 JS）提供交互式输入，实时显示结果。
+
+> 物理公式：匀加速直线运动，初速度为 0 时，位移 d = 0.5 × a × t²
+
+## 构建时计算（Python 静态输出）
+
+下面的代码在构建时执行，并把结果渲染到 HTML 页面中：
+
+```{python}
+a = 2.5  # m/s^2
+t = 3.0  # s
+d = 0.5 * a * (t ** 2)
+d
+```
+
+你可以把上面的 `a` 和 `t` 改成你想展示的默认示例值，然后重新渲染网站即可更新静态结果。
+
+## 网页端交互（JS 实时计算）
+
+在同一页面底部加入一个原生 JS 交互计算器，读者可以输入 a 与 t 并立即看到结果。
+
+```{=html}
+<style>
+  .calc-card { 
+    max-width: 640px; 
+    padding: 1rem 1.25rem; 
+    border: 1px solid #e5e7eb; 
+    border-radius: 10px; 
+    background: #fff; 
+    margin: 1rem 0;
+  }
+  .calc-card h2 { 
+    margin: 0 0 .5rem; 
+    font-size: 1.25rem; 
+  }
+  .muted { 
+    color: #6b7280; 
+    margin-bottom: .75rem; 
+  }
+  .row { 
+    display: flex; 
+    align-items: center; 
+    gap: .5rem; 
+    margin: .5rem 0; 
+  }
+  .row label { 
+    width: 6rem; 
+  }
+  .row input { 
+    width: 10rem; 
+    padding: .4rem .55rem; 
+    border: 1px solid #d1d5db; 
+    border-radius: 6px; 
+  }
+  .calc-btn { 
+    margin-top: .5rem; 
+    padding: .5rem .9rem; 
+    border: 1px solid #1f2937; 
+    background: #111827; 
+    color: #fff; 
+    border-radius: 6px; 
+    cursor: pointer; 
+  }
+  .calc-btn:hover { 
+    background: #0b1220; 
+  }
+  .out { 
+    margin-top: .75rem; 
+    font-size: 1.05rem; 
+  }
+  .note { 
+    color: #6b7280; 
+    font-size: .9rem; 
+    margin-top: .5rem; 
+  }
+</style>
+
+<div class="calc-card">
+  <h2>交互计算器（浏览器端）</h2>
+  <p class="muted">公式：d = 0.5 × a × t²（假设初速度为 0）</p>
+
+  <div class="row">
+    <label for="accel">a (m/s²)</label>
+    <input id="accel" type="number" step="any" placeholder="例如 9.8" />
+  </div>
+  <div class="row">
+    <label for="time">t (s)</label>
+    <input id="time" type="number" step="any" placeholder="例如 2.5" />
+  </div>
+
+  <button class="calc-btn" id="btn-calc">计算 d = 0.5 · a · t²</button>
+  <div class="out">位移 d：<strong><span id="dist">—</span></strong> m</div>
+
+  <p class="note">提示：输入为空或非法时会给出提示；结果使用 6 位有效数字。</p>
+</div>
+
+<script type="text/javascript">
+  (function () {
+    console.log("计算器脚本已加载");
+    
+    function initCalculator() {
+      const btn = document.getElementById('btn-calc');
+      const accelInput = document.getElementById('accel');
+      const timeInput = document.getElementById('time');
+      const distOutput = document.getElementById('dist');
+      
+      if (!btn || !accelInput || !timeInput || !distOutput) {
+        console.error("找不到必要的元素");
+        return;
+      }
+      
+      console.log("所有元素已找到，绑定事件");
+      
+      function compute() {
+        console.log("计算函数被调用");
+        const aRaw = accelInput.value.trim();
+        const tRaw = timeInput.value.trim();
+        
+        if (aRaw === '' || tRaw === '') { 
+          distOutput.textContent = '请输入 a 和 t'; 
+          return; 
+        }
+        
+        const a = Number(aRaw);
+        const t = Number(tRaw);
+        
+        if (!Number.isFinite(a) || !Number.isFinite(t)) { 
+          distOutput.textContent = '输入无效'; 
+          return; 
+        }
+        
+        const d = 0.5 * a * t * t;
+        distOutput.textContent = Number(d).toPrecision(6);
+        console.log(`计算结果: d = ${d}`);
+      }
+      
+      btn.addEventListener('click', compute);
+      console.log("事件监听器已绑定");
+    }
+    
+    // 确保 DOM 完全加载后再初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCalculator);
+    } else {
+      initCalculator();
+    }
+  })();
+</script>
+```
+
+### 小结
+
+- 上面的 Python 代码在构建时运行，适合生成稳定、可复现的演示结果；
+- 下面的 JS 交互模块不依赖外部 CDN，兼容 Quarto Pub 的 CSP；
+- 如需更复杂的交互，也可以把 JS 另外拆到本地脚本文件中再引用。

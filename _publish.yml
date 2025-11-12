@@ -1,0 +1,9 @@
+-
+ source: .
+ quarto-pub: []
+-
+ source: project
+ quarto-pub:
+  -
+   id: 81124cf3-fb5e-456d-887e-f324aee28117
+   url: https://tongsuoregonstate11.quarto.pub/calculator

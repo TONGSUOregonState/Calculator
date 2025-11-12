@@ -1,0 +1,19 @@
+# Quarto build outputs
+_site/
+_freeze/
+.quarto/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python/venv
+.venv/
+__pycache__/
+*.pyc
+
+# Node (if used later)
+node_modules/
+

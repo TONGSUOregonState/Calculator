@@ -1,0 +1,18 @@
+project:
+  type: website
+
+website:
+  title: "calculator"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: pyscript.qmd
+        text: Calculator (Py+JS)
+      - href: pyscript.html
+        text: Calculator
+
+format:
+  html:
+    theme: cosmo
+    toc: true

@@ -1,0 +1,44 @@
+﻿---
+title: "Welcome to My Blog"
+---
+
+# Hello, My name is Tong Su! ðŸ‘‹
+
+This is my first Quarto website. Here I can publish notes, code, and experiments.
+
+ 
+
+## åšå®¢åˆ†ç±»
+
+:::::: {.grid}
+
+::: {.g-col-6}
+### [MATLAB](/matlab/index.qmd) ðŸ“Š
+
+
+::: {.g-col-6}
+### [C Programming](/c-programming/index.qmd) ðŸ’»
+- [C programming Modern Approach ](https://github.com/williamgherman/c-solutions?utm_source=chatgpt.com)
+
+- [C solutions](https://github.com/williamgherman/c-solutions?utm_source=chatgpt.com)
+- [The C answer book](https://github.com/ohkimur/the-c-programming-language-2nd-edition-solutions)
+
+-  [logic circuit visualizer DigitalJS](https://digitaljs.tilk.eu/)
+
+
+::::::
+
+## About this site
+- Built with [Quarto](https://quarto.org)
+- Published on [Quarto Pub](https://quartopub.com)  
+- Source code available on [GitHub](https://github.com/TONGSUOregonState)
+`r`n## 更新日志`r`n{{< include _includes/updates-badge.html >}}`r`n`r`n
+## è”ç³»æ–¹å¼ Contact
+- ðŸŒ GitHub: [@TONGSUOregonState](https://github.com/TONGSUOregonState)
+
+
+
+
+## 更新日志
+{{< include _includes/updates-badge.html >}}
+
