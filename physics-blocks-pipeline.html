@@ -183,6 +183,25 @@
       font-weight: 600;
     }
 
+    .btn-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .btn-calc {
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 500;
+      background: #10b981;
+      color: white;
+    }
+    .btn-calc:hover {
+      background: #059669;
+    }
+
     button {
       padding: 8px 16px;
       border-radius: 999px;
@@ -499,9 +518,60 @@ function createBlockElement(f, number) {
       <div class="output-label">Output: ${f.output}</div>
       <div class="output-value" data-output>—</div>
     </div>
+    <div class="btn-row">
+      <button class="btn-calc" type="button">Calculate</button>
+    </div>
   `;
 
+  // Add individual calculate button handler
+  const calcBtn = block.querySelector('.btn-calc');
+  calcBtn.addEventListener('click', () => {
+    calculateSingleBlock(block, f);
+  });
+
   return block;
+}
+
+// Calculate a single block independently
+function calculateSingleBlock(blockElement, formula) {
+  // Find this block's index in activeBlocks
+  const blockIndex = activeBlocks.findIndex(b => b.element === blockElement);
+  if (blockIndex === -1) return;
+
+  const logLines = [];
+  const inputs = {};
+
+  // Collect and parse inputs
+  formula.inputs.forEach(varName => {
+    const inputEl = blockElement.querySelector(`input[data-input-name="${varName}"]`);
+    const inputStr = inputEl.value;
+
+    // Parse input (may be reference or number)
+    const value = parseInput(inputStr, blockIndex, logLines);
+    inputs[varName] = value;
+
+    // Mark input if it's a reference
+    if (/^(?:block)?#?\d+\(\w+\)$/i.test(inputStr.trim())) {
+      inputEl.classList.add('referenced');
+    } else {
+      inputEl.classList.remove('referenced');
+    }
+  });
+
+  // Calculate output
+  let result;
+  try {
+    result = formula.compute(inputs);
+  } catch (err) {
+    result = NaN;
+  }
+
+  // Store output
+  activeBlocks[blockIndex].output = result;
+
+  // Update display
+  const outputEl = blockElement.querySelector('[data-output]');
+  outputEl.textContent = fmt(result);
 }
 
 // 解析输入：支持 "block1(v)" 或 "#1(v)" 或 数字
