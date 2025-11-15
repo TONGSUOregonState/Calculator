@@ -23,6 +23,8 @@ website:
         text: DSP Tutorial
       - href: drawflow-demo.html
         text: Drawflow Visual Calc
+      - href: block-formula-demo.html
+        text: Block Formula Demo
 
 format:
   html:

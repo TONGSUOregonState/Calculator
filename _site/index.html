@@ -134,6 +134,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./drawflow-demo.html"> 
 <span class="menu-text">Drawflow Visual Calc</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./block-formula-demo.html"> 
+<span class="menu-text">Block Formula Demo</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -201,6 +205,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="dsp-rz-analysis-ðÿžï" class="level3 g-col-6">
 <h3 class="anchored" data-anchor-id="dsp-rz-analysis-ðÿžï"><a href="./dsp_rz.html">DSP R(z) Analysis</a> ðŸŽ›ï¸</h3>
 <p>零点极点分析工具 - Browser-based symbolic analysis using SymPy - <a href="./dsp_tutorial.html">📚 技术文档教程</a></p>
+</section>
+<section id="block-formula-demo" class="level3 g-col-6">
+<h3 class="anchored" data-anchor-id="block-formula-demo"><a href="./block-formula-demo.html">Block Formula Demo</a> 🧮</h3>
+<p>Physics formula calculator with block-based data flow - Interactive v, a, d calculations - Choose input sources (upstream blocks or manual)</p>
 </section>
 </div>
 <section id="about-this-site" class="level2">
@@ -303,7 +311,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/tongsuoregonstate11\.quarto\.pub\/calculator");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

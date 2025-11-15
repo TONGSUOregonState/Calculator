@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Block 公式 Demo (v, a, d)</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .hint {
+      text-align: center;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .canvas {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .block {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px 18px;
+      min-width: 220px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .block-header {
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .block-subtitle {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .field {
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 4px;
+      color: #333;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 13px;
+    }
+
+    input[type="number"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.2);
+    }
+
+    select {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 13px;
+      background: #fff;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.2);
+    }
+
+    .output {
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: #f3f4ff;
+      font-size: 13px;
+      color: #111827;
+    }
+
+    .formula {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: #4b5563;
+    }
+
+    .small-hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Block 公式 Demo：v, a = v/t, d = 0.5·a·t²</h1>
+  <div class="hint">
+    左边是输入 Block，右边是计算 Block。你可以选择每个 input 的来源（上游 Block 或手动值）。<br>
+    这是"Block + 输入输出 + 数据流"的逻辑 Demo，将来可以换成拖拽连线 UI。
+  </div>
+
+  <div id="app">
+    <div class="canvas">
+      <!-- Block 1: v 输入 -->
+      <div class="block">
+        <div class="block-header">Block 1：速度 v</div>
+        <div class="block-subtitle">输入 v，然后作为 output 提供给其它 Block</div>
+
+        <div class="field">
+          <label>v 输入值：</label>
+          <input type="number" v-model.number="vInput" />
+        </div>
+
+        <div class="output">
+          <strong>Output: v = {{ pretty(vInput) }}</strong>
+        </div>
+      </div>
+
+      <!-- Block 2: t 输入 -->
+      <div class="block">
+        <div class="block-header">Block 2：时间 t</div>
+        <div class="block-subtitle">输入 t，然后作为 output 提供给其它 Block</div>
+
+        <div class="field">
+          <label>t 输入值：</label>
+          <input type="number" v-model.number="tInput" />
+        </div>
+
+        <div class="output">
+          <strong>Output: t = {{ pretty(tInput) }}</strong>
+        </div>
+      </div>
+
+      <!-- Block 3: a = v / t -->
+      <div class="block">
+        <div class="block-header">Block 3：加速度 a</div>
+        <div class="block-subtitle">公式：<span class="formula">a = v / t</span></div>
+
+        <div class="field">
+          <label>v 的来源：</label>
+          <select v-model="aSourceV">
+            <option value="v-block">来自 Block 1 (v)</option>
+            <option value="manual">手动输入 v</option>
+          </select>
+        </div>
+
+        <div class="field" v-if="aSourceV === 'manual'">
+          <label>手动 v：</label>
+          <input type="number" v-model.number="aManualV" />
+        </div>
+
+        <div class="field">
+          <label>t 的来源：</label>
+          <select v-model="aSourceT">
+            <option value="t-block">来自 Block 2 (t)</option>
+            <option value="manual">手动输入 t</option>
+          </select>
+        </div>
+
+        <div class="field" v-if="aSourceT === 'manual'">
+          <label>手动 t：</label>
+          <input type="number" v-model.number="aManualT" />
+        </div>
+
+        <div class="output">
+          使用的 v = {{ pretty(aV) }}，t = {{ pretty(aT) }}<br>
+          <strong>a = v / t = {{ isFinite(aValue) ? pretty(aValue) : 'NaN (t 不能为 0)' }}</strong>
+        </div>
+      </div>
+
+      <!-- Block 4: d = 0.5 * a * t^2 -->
+      <div class="block">
+        <div class="block-header">Block 4：位移 d</div>
+        <div class="block-subtitle">
+          公式：<span class="formula">d = 0.5 · a · t²</span>
+        </div>
+
+        <div class="field">
+          <label>a 的来源：</label>
+          <select v-model="dSourceA">
+            <option value="a-block">来自 Block 3 (a)</option>
+            <option value="manual">手动输入 a</option>
+          </select>
+        </div>
+
+        <div class="field" v-if="dSourceA === 'manual'">
+          <label>手动 a：</label>
+          <input type="number" v-model.number="dManualA" />
+        </div>
+
+        <div class="field">
+          <label>t 的来源：</label>
+          <select v-model="dSourceT">
+            <option value="t-block">来自 Block 2 (t)</option>
+            <option value="manual">手动输入 t</option>
+          </select>
+        </div>
+
+        <div class="field" v-if="dSourceT === 'manual'">
+          <label>手动 t：</label>
+          <input type="number" v-model.number="dManualT" />
+        </div>
+
+        <div class="output">
+          使用的 a = {{ pretty(dA) }}，t = {{ pretty(dT) }}<br>
+          <strong>d = 0.5 · a · t² = {{ pretty(dValue) }}</strong>
+          <div class="small-hint">
+            （当 d 的 a 来源选 "Block 3"，就相当于把上一个 Block 的 output 拖到这里的 input）
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue 3 from CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+      setup() {
+        // Block 1: v input
+        const vInput = ref(10);
+
+        // Block 2: t input
+        const tInput = ref(2);
+
+        // Block 3: a = v/t 的"连接状态"
+        const aSourceV = ref('v-block');    // 'v-block' | 'manual'
+        const aSourceT = ref('t-block');    // 't-block' | 'manual'
+        const aManualV = ref(0);
+        const aManualT = ref(1);
+
+        // Block 4: d = 0.5 * a * t^2 的"连接状态"
+        const dSourceA = ref('a-block');    // 'a-block' | 'manual'
+        const dSourceT = ref('t-block');    // 't-block' | 'manual'
+        const dManualA = ref(0);
+        const dManualT = ref(1);
+
+        // 实际用于计算的 v / t / a / t
+        const aV = computed(() =>
+          aSourceV.value === 'v-block' ? vInput.value : aManualV.value
+        );
+
+        const aT = computed(() =>
+          aSourceT.value === 't-block' ? tInput.value : aManualT.value
+        );
+
+        const aValue = computed(() => {
+          if (aT.value === 0) return NaN;
+          return aV.value / aT.value;
+        });
+
+        const dA = computed(() =>
+          dSourceA.value === 'a-block' ? aValue.value : dManualA.value
+        );
+
+        const dT = computed(() =>
+          dSourceT.value === 't-block' ? tInput.value : dManualT.value
+        );
+
+        const dValue = computed(() => 0.5 * dA.value * dT.value * dT.value);
+
+        const pretty = (x) => {
+          if (Number.isNaN(x)) return 'NaN';
+          if (!Number.isFinite(x)) return x > 0 ? '+∞' : '-∞';
+          return Number(x).toFixed(4).replace(/0+$/,'').replace(/\.$/, '');
+        };
+
+        return {
+          vInput,
+          tInput,
+          aSourceV,
+          aSourceT,
+          aManualV,
+          aManualT,
+          dSourceA,
+          dSourceT,
+          dManualA,
+          dManualT,
+          aV,
+          aT,
+          aValue,
+          dA,
+          dT,
+          dValue,
+          pretty,
+        };
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -34,6 +34,14 @@ This is my first Quarto website. Here I can publish notes, code, and experiments
 
 :::
 
+::: {.g-col-6}
+### [Block Formula Demo](./block-formula-demo.html) 🧮
+Physics formula calculator with block-based data flow
+- Interactive v, a, d calculations
+- Choose input sources (upstream blocks or manual)
+
+:::
+
 ::::::
 
 ## About this site

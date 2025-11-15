@@ -169,6 +169,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./drawflow-demo.html"> 
 <span class="menu-text">Drawflow Visual Calc</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./block-formula-demo.html"> 
+<span class="menu-text">Block Formula Demo</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -227,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="构建时计算python-静态输出" class="level2">
 <h2 class="anchored" data-anchor-id="构建时计算python-静态输出">构建时计算（Python 静态输出）</h2>
 <p>下面的代码在构建时执行，并把结果渲染到 HTML 页面中：</p>
-<div id="2ab8b717" class="cell" data-execution_count="1">
+<div id="deddcc03" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">2.5</span>  <span class="co"># m/s^2</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fl">3.0</span>  <span class="co"># s</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> a <span class="op">*</span> (t <span class="op">**</span> <span class="dv">2</span>)</span>
@@ -454,7 +458,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/tongsuoregonstate11\.quarto\.pub\/calculator");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
