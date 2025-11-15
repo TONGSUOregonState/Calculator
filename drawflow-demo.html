@@ -27,7 +27,7 @@
     /* Drawflow takes 1/4 of the page */
     #drawflow-wrapper {
       flex: 0 0 25%;
-      min-width: 300px;
+      min-width: 350px;
       position: relative;
       background: #1f2937;
       border-radius: 0.5rem;
@@ -102,80 +102,94 @@
       height: 400px;
     }
 
-    /* Formula node styles */
-    .formula-node {
+    /* Combined formula block with inputs and output */
+    .formula-block {
       padding: 0.75rem;
-      min-width: 140px;
+      min-width: 180px;
+      background: white;
     }
 
-    .formula-title {
+    .formula-block-title {
       font-size: 0.7rem;
       color: #6b7280;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      text-align: center;
     }
 
     .formula-display {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #111827;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      padding: 0.5rem 0;
-    }
-
-    .input-label, .output-label {
-      font-size: 0.65rem;
-      color: #6b7280;
-      margin: 0.15rem 0;
-    }
-
-    /* Input node with editable value */
-    .input-node {
-      padding: 0.5rem;
-      min-width: 100px;
-    }
-
-    .input-node label {
-      display: block;
-      font-size: 0.7rem;
-      color: #6b7280;
-      margin-bottom: 0.25rem;
-    }
-
-    .input-node input {
-      width: 100%;
-      padding: 0.25rem 0.5rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.25rem;
-      font-size: 0.85rem;
-    }
-
-    .input-node .var-name {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #111827;
-      margin-bottom: 0.25rem;
-    }
-
-    /* Output display node */
-    .output-node {
-      padding: 0.75rem;
-      min-width: 120px;
-      text-align: center;
-    }
-
-    .output-node .label {
-      font-size: 0.7rem;
-      color: #6b7280;
-      margin-bottom: 0.25rem;
-    }
-
-    .output-node .value {
       font-size: 1.2rem;
       font-weight: 700;
+      color: #1f2937;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding: 0.5rem;
+      background: #f3f4f6;
+      border-radius: 0.375rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .inputs-section {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      background: #eff6ff;
+      border-radius: 0.375rem;
+    }
+
+    .inputs-section-title {
+      font-size: 0.65rem;
+      color: #1e40af;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .input-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .input-row label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1e40af;
+      min-width: 20px;
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #bfdbfe;
+      border-radius: 0.25rem;
+      font-size: 0.8rem;
+    }
+
+    .output-section {
+      padding: 0.5rem;
+      background: #f0fdf4;
+      border-radius: 0.375rem;
+    }
+
+    .output-section-title {
+      font-size: 0.65rem;
+      color: #166534;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+    }
+
+    .output-value {
+      font-size: 1.1rem;
+      font-weight: 700;
       color: #059669;
+      text-align: center;
     }
 
     /* Custom node appearance */
@@ -234,129 +248,93 @@
     editor.zoom_value = 1.0;
     editor.precanvas.style.transform = "translate(20px, 20px) scale(1.0)";
 
-    // Helper: bind input field to node data
-    function bindInputField(nodeId, varName) {
+    // Helper: bind input fields to node data
+    function bindInputFields(nodeId, inputVars) {
       setTimeout(() => {
-        const inputEl = document.querySelector('#node-' + nodeId + ' input');
-        if (!inputEl) return;
-        inputEl.addEventListener('input', () => {
-          const node = editor.getNodeFromId(nodeId);
-          const v = parseFloat(inputEl.value);
-          node.data.value = isNaN(v) ? 0 : v;
+        inputVars.forEach((varName, idx) => {
+          const inputEl = document.querySelector(`#node-${nodeId} input[data-var="${varName}"]`);
+          if (!inputEl) return;
+          inputEl.addEventListener('input', () => {
+            const node = editor.getNodeFromId(nodeId);
+            const v = parseFloat(inputEl.value);
+            node.data.inputValues[idx] = isNaN(v) ? 0 : v;
+          });
         });
       }, 100);
     }
 
-    // Create input node (e.g., s=10, t=2)
-    function addInputNode(varName, value, x, y) {
-      const html = `
-        <div class="input-node">
-          <label>Input</label>
-          <div class="var-name">${varName} =</div>
-          <input type="number" value="${value}" step="0.1">
+    // Create combined formula block with inputs and output all in one
+    // inputVars: ['s', 't']
+    // inputDefaults: [10, 2]
+    // formula: 'v = s / t'
+    // outputVar: 'v'
+    // evalFunc: (inputs) => inputs[0] / inputs[1]
+    function addFormulaBlock(formula, inputVars, inputDefaults, outputVar, evalFunc, x, y) {
+      const inputRows = inputVars.map((varName, idx) => `
+        <div class="input-row">
+          <label>${varName} =</label>
+          <input type="number" value="${inputDefaults[idx]}" step="0.1" data-var="${varName}">
         </div>
-      `;
-      const id = editor.addNode(
-        'input',
-        0,  // no inputs
-        1,  // one output
-        x, y,
-        'input',
-        { varName: varName, value: value },
-        html
-      );
-      bindInputField(id, varName);
-      return id;
-    }
-
-    // Create formula node (e.g., v = s/t)
-    // Inputs: array of variable names, e.g., ['s', 't']
-    // Output: variable name, e.g., 'v'
-    // Formula: string to display, e.g., 'v = s / t'
-    // evalFunc: function(inputs) => output value
-    function addFormulaNode(formula, inputVars, outputVar, evalFunc, x, y) {
-      const inputLabels = inputVars.map((v, i) =>
-        `<div class="input-label">← ${v}</div>`
-      ).join('');
+      `).join('');
 
       const html = `
-        <div class="formula-node">
-          <div class="formula-title">Formula</div>
+        <div class="formula-block">
+          <div class="formula-block-title">Formula Block</div>
           <div class="formula-display">${formula}</div>
-          <div style="font-size: 0.7rem; margin-top: 0.25rem;">
-            ${inputLabels}
-            <div class="output-label">→ ${outputVar}</div>
+          <div class="inputs-section">
+            <div class="inputs-section-title">Inputs</div>
+            ${inputRows}
+          </div>
+          <div class="output-section">
+            <div class="output-section-title">Output</div>
+            <div class="output-value" data-output-value>${outputVar} = ?</div>
           </div>
         </div>
       `;
 
       const id = editor.addNode(
-        'formula',
-        inputVars.length,  // number of inputs
-        1,                 // one output
+        'formula_block',
+        inputVars.length,  // input ports for connections
+        1,                 // one output port
         x, y,
-        'formula',
+        'formula_block',
         {
           formula: formula,
           inputVars: inputVars,
+          inputValues: [...inputDefaults],
           outputVar: outputVar,
           evalFunc: evalFunc
         },
         html
       );
+
+      bindInputFields(id, inputVars);
       return id;
     }
 
-    // Create output display node
-    function addOutputNode(varName, x, y) {
-      const html = `
-        <div class="output-node">
-          <div class="label">Output</div>
-          <div class="value" data-output-value>${varName} = ?</div>
-        </div>
-      `;
-      const id = editor.addNode(
-        'output',
-        1,  // one input
-        0,  // no outputs
-        x, y,
-        'output',
-        { varName: varName },
-        html
-      );
-      return id;
-    }
-
-    // Setup example: s, t → v=s/t → v, t → a=v/t → a
-    const nodeS = addInputNode('s', 10, 50, 50);
-    const nodeT1 = addInputNode('t', 2, 50, 150);
-
-    const nodeV = addFormulaNode(
+    // Setup example blocks
+    // Block 1: v = s/t with inputs s=10, t=2
+    const block1 = addFormulaBlock(
       'v = s / t',
       ['s', 't'],
+      [10, 2],
       'v',
       (inputs) => inputs[0] / inputs[1],
-      250, 100
+      50, 50
     );
 
-    const nodeT2 = addInputNode('t', 5, 50, 300);
-
-    const nodeA = addFormulaNode(
+    // Block 2: a = v/t with inputs v (from block1), t=5
+    const block2 = addFormulaBlock(
       'a = v / t',
       ['v', 't'],
+      [0, 5],  // v will come from connection, t=5 as default
       'a',
       (inputs) => inputs[0] / inputs[1],
-      450, 200
+      50, 280
     );
 
-    const nodeOut = addOutputNode('a', 650, 200);
-
-    // Connect nodes
-    editor.addConnection(nodeS, 'output_1', nodeV, 'input_1');
-    editor.addConnection(nodeT1, 'output_1', nodeV, 'input_2');
-    editor.addConnection(nodeV, 'output_1', nodeA, 'input_1');
-    editor.addConnection(nodeT2, 'output_1', nodeA, 'input_2');
-    editor.addConnection(nodeA, 'output_1', nodeOut, 'input_1');
+    // Connect block1 output to block2 input
+    editor.addConnection(block1, 'output_1', block2, 'input_1');
 
     // Evaluation engine
     function evaluateNode(id, nodes, cache) {
@@ -365,25 +343,24 @@
       const node = nodes[id];
       let value = 0;
 
-      if (node.name === 'input') {
-        value = parseFloat(node.data.value);
-        if (isNaN(value)) value = 0;
-      } else if (node.name === 'formula') {
-        // Collect input values in order
+      if (node.name === 'formula_block') {
         const inputValues = [];
         const inputs = node.inputs || {};
 
-        // Get inputs in order (input_1, input_2, ...)
-        for (let i = 1; i <= node.data.inputVars.length; i++) {
-          const portName = 'input_' + i;
+        // Get inputs: first check connections, then use default values
+        for (let i = 0; i < node.data.inputVars.length; i++) {
+          const portName = 'input_' + (i + 1);
           const port = inputs[portName];
+
           if (port && port.connections && port.connections.length > 0) {
+            // Input comes from connection
             const conn = port.connections[0];
             const fromId = conn.node;
             const v = evaluateNode(fromId, nodes, cache);
             inputValues.push(v);
           } else {
-            inputValues.push(0);
+            // Use default input value
+            inputValues.push(node.data.inputValues[i] || 0);
           }
         }
 
@@ -391,13 +368,11 @@
         if (typeof node.data.evalFunc === 'function') {
           value = node.data.evalFunc(inputValues);
         }
-      } else if (node.name === 'output') {
-        const inputs = node.inputs || {};
-        const port = inputs['input_1'];
-        if (port && port.connections && port.connections.length > 0) {
-          const conn = port.connections[0];
-          const fromId = conn.node;
-          value = evaluateNode(fromId, nodes, cache);
+
+        // Update output display in the node
+        const outDisplay = document.querySelector('#node-' + id + ' [data-output-value]');
+        if (outDisplay) {
+          outDisplay.textContent = node.data.outputVar + ' = ' + value.toFixed(4);
         }
       }
 
@@ -417,18 +392,19 @@
         const node = nodes[id];
         const value = evaluateNode(id, nodes, cache);
 
-        if (node.name === 'input') {
-          results[node.data.varName] = value;
-        } else if (node.name === 'formula') {
+        if (node.name === 'formula_block') {
           results[node.data.outputVar] = value;
-        } else if (node.name === 'output') {
-          results[node.data.varName] = value;
+          // Also store input values
+          node.data.inputVars.forEach((varName, idx) => {
+            const inputs = node.inputs || {};
+            const portName = 'input_' + (idx + 1);
+            const port = inputs[portName];
 
-          // Update output display in node
-          const outNodeDom = document.querySelector('#node-' + id + ' [data-output-value]');
-          if (outNodeDom) {
-            outNodeDom.textContent = node.data.varName + ' = ' + value.toFixed(4);
-          }
+            if (!port || !port.connections || port.connections.length === 0) {
+              // Only store if it's a standalone input (not from connection)
+              results[varName] = node.data.inputValues[idx] || 0;
+            }
+          });
         }
       }
 
