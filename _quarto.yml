@@ -27,6 +27,8 @@ website:
         text: Block Formula Demo
       - href: block-drag-connect.html
         text: Block Drag & Connect
+      - href: physics-blocks.html
+        text: Physics Formula Blocks
 
 format:
   html:

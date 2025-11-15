@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>大学物理1 力学公式 Block Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 260px;
+      padding: 16px;
+      background: #111827;
+      color: #e5e7eb;
+      overflow-y: auto;
+    }
+    .main {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 12px;
+    }
+    .formula-item {
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: rgba(31,41,55,0.7);
+    }
+    .formula-item label {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .formula-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .formula-brief {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .blocks-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .block {
+      width: 260px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 10px 12px 12px;
+    }
+    .block-header {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .block-formula {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 8px;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+    }
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .field label {
+      width: 38px;
+      color: #374151;
+    }
+    .field input[type="number"] {
+      flex: 1;
+      padding: 3px 6px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 12px;
+    }
+    .field input[type="number"]:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.3);
+    }
+    .output-row {
+      margin-top: 6px;
+      font-size: 12px;
+    }
+    .output-label {
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .output-value {
+      display: inline-block;
+      padding: 3px 6px;
+      border-radius: 6px;
+      background: #eef2ff;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+    }
+    .btn-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+    button {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-calc {
+      background: #3b82f6;
+      color: white;
+    }
+    .btn-calc:hover {
+      background: #2563eb;
+    }
+    .btn-clear {
+      background: #e5e7eb;
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 左侧：公式列表 + 复选框 -->
+  <div class="sidebar">
+    <h1>力学公式选择</h1>
+    <div id="formula-list"></div>
+  </div>
+
+  <!-- 右侧：Block 区域 -->
+  <div class="main">
+    <h1>已选公式 Blocks（输入 → 点击计算）</h1>
+    <div class="blocks-container" id="blocks-container"></div>
+  </div>
+
+<script>
+// 10 个大学物理1力学公式定义
+const FORMULAS = [
+  {
+    id: 'x_xt_v0_a_t',
+    name: '1. 匀加速直线运动位移',
+    formulaText: 'x = x0 + v0·t + 1/2·a·t²',
+    inputs: ['x0', 'v0', 'a', 't'],
+    output: 'x',
+    compute: ({ x0, v0, a, t }) => x0 + v0 * t + 0.5 * a * t * t
+  },
+  {
+    id: 'v_v0_at',
+    name: '2. 匀加速末速度',
+    formulaText: 'v = v0 + a·t',
+    inputs: ['v0', 'a', 't'],
+    output: 'v',
+    compute: ({ v0, a, t }) => v0 + a * t
+  },
+  {
+    id: 'v2_v02_2a_x_x0',
+    name: '3. 无时间变量速度关系',
+    formulaText: 'v² = v0² + 2·a·(x − x0)',
+    inputs: ['v0', 'a', 'x', 'x0'],
+    output: 'v',
+    compute: ({ v0, a, x, x0 }) => {
+      const val = v0 * v0 + 2 * a * (x - x0);
+      return val >= 0 ? Math.sqrt(val) : NaN;
+    }
+  },
+  {
+    id: 'F_ma',
+    name: '4. 力的基本定义',
+    formulaText: 'F = m·a',
+    inputs: ['m', 'a'],
+    output: 'F',
+    compute: ({ m, a }) => m * a
+  },
+  {
+    id: 'K_1_2mv2',
+    name: '5. 动能',
+    formulaText: 'K = 1/2·m·v²',
+    inputs: ['m', 'v'],
+    output: 'K',
+    compute: ({ m, v }) => 0.5 * m * v * v
+  },
+  {
+    id: 'W_Fd',
+    name: '6. 功（同方向）',
+    formulaText: 'W = F·d',
+    inputs: ['F', 'd'],
+    output: 'W',
+    compute: ({ F, d }) => F * d
+  },
+  {
+    id: 'Wnet_deltaK',
+    name: '7. 动能定理',
+    formulaText: 'W_net = 1/2·m·v² − 1/2·m·v0²',
+    inputs: ['m', 'v', 'v0'],
+    output: 'W_net',
+    compute: ({ m, v, v0 }) => 0.5 * m * (v*v - v0*v0)
+  },
+  {
+    id: 'Ug_mgh',
+    name: '8. 重力势能',
+    formulaText: 'Ug = m·g·h（g 默认 9.8）',
+    inputs: ['m', 'h', 'g'],
+    output: 'Ug',
+    compute: ({ m, h, g }) => m * (g || 9.8) * h
+  },
+  {
+    id: 'P_W_t',
+    name: '9. 功率（平均）',
+    formulaText: 'P = W / t',
+    inputs: ['W', 't'],
+    output: 'P',
+    compute: ({ W, t }) => t === 0 ? NaN : W / t
+  },
+  {
+    id: 'ac_v2_r',
+    name: '10. 向心加速度',
+    formulaText: 'a_c = v² / r',
+    inputs: ['v', 'r'],
+    output: 'a_c',
+    compute: ({ v, r }) => r === 0 ? NaN : v * v / r
+  }
+];
+
+// 工具函数：数字格式化
+function fmt(x) {
+  if (Number.isNaN(x)) return 'NaN';
+  if (!Number.isFinite(x)) return x > 0 ? '+∞' : '-∞';
+  return Number(x).toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+}
+
+// 渲染左侧公式列表
+const formulaListEl = document.getElementById('formula-list');
+const blocksContainer = document.getElementById('blocks-container');
+
+// 存储已创建的 Block DOM，方便取消勾选时删除
+const activeBlocks = new Map(); // id -> blockElement
+
+FORMULAS.forEach(f => {
+  const item = document.createElement('div');
+  item.className = 'formula-item';
+
+  const id = 'chk_' + f.id;
+
+  item.innerHTML = `
+    <label for="${id}">
+      <input type="checkbox" id="${id}" data-formula-id="${f.id}">
+      <div>
+        <div class="formula-name">${f.name}</div>
+        <div class="formula-brief">${f.formulaText}</div>
+      </div>
+    </label>
+  `;
+  formulaListEl.appendChild(item);
+});
+
+// 勾选 / 取消勾选时创建 / 删除 Block
+formulaListEl.addEventListener('change', e => {
+  if (e.target.matches('input[type="checkbox"][data-formula-id]')) {
+    const formulaId = e.target.dataset.formulaId;
+    const formula = FORMULAS.find(f => f.id === formulaId);
+    if (!formula) return;
+
+    if (e.target.checked) {
+      // 创建 Block
+      const blockEl = createBlockElement(formula);
+      blocksContainer.appendChild(blockEl);
+      activeBlocks.set(formulaId, blockEl);
+    } else {
+      // 删除 Block
+      const blockEl = activeBlocks.get(formulaId);
+      if (blockEl) {
+        blockEl.remove();
+        activeBlocks.delete(formulaId);
+      }
+    }
+  }
+});
+
+// 创建一个 Block DOM
+function createBlockElement(f) {
+  const block = document.createElement('div');
+  block.className = 'block';
+  block.dataset.formulaId = f.id;
+
+  const fieldsHtml = f.inputs.map(name => `
+    <div class="field">
+      <label>${name}</label>
+      <input type="number" step="any" data-input-name="${name}" placeholder="${name}">
+    </div>
+  `).join('');
+
+  block.innerHTML = `
+    <div class="block-header">${f.name}</div>
+    <div class="block-formula">${f.formulaText}</div>
+    ${fieldsHtml}
+    <div class="output-row">
+      <div class="output-label">${f.output}：</div>
+      <div class="output-value" data-output>——</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-clear" type="button">清空</button>
+      <button class="btn-calc" type="button">计算</button>
+    </div>
+  `;
+
+  const outputEl = block.querySelector('[data-output]');
+  const calcBtn = block.querySelector('.btn-calc');
+  const clearBtn = block.querySelector('.btn-clear');
+
+  calcBtn.addEventListener('click', () => {
+    const inputs = {};
+    block.querySelectorAll('input[data-input-name]').forEach(inp => {
+      const name = inp.dataset.inputName;
+      const val = parseFloat(inp.value);
+      inputs[name] = isNaN(val) ? 0 : val;
+    });
+
+    let result;
+    try {
+      result = f.compute(inputs);
+    } catch (err) {
+      result = NaN;
+    }
+    outputEl.textContent = fmt(result);
+  });
+
+  clearBtn.addEventListener('click', () => {
+    block.querySelectorAll('input[data-input-name]').forEach(inp => {
+      inp.value = '';
+    });
+    outputEl.textContent = '——';
+  });
+
+  return block;
+}
+</script>
+
+</body>
+</html>

@@ -51,6 +51,15 @@ Drag-and-drop block connection demo
 
 :::
 
+::: {.g-col-6}
+### [Physics Formula Blocks](./physics-blocks.html) 📐
+College Physics Mechanics formula calculator
+- 10 mechanics formulas to choose from
+- Check formulas to generate blocks
+- Input values and calculate results
+
+:::
+
 ::::::
 
 ## About this site
