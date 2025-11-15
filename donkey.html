@@ -18,7 +18,21 @@
       .out, .err { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; padding: .75rem; border-radius: 8px; }
       .out { background: #f8fafc; border: 1px solid #e5e7eb; }
       .err { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
+      .panel { margin-top: 2rem; padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
+      .panel h2 { margin-top: 0; font-size: 1.25rem; }
+      .chain-inputs { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+      .chain-inputs label { flex: 1 1 160px; font-size: .9rem; color: #374151; display: flex; flex-direction: column; gap: .35rem; }
+      .chain-inputs input { border: 1px solid #d1d5db; border-radius: 6px; padding: .4rem .5rem; font-size: .95rem; }
+      .chain-blocks { padding-left: 1.25rem; color: #4b5563; }
+      .chain-blocks li { margin: .25rem 0; }
+      .chain-controls { margin: 1rem 0; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
     </style>
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script async src="https://plausible.io/js/pa-wu5W0MedPxxdVVo_QwTqq.js"></script>
+    <script>
+      window.plausible = window.plausible || function(){ (plausible.q = plausible.q || []).push(arguments) }, plausible.init = plausible.init || function(i){ plausible.o = i || {} };
+      plausible.init()
+    </script>
   </head>
   <body>
     <div class="wrap">
@@ -46,6 +60,38 @@ for i in range(3):
 
       <div class="out" id="stdout" aria-label="标准输出"></div>
       <div class="err" id="stderr" aria-label="错误输出" style="display:none;"></div>
+
+      <section class="panel" aria-labelledby="chain-title">
+        <h2 id="chain-title">Sequential Blackbox：模块拼接演示</h2>
+        <p>按照「Block1 → Block2 → Block3」的思路，将上一个模块的输出自动传给下一个模块，示例链条为：计算速度 → 位移 → 动能。</p>
+
+        <div class="chain-inputs">
+          <label>加速度 a (m/s²)
+            <input id="chain-acceleration" type="number" step="0.1" value="9.8" />
+          </label>
+          <label>时间 t (s)
+            <input id="chain-time" type="number" step="0.1" value="2.5" />
+          </label>
+          <label>质量 m (kg)
+            <input id="chain-mass" type="number" step="0.1" value="70" />
+          </label>
+        </div>
+
+        <ol class="chain-blocks">
+          <li>Block1（velocity）：v = a × t</li>
+          <li>Block2（distance）：d = 0.5 × a × t²</li>
+          <li>Block3（energy）：E = 0.5 × m × v²</li>
+        </ol>
+
+        <div class="chain-controls">
+          <button id="chain-run">运行 Block Chain</button>
+          <button id="chain-clear" class="secondary">清空结果</button>
+          <span class="status" id="chain-status">等待执行</span>
+        </div>
+
+        <pre class="out" id="chain-stdout" aria-live="polite"></pre>
+        <div class="err" id="chain-error" style="display:none;"></div>
+      </section>
     </div>
 
     <!-- 直接使用 Pyodide CDN，更通用、与 Render 静态站兼容 -->
@@ -59,8 +105,17 @@ for i in range(3):
         pyodideReadyPromise = (async () => {
           const status = document.getElementById('status');
           status.textContent = '正在加载 Pyodide…（首次较慢，后续会缓存）';
+
+          // 1. 加载 Pyodide 本体
           pyodide = await loadPyodide();
-          status.textContent = '已加载 Pyodide，准备就绪。';
+
+          // 2. 预加载 micropip（这样 Python 里可以 import micropip）
+          await pyodide.loadPackage('micropip');
+
+          // 3. 你也可以预加载一些常用的包（Pyodide 自带的）
+          //    例如：await pyodide.loadPackage(['numpy', 'matplotlib']);
+
+          status.textContent = '已加载 Pyodide + micropip，准备就绪。';
           return pyodide;
         })();
         return pyodideReadyPromise;
@@ -70,7 +125,7 @@ for i in range(3):
         const status = document.getElementById('status');
         const runBtn = document.getElementById('run');
         runBtn.disabled = running;
-        status.textContent = running ? '正在执行…' : '已加载 Pyodide，准备就绪。';
+        status.textContent = running ? '正在执行…' : '已加载 Pyodide + micropip，准备就绪。';
       }
 
       async function runUserCode() {
@@ -82,12 +137,15 @@ for i in range(3):
         err.style.display = 'none';
         try {
           // 在 Python 侧重定向 stdout/stderr，执行用户代码
-          const wrapped = `\nimport sys, io, traceback\n_stdout = io.StringIO()\n_stderr = io.StringIO()\nsys_stdout_bak, sys_stderr_bak = sys.stdout, sys.stderr\nsys.stdout, sys.stderr = _stdout, _stderr\ntry:\n    exec(compile(\n        source=${JSON.stringify(code)},\n        filename='<user>', mode='exec'\n    ), globals(), globals())\nexcept Exception:\n    traceback.print_exc()\nfinally:\n    sys.stdout, sys.stderr = sys_stdout_bak, sys_stderr_bak\nout = _stdout.getvalue()\nerr = _stderr.getvalue()\n`;
+          const wrapped = `\nimport sys, io, traceback\n_stdout = io.StringIO()\n_stderr = io.StringIO()\nsys_stdout_bak, sys_stderr_bak = sys.stdout, sys.stderr\nsys.stdout, sys.stderr = _stdout, _stderr\ntry:\n    # 在这里执行用户代码\n    exec(compile(\n        source=${JSON.stringify(code)},\n        filename='<user>', mode='exec'\n    ), globals(), globals())\nexcept Exception:\n    traceback.print_exc()\nfinally:\n    sys.stdout, sys.stderr = sys_stdout_bak, sys_stderr_bak\nout = _stdout.getvalue()\nerr = _stderr.getvalue()\n`;
           await pyodide.runPythonAsync(wrapped);
           const outText = pyodide.globals.get('out');
           const errText = pyodide.globals.get('err');
           out.textContent = outText || '';
-          if (errText) { err.style.display = 'block'; err.textContent = errText; }
+          if (errText) {
+            err.style.display = 'block';
+            err.textContent = errText;
+          }
         } catch (e) {
           err.style.display = 'block';
           err.textContent = String(e && e.message ? e.message : e);
@@ -99,7 +157,8 @@ for i in range(3):
       function clearOutput() {
         document.getElementById('stdout').textContent = '';
         const err = document.getElementById('stderr');
-        err.textContent = ''; err.style.display = 'none';
+        err.textContent = '';
+        err.style.display = 'none';
       }
 
       document.getElementById('run').addEventListener('click', runUserCode);
@@ -113,4 +172,3 @@ for i in range(3):
     </script>
   </body>
   </html>
-

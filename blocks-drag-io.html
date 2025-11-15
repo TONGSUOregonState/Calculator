@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Drag-and-Connect Blocks</title>
+
+  <!-- LiteGraph.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/litegraph.js/build/litegraph.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litegraph.js/css/litegraph.css" />
+
+  <style>
+    body { margin: 0; background: #111827; }
+    #graphcanvas {
+      width: 100vw;
+      height: 100vh;
+      background: #111827;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="graphcanvas"></canvas>
+
+<script>
+  function safeFmt(x) {
+    if (x == null || Number.isNaN(x)) return "—";
+    return Number(x).toFixed(4);
+  }
+
+  /* ---------------- Block 1: a = v / t ---------------- */
+  function Block1() {
+    this.properties = {
+      v_manual: 10,
+      t_manual: 2.5
+    };
+
+    this.addInput("v", "number");
+    this.addInput("t", "number");
+    this.addOutput("a", "number");
+
+    this.addWidget(
+      "number",
+      "v (manual)",
+      this.properties.v_manual,
+      (v) => { this.properties.v_manual = v; },
+      { step: 0.1 }
+    );
+
+    this.addWidget(
+      "number",
+      "t (manual)",
+      this.properties.t_manual,
+      (t) => { this.properties.t_manual = t; },
+      { step: 0.1 }
+    );
+
+    this.widget_out = this.addWidget(
+      "number",
+      "a (output)",
+      0,
+      null,
+      { step: 0.0001 }
+    );
+  }
+  Block1.title = "Block1: a = v / t";
+
+  Block1.prototype.onExecute = function () {
+    let v = this.getInputData(0);
+    let t = this.getInputData(1);
+
+    if (v == null || Number.isNaN(v)) v = this.properties.v_manual;
+    if (t == null || Number.isNaN(t) || t === 0) t = this.properties.t_manual;
+
+    let a = null;
+    if (t !== 0 && t != null && !Number.isNaN(t)) {
+      a = v / t;
+    }
+
+    this.setOutputData(0, a);
+    this.widget_out.value = a == null ? 0 : a;
+    this.widgets_title = "a = " + safeFmt(a);
+  };
+
+  /* ---------------- Block 2: d = 0.5 * a * t^2 ---------------- */
+  function Block2() {
+    this.properties = {
+      a_manual: 3.0,
+      t_manual: 2.0
+    };
+
+    this.addInput("a", "number");
+    this.addInput("t", "number");
+    this.addOutput("d", "number");
+
+    this.addWidget(
+      "number",
+      "a (manual)",
+      this.properties.a_manual,
+      (v) => { this.properties.a_manual = v; },
+      { step: 0.1 }
+    );
+
+    this.addWidget(
+      "number",
+      "t (manual)",
+      this.properties.t_manual,
+      (v) => { this.properties.t_manual = v; },
+      { step: 0.1 }
+    );
+
+    this.widget_out = this.addWidget(
+      "number",
+      "d (output)",
+      0,
+      null,
+      { step: 0.0001 }
+    );
+  }
+  Block2.title = "Block2: d = 0.5 * a * t^2";
+
+  Block2.prototype.onExecute = function () {
+    let a = this.getInputData(0);
+    let t = this.getInputData(1);
+
+    if (a == null || Number.isNaN(a)) a = this.properties.a_manual;
+    if (t == null || Number.isNaN(t)) t = this.properties.t_manual;
+
+    let d = null;
+    if (a != null && t != null && !Number.isNaN(a) && !Number.isNaN(t)) {
+      d = 0.5 * a * t * t;
+    }
+
+    this.setOutputData(0, d);
+    this.widget_out.value = d == null ? 0 : d;
+    this.widgets_title = "d = " + safeFmt(d);
+  };
+
+  /* ---------------- Block 3: E = 0.5 * m * v^2 ---------------- */
+  function Block3() {
+    this.properties = {
+      m_manual: 70,
+      v_manual: 10
+    };
+
+    this.addInput("m", "number");
+    this.addInput("v", "number");
+    this.addOutput("E", "number");
+
+    this.addWidget(
+      "number",
+      "m (manual)",
+      this.properties.m_manual,
+      (v) => { this.properties.m_manual = v; },
+      { step: 0.5 }
+    );
+
+    this.addWidget(
+      "number",
+      "v (manual)",
+      this.properties.v_manual,
+      (v) => { this.properties.v_manual = v; },
+      { step: 0.1 }
+    );
+
+    this.widget_out = this.addWidget(
+      "number",
+      "E (output)",
+      0,
+      null,
+      { step: 0.0001 }
+    );
+  }
+  Block3.title = "Block3: E = 0.5 * m * v^2";
+
+  Block3.prototype.onExecute = function () {
+    let m = this.getInputData(0);
+    let v = this.getInputData(1);
+
+    if (m == null || Number.isNaN(m)) m = this.properties.m_manual;
+    if (v == null || Number.isNaN(v)) v = this.properties.v_manual;
+
+    let E = null;
+    if (m != null && v != null && !Number.isNaN(m) && !Number.isNaN(v)) {
+      E = 0.5 * m * v * v;
+    }
+
+    this.setOutputData(0, E);
+    this.widget_out.value = E == null ? 0 : E;
+    this.widgets_title = "E = " + safeFmt(E);
+  };
+
+  LiteGraph.registerNodeType("physics/block1_a_v_over_t", Block1);
+  LiteGraph.registerNodeType("physics/block2_d_half_a_t2", Block2);
+  LiteGraph.registerNodeType("physics/block3_E_half_m_v2", Block3);
+
+  const graph = new LGraph();
+  const canvas = new LGraphCanvas("#graphcanvas", graph);
+  graph.start();
+
+  const n1 = LiteGraph.createNode("physics/block1_a_v_over_t");
+  n1.pos = [80, 80];
+  graph.add(n1);
+
+  const n2 = LiteGraph.createNode("physics/block2_d_half_a_t2");
+  n2.pos = [420, 80];
+  graph.add(n2);
+
+  const n3 = LiteGraph.createNode("physics/block3_E_half_m_v2");
+  n3.pos = [250, 260];
+  graph.add(n3);
+</script>
+
+</body>
+</html>

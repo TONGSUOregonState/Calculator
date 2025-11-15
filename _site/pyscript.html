@@ -103,6 +103,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<!-- Privacy-friendly analytics by Plausible -->
+<script async="" src="https://plausible.io/js/pa-wu5W0MedPxxdVVo_QwTqq.js"></script>
+<script>
+  window.plausible = window.plausible || function(){ (plausible.q = plausible.q || []).push(arguments) }, plausible.init = plausible.init || function(i){ plausible.o = i || {} };
+  plausible.init()
+</script>
+
 
 
 </head>
@@ -141,6 +148,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link" href="./pyscript.html"> 
 <span class="menu-text">Calculator</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./blocks-drag-io.html"> 
+<span class="menu-text">Drag Blocks Demo</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./blocks-sequencer.html"> 
+<span class="menu-text">Block Sequencer</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./dsp_rz.html"> 
+<span class="menu-text">DSP R(z) Analysis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./dsp_tutorial.html"> 
+<span class="menu-text">DSP Tutorial</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./drawflow-demo.html"> 
+<span class="menu-text">Drawflow Visual Calc</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -200,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="构建时计算python-静态输出" class="level2">
 <h2 class="anchored" data-anchor-id="构建时计算python-静态输出">构建时计算（Python 静态输出）</h2>
 <p>下面的代码在构建时执行，并把结果渲染到 HTML 页面中：</p>
-<div id="c87dc296" class="cell" data-execution_count="1">
+<div id="2ab8b717" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">2.5</span>  <span class="co"># m/s^2</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fl">3.0</span>  <span class="co"># s</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> a <span class="op">*</span> (t <span class="op">**</span> <span class="dv">2</span>)</span>

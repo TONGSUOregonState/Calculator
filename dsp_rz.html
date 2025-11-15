@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSP R(z) 零点极点分析</title>
+
+  <!-- MathJax v3 for LaTeX rendering -->
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    },
+    startup: {
+      ready() {
+        console.log('MathJax is loaded and ready');
+        MathJax.startup.defaultReady();
+      }
+    }
+  };
+  </script>
+  <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <!-- Pyodide -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .input-section {
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #34495e;
+      font-weight: 600;
+    }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    .help-text {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-top: 5px;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    button:hover:not(:disabled) {
+      background: #2980b9;
+    }
+    button:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+    .equation-box {
+      background: #f8f9fa;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      border-left: 4px solid #3498db;
+    }
+    .equation-box h3 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-size: 16px;
+    }
+    .plot-container {
+      text-align: center;
+      margin: 20px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .plot-container h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    .plot-container img {
+      max-width: 100%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+    #output {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 20px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: 20px;
+      min-height: 100px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    #loading {
+      text-align: center;
+      color: #7f8c8d;
+      padding: 20px;
+      font-style: italic;
+    }
+    .example {
+      background: #ecf0f1;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    .hidden {
+      display: none;
+    }
+    .results-section {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎛️ DSP R(z) 零点极点分析</h1>
+  <p class="subtitle">使用 SymPy 在浏览器中分析 z 域有理函数</p>
+
+  <div class="container">
+    <div id="loading">⏳ 正在加载 Python 环境和相关库，请稍候...</div>
+
+    <div id="mainContent" class="hidden">
+      <div class="input-section">
+        <label for="numerator">分子多项式（从高次到低次的系数）：</label>
+        <textarea id="numerator" rows="2" placeholder="例如：1, -2, 1  表示 z² - 2z + 1">[1, -2, 1]</textarea>
+        <p class="help-text">输入 Python 列表格式，如 [1, -2, 1] 表示 z² - 2z + 1</p>
+      </div>
+
+      <div class="input-section">
+        <label for="denominator">分母多项式（从高次到低次的系数）：</label>
+        <textarea id="denominator" rows="2" placeholder="例如：1, -1.5, 0.5  表示 z² - 1.5z + 0.5">[1, -1.5, 0.5]</textarea>
+        <p class="help-text">输入 Python 列表格式</p>
+      </div>
+
+      <button id="runBtn" onclick="runAnalysis()">🚀 分析 R(z)</button>
+
+      <div class="example">
+        <strong>示例：</strong><br>
+        分子：[1, -2, 1] → z² - 2z + 1 = (z-1)²<br>
+        分母：[1, -1.5, 0.5] → z² - 1.5z + 0.5 = (z-1)(z-0.5)
+      </div>
+
+      <div class="results-section">
+        <div id="mathOutput"></div>
+        <div id="plotContainer"></div>
+        <div id="output"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let pyodide;
+
+    async function initPyodide() {
+      try {
+        pyodide = await loadPyodide({
+          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/"
+        });
+
+        // Load packages
+        document.getElementById('loading').textContent = '📦 正在加载 SymPy、Matplotlib 和 NumPy...';
+        await pyodide.loadPackage(['sympy', 'matplotlib', 'numpy']);
+
+        // Initialize Python imports
+        await pyodide.runPythonAsync(`
+import sympy as sp
+from sympy import symbols, factor, roots, Poly, latex, S
+from sympy.abc import z
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
+import io
+import base64
+        `);
+
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('mainContent').classList.remove('hidden');
+        console.log('Pyodide with all packages loaded successfully');
+
+        // Verify MathJax is ready
+        if (window.MathJax) {
+          console.log('MathJax is available');
+        } else {
+          console.warn('MathJax not loaded yet');
+        }
+      } catch (error) {
+        document.getElementById('loading').textContent = '❌ 加载失败: ' + error.message;
+        document.getElementById('loading').style.color = '#e74c3c';
+      }
+    }
+
+    async function runAnalysis() {
+      const outputDiv = document.getElementById('output');
+      const mathOutputDiv = document.getElementById('mathOutput');
+      const plotContainerDiv = document.getElementById('plotContainer');
+      const runBtn = document.getElementById('runBtn');
+      const numStr = document.getElementById('numerator').value;
+      const denStr = document.getElementById('denominator').value;
+
+      runBtn.disabled = true;
+      mathOutputDiv.innerHTML = '';
+      plotContainerDiv.innerHTML = '';
+      outputDiv.textContent = '⏳ 计算中...';
+
+      try {
+        // Step 1: Compute R(z), zeros, and poles
+        const analysisCode = `
+import sympy as sp
+from sympy import symbols, factor, roots, Poly, latex, S
+from sympy.abc import z
+
+# Parse input coefficients
+num_coeffs = ${numStr}
+den_coeffs = ${denStr}
+
+# Create polynomials
+n = len(num_coeffs) - 1
+m = len(den_coeffs) - 1
+
+# Build numerator and denominator
+numerator = sum(c * z**(n-i) for i, c in enumerate(num_coeffs))
+denominator = sum(c * z**(m-i) for i, c in enumerate(den_coeffs))
+
+# Create R(z)
+Rz = numerator / denominator
+
+# Factor R(z)
+Rz_factored = sp.factor(Rz)
+
+# Find zeros (roots of numerator)
+zeros = roots(numerator, z)
+
+# Find poles (roots of denominator)
+poles = roots(denominator, z)
+
+# Generate LaTeX for zeros and poles
+zeros_latex_list = []
+for root, mult in zeros.items():
+    root_latex = latex(root)
+    zeros_latex_list.append({
+        'latex': root_latex,
+        'mult': mult
+    })
+
+poles_latex_list = []
+for root, mult in poles.items():
+    root_latex = latex(root)
+    poles_latex_list.append({
+        'latex': root_latex,
+        'mult': mult
+    })
+
+# Store results
+result = {
+    'rz_latex': latex(Rz),
+    'rz_factored_latex': latex(Rz_factored),
+    'zeros': zeros,
+    'poles': poles,
+    'zeros_latex': zeros_latex_list,
+    'poles_latex': poles_latex_list,
+    'numerator': numerator,
+    'denominator': denominator
+}
+result
+        `;
+
+        const result = await pyodide.runPythonAsync(analysisCode);
+
+        // Step 2: Display equations with MathJax
+        const rzLatex = result.get('rz_latex');
+        const rzFactoredLatex = result.get('rz_factored_latex');
+        const zeros = result.get('zeros');
+        const poles = result.get('poles');
+        const zerosLatexList = result.get('zeros_latex').toJs();
+        const polesLatexList = result.get('poles_latex').toJs();
+
+        let zerosHtml = '';
+        if (zerosLatexList.length > 0) {
+          zerosHtml = zerosLatexList.map(item => {
+            const mult = item.mult;
+            return `$z_0 = ${item.latex}$` + (mult > 1 ? ` (重数 = ${mult})` : '');
+          }).join('<br>');
+        } else {
+          zerosHtml = '无零点';
+        }
+
+        let polesHtml = '';
+        if (polesLatexList.length > 0) {
+          polesHtml = polesLatexList.map(item => {
+            const mult = item.mult;
+            return `$p = ${item.latex}$` + (mult > 1 ? ` (重数 = ${mult})` : '');
+          }).join('<br>');
+        } else {
+          polesHtml = '无极点';
+        }
+
+        mathOutputDiv.innerHTML = `
+          <div class="equation-box">
+            <h3>传递函数 R(z):</h3>
+            $$R(z) = ${rzLatex}$$
+          </div>
+
+          <div class="equation-box">
+            <h3>因式分解形式:</h3>
+            $$R(z) = ${rzFactoredLatex}$$
+          </div>
+
+          <div class="equation-box">
+            <h3>零点 (Zeros):</h3>
+            <p>${zerosHtml}</p>
+          </div>
+
+          <div class="equation-box">
+            <h3>极点 (Poles):</h3>
+            <p>${polesHtml}</p>
+          </div>
+        `;
+
+        // Trigger MathJax to render the equations
+        if (window.MathJax) {
+          try {
+            await MathJax.typesetPromise([mathOutputDiv]);
+          } catch (e) {
+            console.warn('MathJax typeset warning:', e);
+            // Fallback: try to typeset the whole document
+            MathJax.typeset();
+          }
+        }
+
+        // Step 3: Generate zero-pole plot
+        plotContainerDiv.innerHTML = '<p>⏳ 生成零极点图...</p>';
+
+        const plotCode = `
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
+import io
+import base64
+
+# Create figure
+fig, ax = plt.subplots(figsize=(7, 7))
+
+# Draw unit circle
+circle = patches.Circle((0, 0), radius=1, fill=False,
+                        color='black', linestyle='--', linewidth=2)
+ax.add_patch(circle)
+
+# Plot zeros
+if zeros:
+    zero_vals = [complex(z.evalf()) for z in zeros.keys()]
+    ax.plot([z.real for z in zero_vals],
+            [z.imag for z in zero_vals],
+            'o', markersize=12, label='零点 (Zeros)',
+            color='blue', markeredgewidth=2, markerfacecolor='none')
+
+# Plot poles
+if poles:
+    pole_vals = [complex(p.evalf()) for p in poles.keys()]
+    ax.plot([p.real for p in pole_vals],
+            [p.imag for p in pole_vals],
+            'x', markersize=14, label='极点 (Poles)',
+            color='red', markeredgewidth=3)
+
+# Axes and styling
+ax.axhline(y=0, color='k', linewidth=0.5, alpha=0.5)
+ax.axvline(x=0, color='k', linewidth=0.5, alpha=0.5)
+ax.set_aspect('equal')
+ax.grid(True, alpha=0.3, linestyle=':', linewidth=0.5)
+ax.set_xlabel('实部 (Real)', fontsize=12)
+ax.set_ylabel('虚部 (Imaginary)', fontsize=12)
+ax.set_title('零极点图 (Zero-Pole Plot, z-plane)', fontsize=14, fontweight='bold')
+ax.legend(loc='upper right', fontsize=11)
+
+# Set reasonable plot limits
+all_vals = []
+if zeros:
+    all_vals.extend([complex(z.evalf()) for z in zeros.keys()])
+if poles:
+    all_vals.extend([complex(p.evalf()) for p in poles.keys()])
+
+if all_vals:
+    max_abs = max(abs(v) for v in all_vals)
+    lim = max(1.5, max_abs * 1.2)
+    ax.set_xlim(-lim, lim)
+    ax.set_ylim(-lim, lim)
+else:
+    ax.set_xlim(-1.5, 1.5)
+    ax.set_ylim(-1.5, 1.5)
+
+# Convert to base64 PNG
+buf = io.BytesIO()
+fig.savefig(buf, format='png', dpi=100, bbox_inches='tight', facecolor='white')
+buf.seek(0)
+img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+plt.close(fig)
+
+img_base64
+        `;
+
+        const imgData = await pyodide.runPythonAsync(plotCode);
+
+        plotContainerDiv.innerHTML = `
+          <div class="plot-container">
+            <h3>零极点图 (Zero-Pole Plot)</h3>
+            <img src="data:image/png;base64,${imgData}" alt="Zero-Pole Plot">
+            <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">
+              ○ = 零点 (Zeros) &nbsp;&nbsp; × = 极点 (Poles) &nbsp;&nbsp; ⭕ = 单位圆
+            </p>
+          </div>
+        `;
+
+        // Step 4: Generate text summary
+        const textCode = `
+import io
+import sys
+
+output_buffer = io.StringIO()
+sys.stdout = output_buffer
+
+print("=" * 50)
+print("详细分析结果")
+print("=" * 50)
+print()
+print(f"分子多项式: {num_coeffs}")
+print(f"分母多项式: {den_coeffs}")
+print()
+print("零点 (Zeros):")
+if zeros:
+    for root, mult in zeros.items():
+        print(f"  z₀ = {root} (重数 = {mult})")
+else:
+    print("  无零点")
+print()
+print("极点 (Poles):")
+if poles:
+    for root, mult in poles.items():
+        print(f"  p = {root} (重数 = {mult})")
+else:
+    print("  无极点")
+print()
+print("=" * 50)
+
+sys.stdout = sys.__stdout__
+output_buffer.getvalue()
+        `;
+
+        const textOutput = await pyodide.runPythonAsync(textCode);
+        outputDiv.textContent = textOutput;
+        outputDiv.style.color = '#ecf0f1';
+
+      } catch (error) {
+        outputDiv.textContent = '❌ 错误:\n' + error.message;
+        outputDiv.style.color = '#e74c3c';
+        console.error('Error:', error);
+      } finally {
+        runBtn.disabled = false;
+      }
+    }
+
+    // Initialize on page load
+    window.addEventListener('load', initPyodide);
+
+    // Allow Shift+Enter to run
+    document.addEventListener('keydown', (e) => {
+      if (e.shiftKey && e.key === 'Enter') {
+        e.preventDefault();
+        if (!document.getElementById('runBtn').disabled) {
+          runAnalysis();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

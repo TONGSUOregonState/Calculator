@@ -13,8 +13,20 @@ website:
         text: Python Runner
       - href: pyscript.html
         text: Calculator
+      - href: blocks-drag-io.html
+        text: Drag Blocks Demo
+      - href: blocks-sequencer.html
+        text: Block Sequencer
+      - href: dsp_rz.html
+        text: DSP R(z) Analysis
+      - href: dsp_tutorial.html
+        text: DSP Tutorial
+      - href: drawflow-demo.html
+        text: Drawflow Visual Calc
 
 format:
   html:
     theme: cosmo
     toc: true
+    include-in-header:
+      - _includes/plausible.html

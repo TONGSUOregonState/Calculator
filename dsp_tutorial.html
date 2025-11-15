@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSP R(z) 分析工具完整技术解析</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, sans-serif;
+      line-height: 1.8;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #3498db;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 1.1em;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      color: #2980b9;
+      font-size: 1.8em;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      padding-left: 15px;
+      border-left: 5px solid #3498db;
+    }
+
+    h3 {
+      color: #34495e;
+      font-size: 1.4em;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .code-block {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .code-label {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background: #3498db;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .highlight {
+      background: #fff3cd;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .info-box {
+      background: #e8f4f8;
+      border-left: 4px solid #3498db;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .warning-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .success-box {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .diagram {
+      background: #f8f9fa;
+      border: 2px solid #dee2e6;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    ul, ol {
+      margin-left: 30px;
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    table th {
+      background: #3498db;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    table tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    .toc {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 40px;
+    }
+
+    .toc h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .toc ul {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .toc li {
+      margin-bottom: 8px;
+    }
+
+    .toc a {
+      color: #3498db;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .toc a:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
+
+    .emoji {
+      font-size: 1.2em;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎛️ DSP R(z) 分析工具完整技术解析</h1>
+    <p class="subtitle">深入理解浏览器中的 Python + WebAssembly 技术栈</p>
+
+    <div class="toc">
+      <h3>📋 目录</h3>
+      <ul>
+        <li><a href="#overview">一、项目概述</a></li>
+        <li><a href="#architecture">二、Pyodide 架构原理</a></li>
+        <li><a href="#code-structure">三、代码结构详解</a></li>
+        <li><a href="#python-embedding">四、Python 代码嵌入机制</a></li>
+        <li><a href="#data-conversion">五、JS 与 Python 数据转换</a></li>
+        <li><a href="#string-template">六、字符串模板嵌入详解</a></li>
+        <li><a href="#workflow">七、完整工作流程</a></li>
+        <li><a href="#advantages">八、WebAssembly 的优势</a></li>
+      </ul>
+    </div>
+
+    <!-- 第一部分：项目概述 -->
+    <div class="section" id="overview">
+      <h2>📋 一、项目概述</h2>
+
+      <p>这是一个完全在浏览器中运行的 DSP（数字信号处理）零极点分析工具。它利用 <span class="highlight">WebAssembly</span> 技术，在前端执行 Python 科学计算，无需任何服务器支持。</p>
+
+      <h3>核心功能</h3>
+      <ul>
+        <li><strong>零极点计算</strong>：分析 z 域有理函数 R(z) = N(z)/D(z)</li>
+        <li><strong>因式分解</strong>：将 R(z) 转换为因子相乘形式</li>
+        <li><strong>可视化绘图</strong>：在复平面上绘制零极点图</li>
+        <li><strong>公式渲染</strong>：使用 MathJax 显示数学表达式</li>
+      </ul>
+
+      <div class="info-box">
+        <strong>🔑 关键技术：</strong>
+        <ul style="margin-bottom: 0;">
+          <li>Pyodide：WebAssembly 版本的 CPython</li>
+          <li>SymPy：符号数学计算库</li>
+          <li>Matplotlib：科学绘图库</li>
+          <li>MathJax：LaTeX 公式渲染引擎</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 第二部分：Pyodide 架构 -->
+    <div class="section" id="architecture">
+      <h2>🔍 二、Pyodide 架构原理</h2>
+
+      <p>Pyodide 将完整的 CPython 解释器编译成 WebAssembly，使其能在浏览器中运行。</p>
+
+      <div class="diagram">┌─────────────────────────────────────────────────┐
+│           浏览器 (Browser)                       │
+│  ┌───────────────────────────────────────────┐  │
+│  │      JavaScript 执行环境                   │  │
+│  │  ┌─────────────────────────────────────┐  │  │
+│  │  │   Pyodide.js (桥接层)               │  │  │
+│  │  │   - runPythonAsync()                │  │  │
+│  │  │   - loadPackage()                   │  │  │
+│  │  └──────────┬──────────────────────────┘  │  │
+│  │             │                              │  │
+│  │             ▼                              │  │
+│  │  ┌─────────────────────────────────────┐  │  │
+│  │  │   WebAssembly 虚拟机                 │  │  │
+│  │  │   CPython 3.11 (编译成.wasm)        │  │  │
+│  │  │   - Python解释器                    │  │  │
+│  │  │   - 标准库                          │  │  │
+│  │  │   - NumPy, SymPy等科学库            │  │  │
+│  │  └─────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────┘</div>
+
+      <h3>工作流程</h3>
+      <ol>
+        <li><strong>加载阶段</strong>：下载 pyodide.wasm 文件（约 10MB）</li>
+        <li><strong>初始化</strong>：启动 CPython 解释器</li>
+        <li><strong>包管理</strong>：加载所需的 Python 包（SymPy, Matplotlib 等）</li>
+        <li><strong>执行</strong>：运行 Python 代码并返回结果</li>
+      </ol>
+    </div>
+
+    <!-- 第三部分：代码结构 -->
+    <div class="section" id="code-structure">
+      <h2>📝 三、代码结构详解</h2>
+
+      <h3>1. HTML 头部配置</h3>
+
+      <div class="code-block">
+        <div class="code-label">HTML</div>&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;DSP R(z) 零点极点分析&lt;/title&gt;</div>
+
+      <p><strong>作用：</strong>定义 HTML5 文档，设置中文语言，UTF-8 编码，响应式视口。</p>
+
+      <h3>2. MathJax 配置</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>&lt;script&gt;
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+&lt;/script&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;&lt;/script&gt;</div>
+
+      <div class="info-box">
+        <strong>📐 MathJax 功能：</strong>
+        <ul style="margin-bottom: 0;">
+          <li><code>inlineMath</code>：行内公式用 $...$ 包裹</li>
+          <li><code>displayMath</code>：独立公式用 $$...$$ 包裹</li>
+          <li><code>svg</code>：使用 SVG 渲染，效果更清晰</li>
+        </ul>
+      </div>
+
+      <h3>3. Pyodide 引入</h3>
+
+      <div class="code-block">
+        <div class="code-label">HTML</div>&lt;script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"&gt;&lt;/script&gt;</div>
+
+      <p><strong>作用：</strong>引入 Pyodide 库，允许在浏览器中运行 Python。</p>
+
+      <h3>4. Pyodide 初始化</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>let pyodide;
+
+async function initPyodide() {
+  // 加载 Pyodide 引擎
+  pyodide = await loadPyodide({
+    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/"
+  });
+
+  // 加载 Python 包
+  await pyodide.loadPackage(['sympy', 'matplotlib', 'numpy']);
+
+  // 导入模块
+  await pyodide.runPythonAsync(`
+import sympy as sp
+from sympy import symbols, factor, roots, latex
+from sympy.abc import z
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+import base64
+  `);
+}</div>
+
+      <div class="success-box">
+        <strong>✅ 初始化步骤：</strong>
+        <ol style="margin-bottom: 0;">
+          <li>下载并加载 Pyodide WebAssembly 文件</li>
+          <li>安装所需的 Python 包（约 8MB）</li>
+          <li>预先导入常用模块</li>
+          <li>显示主界面</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 第四部分：Python 嵌入机制 -->
+    <div class="section" id="python-embedding">
+      <h2>🔗 四、Python 代码嵌入机制</h2>
+
+      <h3>方式 1：字符串模板嵌入（本项目使用）</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>async function runAnalysis() {
+  // 从 HTML 读取用户输入
+  const numStr = document.getElementById('numerator').value;
+  const denStr = document.getElementById('denominator').value;
+
+  // 🔥 用模板字符串构造 Python 代码
+  const analysisCode = `
+import sympy as sp
+from sympy.abc import z
+
+# ${numStr} 会被替换成用户输入的值
+num_coeffs = ${numStr}
+den_coeffs = ${denStr}
+
+# 构建多项式
+numerator = sum(c * z**(len(num_coeffs)-1-i) for i, c in enumerate(num_coeffs))
+zeros = sp.roots(numerator, z)
+zeros
+  `;
+
+  // 执行 Python 代码
+  const result = await pyodide.runPythonAsync(analysisCode);
+}</div>
+
+      <div class="info-box">
+        <strong>💡 执行流程：</strong>
+        <div class="diagram" style="white-space: normal;">
+JavaScript 字符串<br>
+&nbsp;&nbsp;&nbsp;&nbsp;↓ (传递给 Pyodide)<br>
+WebAssembly 中的 Python 解释器<br>
+&nbsp;&nbsp;&nbsp;&nbsp;↓ (解析、编译、执行)<br>
+Python 运行时<br>
+&nbsp;&nbsp;&nbsp;&nbsp;↓ (返回 Python 对象)<br>
+JS Proxy 对象 (可用 .get() 访问)
+        </div>
+      </div>
+
+      <h3>方式 2：通过 pyodide.globals 传递</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>// 在 Python 中设置变量
+pyodide.globals.set('my_list', [1, 2, 3]);
+
+// 在 Python 中使用
+await pyodide.runPythonAsync(`
+print(my_list)  # [1, 2, 3]
+result = sum(my_list)
+`);
+
+// 读取 Python 变量
+const result = pyodide.globals.get('result');  // 6</div>
+
+      <h3>方式 3：JSON 序列化</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>const userObj = { a: 1, b: 2 };
+
+const code = `
+import json
+data = json.loads('${JSON.stringify(userObj)}')
+print(data['a'])  # 1
+`;
+
+await pyodide.runPythonAsync(code);</div>
+    </div>
+
+    <!-- 第五部分：数据转换 -->
+    <div class="section" id="data-conversion">
+      <h2>🔄 五、JS 与 Python 数据转换</h2>
+
+      <h3>Python → JavaScript</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>const pyResult = await pyodide.runPythonAsync(`
+{
+    'zeros': {-1: 1, 1: 1},
+    'count': 2,
+    'name': 'analysis'
+}
+`);
+
+// pyResult 是 PyProxy 对象
+const zeros = pyResult.get('zeros');   // PyProxy
+const count = pyResult.get('count');    // 2 (JS 数字)
+const name = pyResult.get('name');      // "analysis" (JS 字符串)
+
+// 转换为纯 JS 对象
+const jsObj = pyResult.toJs();</div>
+
+      <h3>数据类型映射表</h3>
+
+      <table>
+        <tr>
+          <th>Python 类型</th>
+          <th>JavaScript 类型</th>
+          <th>备注</th>
+        </tr>
+        <tr>
+          <td>int</td>
+          <td>Number</td>
+          <td>直接转换</td>
+        </tr>
+        <tr>
+          <td>float</td>
+          <td>Number</td>
+          <td>直接转换</td>
+        </tr>
+        <tr>
+          <td>str</td>
+          <td>String</td>
+          <td>直接转换</td>
+        </tr>
+        <tr>
+          <td>list</td>
+          <td>Array</td>
+          <td>需要 .toJs()</td>
+        </tr>
+        <tr>
+          <td>dict</td>
+          <td>Object</td>
+          <td>需要 .toJs()</td>
+        </tr>
+        <tr>
+          <td>SymPy 对象</td>
+          <td>PyProxy</td>
+          <td>保持在 Python 侧</td>
+        </tr>
+      </table>
+
+      <h3>图片传输：Matplotlib → Base64</h3>
+
+      <div class="code-block">
+        <div class="code-label">Python</div>import matplotlib.pyplot as plt
+import io
+import base64
+
+# 绘图
+fig, ax = plt.subplots()
+ax.plot([1, 2, 3], [1, 4, 9])
+
+# 保存到内存
+buf = io.BytesIO()
+fig.savefig(buf, format='png', dpi=100)
+buf.seek(0)
+
+# 转换为 base64
+img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+img_base64  # 返回给 JS</div>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>// 接收 base64 图片
+const imgData = await pyodide.runPythonAsync(plotCode);
+
+// 嵌入 HTML
+plotDiv.innerHTML = `
+  &lt;img src="data:image/png;base64,${imgData}" alt="Plot"&gt;
+`;</div>
+
+      <div class="diagram">Matplotlib 绘图 → BytesIO 内存缓冲 → Base64 编码
+→ 返回给 JS → Data URL → &lt;img&gt; 标签显示</div>
+    </div>
+
+    <!-- 第六部分：字符串模板详解 -->
+    <div class="section" id="string-template">
+      <h2>🎯 六、字符串模板嵌入详解</h2>
+
+      <h3>ES6 模板字符串基础</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>const name = "Alice";
+
+// ❌ 普通字符串 - 用单引号或双引号
+const greeting1 = 'Hello, my name is name';
+console.log(greeting1);  // Hello, my name is name
+
+// ✅ 模板字符串 - 用反引号 ` `
+const greeting2 = `Hello, my name is ${name}`;
+console.log(greeting2);  // Hello, my name is Alice</div>
+
+      <h3>应用到 Python 代码生成</h3>
+
+      <div class="code-block">
+        <div class="code-label">JavaScript</div>// 用户输入：[1, -2, 1]
+const userInput = "[1, -2, 1]";
+
+// 构造 Python 代码
+const pythonCode = `
+coefficients = ${userInput}  # 会被替换成 [1, -2, 1]
+result = sum(coefficients)
+print(result)
+`;
+
+// Python 实际看到的代码：
+// coefficients = [1, -2, 1]
+// result = sum([1, -2, 1])
+// print(0)</div>
+
+      <h3>动态替换演示</h3>
+
+      <div class="diagram">// ========== JavaScript 中 ==========
+const num = "[1, -2, 1]";
+
+const code = `
+coeffs = ${num}     ← 这是模板字符串的"洞"
+`;
+
+// ========== 替换过程 ==========
+"coeffs = ${num}"
+      ↓
+"coeffs = [1, -2, 1]"
+
+// ========== Python 执行 ==========
+coeffs = [1, -2, 1]
+result = sum(coeffs)  # 0</div>
+
+      <div class="warning-box">
+        <strong>⚠️ 注意事项：</strong>
+        <ul style="margin-bottom: 0;">
+          <li>字符串格式必须正确（列表需要方括号）</li>
+          <li>本项目运行在沙箱环境，不存在安全风险</li>
+          <li>WebAssembly 只能访问虚拟文件系统</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 第七部分：工作流程 -->
+    <div class="section" id="workflow">
+      <h2>🎯 七、完整工作流程</h2>
+
+      <ol>
+        <li><strong>页面加载</strong> → 初始化 Pyodide 和 Python 库</li>
+        <li><strong>用户输入</strong> → 分子/分母多项式系数</li>
+        <li><strong>点击分析</strong> → Python 计算零点、极点、因式分解</li>
+        <li><strong>渲染公式</strong> → MathJax 显示数学表达式</li>
+        <li><strong>绘制图形</strong> → Matplotlib 生成零极点图</li>
+        <li><strong>显示结果</strong> → 文本摘要输出到终端区域</li>
+      </ol>
+
+      <div class="diagram">┌─────────────┐
+│ 用户点击按钮 │
+└──────┬──────┘
+       ↓
+┌─────────────────┐
+│ JS 读取输入值    │  numStr = "[1, -2, 1]"
+└──────┬──────────┘
+       ↓
+┌─────────────────────────┐
+│ 用模板字符串构造 Python  │
+│ code = `coeffs = ${num}` │
+└──────┬──────────────────┘
+       ↓
+┌───────────────────────────┐
+│ 发送给 WebAssembly        │
+│ pyodide.runPythonAsync()  │
+└──────┬────────────────────┘
+       ↓
+┌──────────────────────┐
+│ Python 解释器执行    │
+│ - 解析代码           │
+│ - 编译字节码         │
+│ - 执行计算           │
+└──────┬───────────────┘
+       ↓
+┌──────────────────┐
+│ 返回结果给 JS     │
+│ PyProxy 对象      │
+└──────┬───────────┘
+       ↓
+┌──────────────────┐
+│ 更新页面显示      │
+└──────────────────┘</div>
+    </div>
+
+    <!-- 第八部分：优势 -->
+    <div class="section" id="advantages">
+      <h2>⚙️ 八、WebAssembly 的优势</h2>
+
+      <h3>传统方式 vs Pyodide 方式</h3>
+
+      <table>
+        <tr>
+          <th>特性</th>
+          <th>传统方式（需要服务器）</th>
+          <th>Pyodide 方式（纯前端）</th>
+        </tr>
+        <tr>
+          <td>架构</td>
+          <td>浏览器 → HTTP 请求 → 服务器执行 Python → 返回结果</td>
+          <td>浏览器加载 .wasm → 本地执行 Python → 立即显示</td>
+        </tr>
+        <tr>
+          <td>服务器需求</td>
+          <td>❌ 需要后端服务器</td>
+          <td>✅ 无需服务器</td>
+        </tr>
+        <tr>
+          <td>网络延迟</td>
+          <td>❌ 每次请求都有延迟</td>
+          <td>✅ 本地执行，无延迟</td>
+        </tr>
+        <tr>
+          <td>离线使用</td>
+          <td>❌ 必须联网</td>
+          <td>✅ 缓存后可离线</td>
+        </tr>
+        <tr>
+          <td>运行成本</td>
+          <td>❌ 需要服务器成本</td>
+          <td>✅ 仅需静态托管</td>
+        </tr>
+        <tr>
+          <td>性能</td>
+          <td>取决于服务器</td>
+          <td>✅ 接近原生速度</td>
+        </tr>
+      </table>
+
+      <h3>核心技术栈总结</h3>
+
+      <ul>
+        <li><strong>Pyodide</strong>：将 CPython 编译成 WebAssembly</li>
+        <li><strong>WebAssembly</strong>：浏览器原生支持的二进制指令格式</li>
+        <li><strong>JS 模板字符串</strong>：动态构造 Python 代码</li>
+        <li><strong>PyProxy</strong>：JS 与 Python 对象的桥接层</li>
+        <li><strong>Base64 编码</strong>：图片等二进制数据的传输</li>
+      </ul>
+
+      <div class="success-box">
+        <strong>🎉 总结：</strong>
+        <p style="margin-bottom: 0;">这个项目本质上是在浏览器里运行了一个完整的 Python 环境，就像你在本地安装了 Python 一样，只不过是通过 WebAssembly 实现的！完全在前端完成科学计算，无需任何服务器支持。</p>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 60px; padding-top: 30px; border-top: 2px solid #dee2e6; color: #7f8c8d;">
+      <p>📚 DSP R(z) 分析工具技术文档</p>
+      <p>基于 Pyodide + WebAssembly + SymPy + Matplotlib</p>
+    </div>
+  </div>
+</body>
+</html>

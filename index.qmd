@@ -17,7 +17,7 @@ This is my first Quarto website. Here I can publish notes, code, and experiments
 
 
 ::: {.g-col-6}
-### [C Programming](/c-programming/index.qmd) ðŸ’»
+### [C Programming](/c-programming/index.qmd) ðŸ'»
 - [C programming Modern Approach ](https://github.com/williamgherman/c-solutions?utm_source=chatgpt.com)
 
 - [C solutions](https://github.com/williamgherman/c-solutions?utm_source=chatgpt.com)
@@ -25,6 +25,14 @@ This is my first Quarto website. Here I can publish notes, code, and experiments
 
 -  [logic circuit visualizer DigitalJS](https://digitaljs.tilk.eu/)
 
+:::
+
+::: {.g-col-6}
+### [DSP R(z) Analysis](./dsp_rz.html) ðŸŽ›ï¸
+零点极点分析工具 - Browser-based symbolic analysis using SymPy
+- [📚 技术文档教程](./dsp_tutorial.html)
+
+:::
 
 ::::::
 

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sequential Blocks with .blockX(output) References</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 2rem;
+      background: #f9fafb;
+    }
+    h1, h2 {
+      margin-bottom: 0.5rem;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 1.2fr) minmax(260px, 0.8fr);
+      gap: 1.5rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      margin-bottom: 1rem;
+    }
+    .block {
+      border-radius: 10px;
+      border: 1px dashed #d1d5db;
+      padding: 0.75rem 0.9rem;
+      margin-bottom: 0.9rem;
+      background: #f9fafb;
+    }
+    .block-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+    .formula {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-bottom: 0.4rem;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.85rem;
+    }
+    label {
+      width: 70px;
+      font-size: 0.82rem;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.25rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 0.82rem;
+    }
+    .output-box {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.82rem;
+      padding: 0.25rem 0.4rem;
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 6px;
+      min-width: 90px;
+      text-align: right;
+    }
+    .msg {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+      min-height: 1em;
+    }
+    .msg.error {
+      color: #b91c1c;
+    }
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-right: 0.4rem;
+    }
+    button.primary {
+      background: #111827;
+      color: #ffffff;
+    }
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    select {
+      padding: 0.25rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 0.82rem;
+    }
+    .hint {
+      font-size: 0.8rem;
+      color: #4b5563;
+      margin-top: 0.4rem;
+    }
+    .log {
+      margin-top: 0.7rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      white-space: pre-wrap;
+      font-size: 0.82rem;
+      background: #111827;
+      color: #f9fafb;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Sequential Blocks · 文本引用版</h1>
+<p style="max-width: 800px; font-size: 0.93rem;">
+  每个 Block 是独立公式，输入框可以填 <strong>数字</strong>，也可以填
+  <code>.block1(output)</code> / <code>.block2(output)</code> / <code>.block3(output)</code>，
+  表示“代入对应 Block 的输出值”。下方可以选择全局执行顺序，比如 1→2→3 或 2→3→1。
+</p>
+
+<div class="layout">
+  <!-- 左边：三个独立 Block -->
+  <div>
+    <!-- Block 1 -->
+    <div class="card block" id="block1">
+      <div class="block-title">Block 1 · a = v / t</div>
+      <div class="formula">
+        输入：v, t → 输出：a<br>
+        示例：v = 10, t = 2.5 → a = 4.0
+      </div>
+
+      <div class="row">
+        <label for="b1_v">v (m/s)</label>
+        <input id="b1_v" type="text" value="10" />
+      </div>
+      <div class="row">
+        <label for="b1_t">t (s)</label>
+        <input id="b1_t" type="text" value="2.5" />
+      </div>
+      <div class="row">
+        <label>输出 a</label>
+        <div class="output-box" id="b1_out">—</div>
+      </div>
+      <div id="b1_msg" class="msg"></div>
+      <button class="secondary" onclick="computeBlock('block1')">Compute Block 1</button>
+    </div>
+
+    <!-- Block 2 -->
+    <div class="card block" id="block2">
+      <div class="block-title">Block 2 · d = 0.5 · a · t²</div>
+      <div class="formula">
+        输入：a, t → 输出：d<br>
+        示例：a = .block1(output), t = 2.5
+      </div>
+
+      <div class="row">
+        <label for="b2_a">a (m/s²)</label>
+        <input id="b2_a" type="text" value=".block1(output)" />
+      </div>
+      <div class="row">
+        <label for="b2_t">t (s)</label>
+        <input id="b2_t" type="text" value="2.5" />
+      </div>
+      <div class="row">
+        <label>输出 d</label>
+        <div class="output-box" id="b2_out">—</div>
+      </div>
+      <div id="b2_msg" class="msg"></div>
+      <button class="secondary" onclick="computeBlock('block2')">Compute Block 2</button>
+    </div>
+
+    <!-- Block 3 -->
+    <div class="card block" id="block3">
+      <div class="block-title">Block 3 · E = 0.5 · m · v²</div>
+      <div class="formula">
+        输入：m, v → 输出：E<br>
+        示例：m = 70, v = .block1(output) → E 使用 Block1 的结果
+      </div>
+
+      <div class="row">
+        <label for="b3_m">m (kg)</label>
+        <input id="b3_m" type="text" value="70" />
+      </div>
+      <div class="row">
+        <label for="b3_v">v (m/s)</label>
+        <input id="b3_v" type="text" value=".block1(output)" />
+      </div>
+      <div class="row">
+        <label>输出 E</label>
+        <div class="output-box" id="b3_out">—</div>
+      </div>
+      <div id="b3_msg" class="msg"></div>
+      <button class="secondary" onclick="computeBlock('block3')">Compute Block 3</button>
+    </div>
+
+    <p class="hint">
+      任何输入框都可以写：<code>数字</code> 或 <code>.block1(output)</code> / <code>.block2(output)</code> / <code>.block3(output)</code>。<br>
+      比如在 Block2 里写 <code>a = .block1(output)</code>，就是“把 Block1 的输出 a 当作这里的 a”。
+    </p>
+  </div>
+
+  <!-- 右边：全局执行顺序 -->
+  <div class="card">
+    <h2>全局执行顺序 · 123 / 231 由你定</h2>
+
+    <div class="row">
+      <label style="width: 80px;">Step 1</label>
+      <select id="step1">
+        <option value="block1">Block 1</option>
+        <option value="block2">Block 2</option>
+        <option value="block3">Block 3</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label style="width: 80px;">Step 2</label>
+      <select id="step2">
+        <option value="block1">Block 1</option>
+        <option value="block2" selected>Block 2</option>
+        <option value="block3">Block 3</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label style="width: 80px;">Step 3</label>
+      <select id="step3">
+        <option value="block1">Block 1</option>
+        <option value="block2">Block 2</option>
+        <option value="block3" selected>Block 3</option>
+      </select>
+    </div>
+
+    <p class="hint">
+      比如想要顺序 1→2→3，就选：Step1=Block1, Step2=Block2, Step3=Block3。<br>
+      想要顺序 2→3→1，就选：Step1=Block2, Step2=Block3, Step3=Block1。<br>
+      然后在 Block 的输入里用 <code>.block1(output)</code> 之类语法来引用前面已经算好的结果。
+    </p>
+
+    <button class="primary" onclick="runSequence()">Run sequence</button>
+    <button class="secondary" onclick="resetAll()">Reset outputs</button>
+
+    <div id="log" class="log"></div>
+  </div>
+</div>
+
+<script>
+  const outputs = {
+    block1: null,
+    block2: null,
+    block3: null,
+  };
+
+  function fmt(x) {
+    if (x === null || x === undefined || Number.isNaN(x)) return "—";
+    return Number(x).toFixed(4);
+  }
+
+  function resolveInput(text) {
+    if (text === undefined || text === null) return null;
+    const s = String(text).trim();
+    if (!s) return null;
+
+    const m = s.match(/^\.block([123])\(\s*output\s*\)$/);
+    if (m) {
+      const key = "block" + m[1];
+      return outputs[key];
+    }
+
+    const v = parseFloat(s);
+    if (Number.isNaN(v)) return null;
+    return v;
+  }
+
+  function setMsg(id, msg, isError) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg || "";
+    el.className = "msg" + (isError ? " error" : "");
+  }
+
+  function computeBlock(blockId, logLines) {
+    if (!logLines) logLines = [];
+
+    if (blockId === "block1") {
+      const vStr = document.getElementById("b1_v").value;
+      const tStr = document.getElementById("b1_t").value;
+
+      const v = resolveInput(vStr);
+      const t = resolveInput(tStr);
+
+      if (v == null || t == null || t === 0) {
+        outputs.block1 = null;
+        document.getElementById("b1_out").textContent = "—";
+        setMsg("b1_msg", "输入无效或 t=0，无法计算 a = v / t", true);
+        logLines.push("[Block1] 计算失败：输入无效或 t=0");
+        return null;
+      }
+
+      const a = v / t;
+      outputs.block1 = a;
+      document.getElementById("b1_out").textContent = fmt(a);
+      setMsg("b1_msg", `使用 v=${fmt(v)}, t=${fmt(t)} 计算得到 a=${fmt(a)}`, false);
+      logLines.push(`[Block1] v=${fmt(v)}, t=${fmt(t)} → a=${fmt(a)}`);
+      return a;
+    }
+
+    if (blockId === "block2") {
+      const aStr = document.getElementById("b2_a").value;
+      const tStr = document.getElementById("b2_t").value;
+
+      const a = resolveInput(aStr);
+      const t = resolveInput(tStr);
+
+      if (a == null || t == null) {
+        outputs.block2 = null;
+        document.getElementById("b2_out").textContent = "—";
+        setMsg("b2_msg", "输入无效，无法计算 d = 0.5 · a · t²", true);
+        logLines.push("[Block2] 计算失败：输入无效");
+        return null;
+      }
+
+      const d = 0.5 * a * t * t;
+      outputs.block2 = d;
+      document.getElementById("b2_out").textContent = fmt(d);
+      setMsg("b2_msg", `使用 a=${fmt(a)}, t=${fmt(t)} 计算得到 d=${fmt(d)}`, false);
+      logLines.push(`[Block2] a=${fmt(a)}, t=${fmt(t)} → d=${fmt(d)}`);
+      return d;
+    }
+
+    if (blockId === "block3") {
+      const mStr = document.getElementById("b3_m").value;
+      const vStr = document.getElementById("b3_v").value;
+
+      const m = resolveInput(mStr);
+      const v = resolveInput(vStr);
+
+      if (m == null || v == null) {
+        outputs.block3 = null;
+        document.getElementById("b3_out").textContent = "—";
+        setMsg("b3_msg", "输入无效，无法计算 E = 0.5 · m · v²", true);
+        logLines.push("[Block3] 计算失败：输入无效");
+        return null;
+      }
+
+      const E = 0.5 * m * v * v;
+      outputs.block3 = E;
+      document.getElementById("b3_out").textContent = fmt(E);
+      setMsg("b3_msg", `使用 m=${fmt(m)}, v=${fmt(v)} 计算得到 E=${fmt(E)}`, false);
+      logLines.push(`[Block3] m=${fmt(m)}, v=${fmt(v)} → E=${fmt(E)}`);
+      return E;
+    }
+
+    return null;
+  }
+
+  function runSequence() {
+    const order = [
+      document.getElementById("step1").value,
+      document.getElementById("step2").value,
+      document.getElementById("step3").value,
+    ];
+
+    const logLines = [];
+    logLines.push("执行顺序: " + order.join(" → ") + "\n");
+
+    for (const blk of order) {
+      logLines.push("=== 计算 " + blk + " ===");
+      computeBlock(blk, logLines);
+      logLines.push("");
+    }
+
+    document.getElementById("log").textContent = logLines.join("\n");
+  }
+
+  function resetAll() {
+    outputs.block1 = outputs.block2 = outputs.block3 = null;
+    document.getElementById("b1_out").textContent = "—";
+    document.getElementById("b2_out").textContent = "—";
+    document.getElementById("b3_out").textContent = "—";
+    setMsg("b1_msg", "");
+    setMsg("b2_msg", "");
+    setMsg("b3_msg", "");
+    document.getElementById("log").textContent = "";
+  }
+</script>
+
+</body>
+</html>
