@@ -2,13 +2,12 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>可视化拖拽计算 Demo（Drawflow + Chart.js）</title>
+  <title>Physics Formula Flow Chart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Drawflow 样式 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/drawflow@0.0.54/dist/drawflow.min.css">
 
-  <!-- 简单页面样式 -->
   <style>
     * { box-sizing: border-box; }
     body {
@@ -17,277 +16,388 @@
       background: #f3f4f6;
       color: #111827;
     }
-    h1 {
-      font-size: 1.2rem;
-      margin: 0;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+
+    .container {
+      display: flex;
       height: 100vh;
+      gap: 1rem;
+      padding: 1rem;
     }
+
+    /* Drawflow takes 1/4 of the page */
     #drawflow-wrapper {
+      flex: 0 0 25%;
+      min-width: 300px;
       position: relative;
-      background: #111827;
+      background: #1f2937;
+      border-radius: 0.5rem;
+      overflow: hidden;
     }
+
     #drawflow {
       width: 100%;
       height: 100%;
     }
-    .sidebar {
-      padding: 1rem 1.25rem;
-      background: #ffffff;
-      border-left: 1px solid #e5e7eb;
+
+    /* Results and charts take 3/4 */
+    .results-area {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 1rem;
+      overflow: auto;
     }
-    .sidebar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
+
+    .control-panel {
+      background: white;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
+
     .btn {
-      padding: 0.4rem 0.75rem;
-      border-radius: 999px;
-      border: 1px solid #111827;
-      background: #111827;
-      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      border: none;
+      background: #2563eb;
+      color: white;
       cursor: pointer;
       font-size: 0.9rem;
+      font-weight: 500;
     }
     .btn:hover {
-      background: #1f2937;
+      background: #1d4ed8;
     }
-    #result-box {
-      padding: 0.5rem 0.75rem;
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .result-card {
+      background: white;
+      padding: 1rem;
       border-radius: 0.5rem;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      font-size: 0.9rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
-    #result-value {
+
+    .result-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      color: #374151;
+    }
+
+    .result-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #059669;
+    }
+
+    .chart-container {
+      background: white;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      height: 400px;
+    }
+
+    /* Formula node styles */
+    .formula-node {
+      padding: 0.75rem;
+      min-width: 140px;
+    }
+
+    .formula-title {
+      font-size: 0.7rem;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .formula-display {
+      font-size: 1.1rem;
       font-weight: 600;
       color: #111827;
-    }
-    #chart-container {
-      flex: 1;
-      min-height: 0;
-    }
-    #chart {
-      width: 100%;
-      height: 100%;
-    }
-    .hint {
-      font-size: 0.8rem;
-      color: #6b7280;
-      line-height: 1.4;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding: 0.5rem 0;
     }
 
-    /* 自定义节点内部样式 */
-    .node-constant {
-      padding: 0.25rem 0.3rem;
-      font-size: 0.75rem;
+    .input-label, .output-label {
+      font-size: 0.65rem;
+      color: #6b7280;
+      margin: 0.15rem 0;
     }
-    .node-constant label {
+
+    /* Input node with editable value */
+    .input-node {
+      padding: 0.5rem;
+      min-width: 100px;
+    }
+
+    .input-node label {
       display: block;
       font-size: 0.7rem;
-      margin-bottom: 0.1rem;
-      color: #4b5563;
-    }
-    .node-constant input {
-      width: 80px;
-      padding: 0.1rem 0.25rem;
-      font-size: 0.75rem;
-    }
-    .node-mul, .node-output {
-      padding: 0.35rem 0.4rem;
-      font-size: 0.8rem;
-      text-align: center;
-    }
-    .node-output-value {
-      margin-top: 0.25rem;
-      font-size: 0.8rem;
-      color: #16a34a;
-      font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
     }
 
-    /* 让节点稍微现代一点 */
+    .input-node input {
+      width: 100%;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+      font-size: 0.85rem;
+    }
+
+    .input-node .var-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #111827;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Output display node */
+    .output-node {
+      padding: 0.75rem;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .output-node .label {
+      font-size: 0.7rem;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
+    }
+
+    .output-node .value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #059669;
+    }
+
+    /* Custom node appearance */
     .drawflow-node {
       border-radius: 0.5rem !important;
-      border-color: #9ca3af !important;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
-      background: #f9fafb !important;
+      border: 2px solid #9ca3af !important;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      background: #ffffff !important;
     }
+
     .drawflow-node.selected {
       border-color: #2563eb !important;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+    }
+
+    .drawflow .connection .main-path {
+      stroke: #3b82f6 !important;
+      stroke-width: 2px !important;
     }
   </style>
 </head>
 <body>
-  <div class="layout">
-    <!-- 左侧：Drawflow 画布 -->
+  <div class="container">
+    <!-- Left: Drawflow Chart (1/4 of page) -->
     <div id="drawflow-wrapper">
       <div id="drawflow"></div>
     </div>
 
-    <!-- 右侧：结果 + 按钮 + 图表 -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1>拖拽计算 Demo</h1>
-        <button id="run-btn" class="btn">运行计算并画图</button>
+    <!-- Right: Results Area (3/4 of page) -->
+    <div class="results-area">
+      <div class="control-panel">
+        <h2 style="margin: 0 0 1rem 0;">Physics Formula Calculator</h2>
+        <button id="run-btn" class="btn">Calculate All Values</button>
       </div>
 
-      <div id="result-box">
-        当前输出值：<span id="result-value">（尚未计算）</span>
+      <div class="results-grid" id="results-grid">
+        <!-- Results will be populated here -->
       </div>
 
-      <div id="chart-container">
+      <div class="chart-container">
         <canvas id="chart"></canvas>
       </div>
-
-      <p class="hint">
-        使用说明：<br>
-        · 左边有两个"常数"节点和一个"乘法"节点、一个"输出"节点。<br>
-        · 修改常数里的数值，或者拖动连线改变输入。<br>
-        · 点击「运行计算并画图」，程序会：<br>
-        &nbsp;&nbsp;1）按连线顺序，从常数 → 乘法 → 输出，求出最终输出值 k；<br>
-        &nbsp;&nbsp;2）在右侧画出 y = k · t （0 ≤ t ≤ 10） 的折线图。<br>
-        这只是一个最小 demo，后面可以一起扩展成更复杂的物理/信号系统编辑器。
-      </p>
-    </aside>
+    </div>
   </div>
 
-  <!-- Drawflow 与 Chart.js 脚本 -->
+  <!-- Drawflow & Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/drawflow@0.0.54/dist/drawflow.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <script>
-    // 初始化 Drawflow
+    // Initialize Drawflow
     const container = document.getElementById('drawflow');
     const editor = new Drawflow(container);
     editor.start();
 
-    // 在画布中居中一点
-    editor.zoom_value = 0.8;
-    editor.precanvas.style.transform = "translate(200px, 80px) scale(0.8)";
+    editor.zoom_value = 1.0;
+    editor.precanvas.style.transform = "translate(20px, 20px) scale(1.0)";
 
-    // 辅助：为常数节点绑定 input -> data.value
-    function bindConstantInput(nodeId) {
-      const inputEl = document.querySelector('#node-' + nodeId + ' input');
-      if (!inputEl) return;
-      inputEl.addEventListener('input', () => {
-        const node = editor.getNodeFromId(nodeId);
-        const v = parseFloat(inputEl.value);
-        node.data.value = isNaN(v) ? 0 : v;
-      });
+    // Helper: bind input field to node data
+    function bindInputField(nodeId, varName) {
+      setTimeout(() => {
+        const inputEl = document.querySelector('#node-' + nodeId + ' input');
+        if (!inputEl) return;
+        inputEl.addEventListener('input', () => {
+          const node = editor.getNodeFromId(nodeId);
+          const v = parseFloat(inputEl.value);
+          node.data.value = isNaN(v) ? 0 : v;
+        });
+      }, 100);
     }
 
-    // 创建常数节点
-    function addConstantNode(value, x, y) {
+    // Create input node (e.g., s=10, t=2)
+    function addInputNode(varName, value, x, y) {
       const html = `
-        <div class="node-constant">
-          <label>常数</label>
-          <input type="number" value="${value}">
+        <div class="input-node">
+          <label>Input</label>
+          <div class="var-name">${varName} =</div>
+          <input type="number" value="${value}" step="0.1">
         </div>
       `;
       const id = editor.addNode(
-        'constant',   // name
-        0,            // inputs
-        1,            // outputs
+        'input',
+        0,  // no inputs
+        1,  // one output
         x, y,
-        'constant',   // class
-        { value: value },
+        'input',
+        { varName: varName, value: value },
         html
       );
-      bindConstantInput(id);
+      bindInputField(id, varName);
       return id;
     }
 
-    // 创建乘法节点：将其所有输入相乘
-    function addMultiplyNode(x, y) {
-      const html = `<div class="node-mul"><strong>乘法：所有输入相乘</strong></div>`;
-      const id = editor.addNode(
-        'multiply',
-        2,   // 有两个输入端口 input_1, input_2
-        1,   // 一个输出端口 output_1
-        x, y,
-        'multiply',
-        {},
-        html
-      );
-      return id;
-    }
+    // Create formula node (e.g., v = s/t)
+    // Inputs: array of variable names, e.g., ['s', 't']
+    // Output: variable name, e.g., 'v'
+    // Formula: string to display, e.g., 'v = s / t'
+    // evalFunc: function(inputs) => output value
+    function addFormulaNode(formula, inputVars, outputVar, evalFunc, x, y) {
+      const inputLabels = inputVars.map((v, i) =>
+        `<div class="input-label">← ${v}</div>`
+      ).join('');
 
-    // 创建输出节点：展示最终数值
-    function addOutputNode(x, y) {
       const html = `
-        <div class="node-output">
-          <div><strong>输出节点</strong></div>
-          <div class="node-output-value" data-output-value>k = ?</div>
+        <div class="formula-node">
+          <div class="formula-title">Formula</div>
+          <div class="formula-display">${formula}</div>
+          <div style="font-size: 0.7rem; margin-top: 0.25rem;">
+            ${inputLabels}
+            <div class="output-label">→ ${outputVar}</div>
+          </div>
+        </div>
+      `;
+
+      const id = editor.addNode(
+        'formula',
+        inputVars.length,  // number of inputs
+        1,                 // one output
+        x, y,
+        'formula',
+        {
+          formula: formula,
+          inputVars: inputVars,
+          outputVar: outputVar,
+          evalFunc: evalFunc
+        },
+        html
+      );
+      return id;
+    }
+
+    // Create output display node
+    function addOutputNode(varName, x, y) {
+      const html = `
+        <div class="output-node">
+          <div class="label">Output</div>
+          <div class="value" data-output-value>${varName} = ?</div>
         </div>
       `;
       const id = editor.addNode(
         'output',
-        1,   // 一个输入
-        0,   // 无输出
+        1,  // one input
+        0,  // no outputs
         x, y,
         'output',
-        {},
+        { varName: varName },
         html
       );
       return id;
     }
 
-    // 预先布置几个节点
-    const idConst1 = addConstantNode(2, 50, 50);
-    const idConst2 = addConstantNode(3, 50, 220);
-    const idMul    = addMultiplyNode(350, 140);
-    const idOut    = addOutputNode(600, 140);
+    // Setup example: s, t → v=s/t → v, t → a=v/t → a
+    const nodeS = addInputNode('s', 10, 50, 50);
+    const nodeT1 = addInputNode('t', 2, 50, 150);
 
-    // 连线：const1 -> mul, const2 -> mul, mul -> out
-    editor.addConnection(idConst1, 'output_1', idMul, 'input_1');
-    editor.addConnection(idConst2, 'output_1', idMul, 'input_2');
-    editor.addConnection(idMul, 'output_1', idOut, 'input_1');
+    const nodeV = addFormulaNode(
+      'v = s / t',
+      ['s', 't'],
+      'v',
+      (inputs) => inputs[0] / inputs[1],
+      250, 100
+    );
 
-    // 图计算：递归求值
+    const nodeT2 = addInputNode('t', 5, 50, 300);
+
+    const nodeA = addFormulaNode(
+      'a = v / t',
+      ['v', 't'],
+      'a',
+      (inputs) => inputs[0] / inputs[1],
+      450, 200
+    );
+
+    const nodeOut = addOutputNode('a', 650, 200);
+
+    // Connect nodes
+    editor.addConnection(nodeS, 'output_1', nodeV, 'input_1');
+    editor.addConnection(nodeT1, 'output_1', nodeV, 'input_2');
+    editor.addConnection(nodeV, 'output_1', nodeA, 'input_1');
+    editor.addConnection(nodeT2, 'output_1', nodeA, 'input_2');
+    editor.addConnection(nodeA, 'output_1', nodeOut, 'input_1');
+
+    // Evaluation engine
     function evaluateNode(id, nodes, cache) {
       if (cache[id] !== undefined) return cache[id];
 
       const node = nodes[id];
       let value = 0;
 
-      if (node.name === 'constant') {
+      if (node.name === 'input') {
         value = parseFloat(node.data.value);
         if (isNaN(value)) value = 0;
-      } else {
-        // 收集该节点所有输入端口的上游节点值
-        const inputs = node.inputs || {};
+      } else if (node.name === 'formula') {
+        // Collect input values in order
         const inputValues = [];
+        const inputs = node.inputs || {};
 
-        for (const portName of Object.keys(inputs)) {
+        // Get inputs in order (input_1, input_2, ...)
+        for (let i = 1; i <= node.data.inputVars.length; i++) {
+          const portName = 'input_' + i;
           const port = inputs[portName];
-          (port.connections || []).forEach(conn => {
-            const fromId = conn.node;       // 上游节点 ID（字符串）
+          if (port && port.connections && port.connections.length > 0) {
+            const conn = port.connections[0];
+            const fromId = conn.node;
             const v = evaluateNode(fromId, nodes, cache);
             inputValues.push(v);
-          });
+          } else {
+            inputValues.push(0);
+          }
         }
 
-        if (node.name === 'multiply') {
-          // 所有输入相乘，若没有输入则为 0
-          if (inputValues.length === 0) {
-            value = 0;
-          } else {
-            value = inputValues.reduce((acc, v) => acc * v, 1);
-          }
-        } else if (node.name === 'output') {
-          // 输出节点：直接把第一个输入的值作为输出
-          value = inputValues.length > 0 ? inputValues[0] : 0;
-        } else {
-          // 未定义类型：简单地把第一个输入传递下去
-          value = inputValues.length > 0 ? inputValues[0] : 0;
+        // Evaluate formula
+        if (typeof node.data.evalFunc === 'function') {
+          value = node.data.evalFunc(inputValues);
+        }
+      } else if (node.name === 'output') {
+        const inputs = node.inputs || {};
+        const port = inputs['input_1'];
+        if (port && port.connections && port.connections.length > 0) {
+          const conn = port.connections[0];
+          const fromId = conn.node;
+          value = evaluateNode(fromId, nodes, cache);
         }
       }
 
@@ -295,42 +405,68 @@
       return value;
     }
 
-    // 运行整张图：找到 output 节点并求值
-    function runGraphAndGetOutput() {
+    // Run calculation
+    function runCalculation() {
       const exported = editor.export();
       const nodes = exported.drawflow.Home.data;
-      let outputId = null;
+      const cache = {};
+      const results = {};
 
+      // Evaluate all nodes
       for (const id of Object.keys(nodes)) {
-        if (nodes[id].name === 'output') {
-          outputId = id;
-          break;
+        const node = nodes[id];
+        const value = evaluateNode(id, nodes, cache);
+
+        if (node.name === 'input') {
+          results[node.data.varName] = value;
+        } else if (node.name === 'formula') {
+          results[node.data.outputVar] = value;
+        } else if (node.name === 'output') {
+          results[node.data.varName] = value;
+
+          // Update output display in node
+          const outNodeDom = document.querySelector('#node-' + id + ' [data-output-value]');
+          if (outNodeDom) {
+            outNodeDom.textContent = node.data.varName + ' = ' + value.toFixed(4);
+          }
         }
       }
-      if (!outputId) return 0;
 
-      const cache = {};
-      const result = evaluateNode(outputId, nodes, cache);
-
-      // 更新输出节点中的显示文字
-      const outNodeDom = document.querySelector('#node-' + outputId + ' [data-output-value]');
-      if (outNodeDom) {
-        outNodeDom.textContent = 'k = ' + result.toFixed(4);
-      }
-      return result;
+      return results;
     }
 
-    // Chart.js：画 y = k * t
+    // Display results
+    function displayResults(results) {
+      const grid = document.getElementById('results-grid');
+      grid.innerHTML = '';
+
+      for (const [varName, value] of Object.entries(results)) {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+          <h3>${varName}</h3>
+          <div class="result-value">${value.toFixed(4)}</div>
+        `;
+        grid.appendChild(card);
+      }
+    }
+
+    // Plot results
     let chartInstance = null;
-    function plotLine(k) {
+    function plotResults(results) {
       const ctx = document.getElementById('chart').getContext('2d');
+
+      // Generate time series using acceleration
+      const a = results.a || 0;
+      const v0 = results.v || 0;
       const t = [];
-      const y = [];
-      const maxT = 10;
-      const step = 0.1;
-      for (let x = 0; x <= maxT + 1e-9; x += step) {
-        t.push(parseFloat(x.toFixed(2)));
-        y.push(k * x);
+      const velocity = [];
+      const displacement = [];
+
+      for (let time = 0; time <= 10; time += 0.5) {
+        t.push(time);
+        velocity.push(v0 + a * time);
+        displacement.push(v0 * time + 0.5 * a * time * time);
       }
 
       if (chartInstance) {
@@ -341,40 +477,46 @@
         type: 'line',
         data: {
           labels: t,
-          datasets: [{
-            label: 'y = k · t',
-            data: y,
-            pointRadius: 0,
-            borderWidth: 2,
-            tension: 0.1
-          }]
+          datasets: [
+            {
+              label: 'Velocity v(t) = v₀ + at',
+              data: velocity,
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              tension: 0.1
+            },
+            {
+              label: 'Displacement s(t) = v₀t + ½at²',
+              data: displacement,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              tension: 0.1
+            }
+          ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            x: { title: { display: true, text: 't' } },
-            y: { title: { display: true, text: 'y' } }
+            x: { title: { display: true, text: 'Time (s)' } },
+            y: { title: { display: true, text: 'Value' } }
           }
         }
       });
     }
 
-    // 点击按钮：运行 + 画图
-    const runBtn = document.getElementById('run-btn');
-    const resultSpan = document.getElementById('result-value');
-
-    runBtn.addEventListener('click', () => {
-      const k = runGraphAndGetOutput();
-      resultSpan.textContent = k.toFixed(4);
-      plotLine(k);
+    // Button handler
+    document.getElementById('run-btn').addEventListener('click', () => {
+      const results = runCalculation();
+      displayResults(results);
+      plotResults(results);
     });
 
-    // 首次自动跑一遍
+    // Auto-run on load
     window.addEventListener('load', () => {
-      const k = runGraphAndGetOutput();
-      resultSpan.textContent = k.toFixed(4);
-      plotLine(k);
+      const results = runCalculation();
+      displayResults(results);
+      plotResults(results);
     });
   </script>
 </body>
