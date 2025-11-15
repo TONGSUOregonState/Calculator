@@ -29,6 +29,41 @@
       font-size: 18px;
       margin: 0 0 12px;
     }
+
+    /* Category styles */
+    .category {
+      margin-bottom: 12px;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: rgba(59,130,246,0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .category-header:hover {
+      background: rgba(59,130,246,0.3);
+    }
+    .category-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #93c5fd;
+    }
+    .category-toggle {
+      font-size: 12px;
+      color: #93c5fd;
+    }
+    .category-items {
+      margin-top: 6px;
+      padding-left: 8px;
+    }
+    .category-items.collapsed {
+      display: none;
+    }
+
     .formula-item {
       margin-bottom: 8px;
       padding: 6px 8px;
@@ -205,15 +240,15 @@
   <div class="sidebar">
     <h1>📐 物理公式库</h1>
     <p style="font-size: 12px; color: #9ca3af; margin-bottom: 12px;">
-      勾选公式创建Block，输入框支持引用其他Block
+      选择公式创建Block（按勾选顺序编号）
     </p>
-    <div id="formula-list"></div>
+    <div id="formula-categories"></div>
   </div>
 
   <!-- 右侧：Blocks + 控制 -->
   <div class="main">
     <div class="top-bar">
-      <h1>🔗 公式流水线</h1>
+      <h1>🔗 公式流水线（按勾选顺序执行）</h1>
       <button id="runBtn" class="btn-primary">▶ Run Pipeline</button>
       <button id="clearBtn" class="btn-secondary">Clear All</button>
       <div class="instruction">
@@ -231,90 +266,105 @@
   </div>
 
 <script>
-// 10 个大学物理1力学公式定义
-const FORMULAS = [
+// 公式分类定义
+const FORMULA_CATEGORIES = [
   {
-    id: 'x_xt_v0_a_t',
-    name: '1. 匀加速直线运动位移',
-    formulaText: 'x = x0 + v0·t + 1/2·a·t²',
-    inputs: ['x0', 'v0', 'a', 't'],
-    output: 'x',
-    compute: ({ x0, v0, a, t }) => x0 + v0 * t + 0.5 * a * t * t
+    name: '运动学 Kinematics',
+    formulas: [
+      {
+        id: 'x_xt_v0_a_t',
+        name: '匀加速直线运动位移',
+        formulaText: 'x = x0 + v0·t + 1/2·a·t²',
+        inputs: ['x0', 'v0', 'a', 't'],
+        output: 'x',
+        compute: ({ x0, v0, a, t }) => x0 + v0 * t + 0.5 * a * t * t
+      },
+      {
+        id: 'v_v0_at',
+        name: '匀加速末速度',
+        formulaText: 'v = v0 + a·t',
+        inputs: ['v0', 'a', 't'],
+        output: 'v',
+        compute: ({ v0, a, t }) => v0 + a * t
+      },
+      {
+        id: 'v2_v02_2a_x_x0',
+        name: '速度-位移关系',
+        formulaText: 'v² = v0² + 2·a·(x − x0)',
+        inputs: ['v0', 'a', 'x', 'x0'],
+        output: 'v',
+        compute: ({ v0, a, x, x0 }) => {
+          const val = v0 * v0 + 2 * a * (x - x0);
+          return val >= 0 ? Math.sqrt(val) : NaN;
+        }
+      },
+      {
+        id: 'ac_v2_r',
+        name: '向心加速度',
+        formulaText: 'a_c = v² / r',
+        inputs: ['v', 'r'],
+        output: 'a_c',
+        compute: ({ v, r }) => r === 0 ? NaN : v * v / r
+      }
+    ]
   },
   {
-    id: 'v_v0_at',
-    name: '2. 匀加速末速度',
-    formulaText: 'v = v0 + a·t',
-    inputs: ['v0', 'a', 't'],
-    output: 'v',
-    compute: ({ v0, a, t }) => v0 + a * t
+    name: '动力学 Dynamics',
+    formulas: [
+      {
+        id: 'F_ma',
+        name: '牛顿第二定律',
+        formulaText: 'F = m·a',
+        inputs: ['m', 'a'],
+        output: 'F',
+        compute: ({ m, a }) => m * a
+      }
+    ]
   },
   {
-    id: 'v2_v02_2a_x_x0',
-    name: '3. 无时间变量速度关系',
-    formulaText: 'v² = v0² + 2·a·(x − x0)',
-    inputs: ['v0', 'a', 'x', 'x0'],
-    output: 'v',
-    compute: ({ v0, a, x, x0 }) => {
-      const val = v0 * v0 + 2 * a * (x - x0);
-      return val >= 0 ? Math.sqrt(val) : NaN;
-    }
-  },
-  {
-    id: 'F_ma',
-    name: '4. 力的基本定义',
-    formulaText: 'F = m·a',
-    inputs: ['m', 'a'],
-    output: 'F',
-    compute: ({ m, a }) => m * a
-  },
-  {
-    id: 'K_1_2mv2',
-    name: '5. 动能',
-    formulaText: 'K = 1/2·m·v²',
-    inputs: ['m', 'v'],
-    output: 'K',
-    compute: ({ m, v }) => 0.5 * m * v * v
-  },
-  {
-    id: 'W_Fd',
-    name: '6. 功（同方向）',
-    formulaText: 'W = F·d',
-    inputs: ['F', 'd'],
-    output: 'W',
-    compute: ({ F, d }) => F * d
-  },
-  {
-    id: 'Wnet_deltaK',
-    name: '7. 动能定理',
-    formulaText: 'W_net = 1/2·m·v² − 1/2·m·v0²',
-    inputs: ['m', 'v', 'v0'],
-    output: 'W_net',
-    compute: ({ m, v, v0 }) => 0.5 * m * (v*v - v0*v0)
-  },
-  {
-    id: 'Ug_mgh',
-    name: '8. 重力势能',
-    formulaText: 'Ug = m·g·h（g 默认 9.8）',
-    inputs: ['m', 'h', 'g'],
-    output: 'Ug',
-    compute: ({ m, h, g }) => m * (g || 9.8) * h
-  },
-  {
-    id: 'P_W_t',
-    name: '9. 功率（平均）',
-    formulaText: 'P = W / t',
-    inputs: ['W', 't'],
-    output: 'P',
-    compute: ({ W, t }) => t === 0 ? NaN : W / t
-  },
-  {
-    id: 'ac_v2_r',
-    name: '10. 向心加速度',
-    formulaText: 'a_c = v² / r',
-    inputs: ['v', 'r'],
-    output: 'a_c',
-    compute: ({ v, r }) => r === 0 ? NaN : v * v / r
+    name: '能量与功率 Energy & Power',
+    formulas: [
+      {
+        id: 'K_1_2mv2',
+        name: '动能',
+        formulaText: 'K = 1/2·m·v²',
+        inputs: ['m', 'v'],
+        output: 'K',
+        compute: ({ m, v }) => 0.5 * m * v * v
+      },
+      {
+        id: 'W_Fd',
+        name: '功（同方向）',
+        formulaText: 'W = F·d',
+        inputs: ['F', 'd'],
+        output: 'W',
+        compute: ({ F, d }) => F * d
+      },
+      {
+        id: 'Wnet_deltaK',
+        name: '动能定理',
+        formulaText: 'W_net = 1/2·m·v² − 1/2·m·v0²',
+        inputs: ['m', 'v', 'v0'],
+        output: 'W_net',
+        compute: ({ m, v, v0 }) => 0.5 * m * (v*v - v0*v0)
+      },
+      {
+        id: 'Ug_mgh',
+        name: '重力势能',
+        formulaText: 'Ug = m·g·h（g默认9.8）',
+        inputs: ['m', 'h', 'g'],
+        output: 'Ug',
+        compute: ({ m, h, g }) => m * (g || 9.8) * h
+      },
+      {
+        id: 'P_W_t',
+        name: '平均功率',
+        formulaText: 'P = W / t',
+        inputs: ['W', 't'],
+        output: 'P',
+        compute: ({ W, t }) => t === 0 ? NaN : W / t
+      }
+    ]
   }
 ];
 
@@ -326,40 +376,84 @@ function fmt(x) {
   return Number(x).toFixed(4).replace(/\.?0+$/, '');
 }
 
-// 渲染左侧公式列表
-const formulaListEl = document.getElementById('formula-list');
+// 渲染分类公式列表
+const categoriesEl = document.getElementById('formula-categories');
 const blocksContainer = document.getElementById('blocks-container');
 const resultsEl = document.getElementById('results');
 
-// 存储已创建的 Block
-const activeBlocks = []; // 按顺序存储 {formula, element, outputs}
+// 存储已创建的 Block（按勾选顺序）
+const activeBlocks = [];
 
-FORMULAS.forEach(f => {
-  const item = document.createElement('div');
-  item.className = 'formula-item';
-  const id = 'chk_' + f.id;
+// 创建分类
+FORMULA_CATEGORIES.forEach((category, catIdx) => {
+  const catDiv = document.createElement('div');
+  catDiv.className = 'category';
 
-  item.innerHTML = `
-    <label for="${id}">
-      <input type="checkbox" id="${id}" data-formula-id="${f.id}">
-      <div>
-        <div class="formula-name">${f.name}</div>
-        <div class="formula-brief">${f.formulaText}</div>
-      </div>
-    </label>
+  const headerDiv = document.createElement('div');
+  headerDiv.className = 'category-header';
+  headerDiv.innerHTML = `
+    <span class="category-title">${category.name}</span>
+    <span class="category-toggle">▼</span>
   `;
-  formulaListEl.appendChild(item);
+
+  const itemsDiv = document.createElement('div');
+  itemsDiv.className = 'category-items';
+
+  // 创建公式项
+  category.formulas.forEach((f) => {
+    const item = document.createElement('div');
+    item.className = 'formula-item';
+    const id = 'chk_' + f.id;
+
+    item.innerHTML = `
+      <label for="${id}">
+        <input type="checkbox" id="${id}" data-formula-id="${f.id}">
+        <div>
+          <div class="formula-name">${f.name}</div>
+          <div class="formula-brief">${f.formulaText}</div>
+        </div>
+      </label>
+    `;
+    itemsDiv.appendChild(item);
+  });
+
+  // 折叠/展开功能
+  headerDiv.addEventListener('click', () => {
+    const toggle = headerDiv.querySelector('.category-toggle');
+    if (itemsDiv.classList.contains('collapsed')) {
+      itemsDiv.classList.remove('collapsed');
+      toggle.textContent = '▼';
+    } else {
+      itemsDiv.classList.add('collapsed');
+      toggle.textContent = '▶';
+    }
+  });
+
+  catDiv.appendChild(headerDiv);
+  catDiv.appendChild(itemsDiv);
+  categoriesEl.appendChild(catDiv);
 });
 
+// 获取公式对象
+function getFormulaById(id) {
+  for (const cat of FORMULA_CATEGORIES) {
+    const found = cat.formulas.find(f => f.id === id);
+    if (found) return found;
+  }
+  return null;
+}
+
 // 勾选创建 Block
-formulaListEl.addEventListener('change', e => {
+categoriesEl.addEventListener('change', e => {
   if (e.target.matches('input[type="checkbox"][data-formula-id]')) {
     const formulaId = e.target.dataset.formulaId;
-    const formula = FORMULAS.find(f => f.id === formulaId);
+    const formula = getFormulaById(formulaId);
     if (!formula) return;
 
     if (e.target.checked) {
-      const blockEl = createBlockElement(formula, activeBlocks.length + 1);
+      // 按勾选顺序添加
+      const blockNumber = activeBlocks.length + 1;
+      const blockEl = createBlockElement(formula, blockNumber);
       blocksContainer.appendChild(blockEl);
       activeBlocks.push({
         formula,
@@ -367,11 +461,12 @@ formulaListEl.addEventListener('change', e => {
         output: null
       });
     } else {
+      // 删除并重新编号
       const idx = activeBlocks.findIndex(b => b.formula.id === formulaId);
       if (idx >= 0) {
         activeBlocks[idx].element.remove();
         activeBlocks.splice(idx, 1);
-        // 重新编号
+        // 重新编号所有Block
         activeBlocks.forEach((b, i) => {
           b.element.querySelector('.block-number').textContent = `#${i + 1}`;
         });
@@ -388,7 +483,7 @@ function createBlockElement(f, number) {
   const fieldsHtml = f.inputs.map(name => `
     <div class="field">
       <label>${name}:</label>
-      <input type="text" data-input-name="${name}" placeholder="数字 或 block1(x)">
+      <input type="text" data-input-name="${name}" placeholder="数字 或 #1(x)">
       <div class="hint">例: 10 或 #1(v)</div>
     </div>
   `).join('');
@@ -460,7 +555,7 @@ document.getElementById('runBtn').addEventListener('click', () => {
   }
 
   const logLines = [];
-  logLines.push('=== 开始执行流水线 ===\n');
+  logLines.push('=== 开始执行流水线（按勾选顺序） ===\n');
 
   activeBlocks.forEach((blockData, index) => {
     const { formula, element } = blockData;
