@@ -117,6 +117,23 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px;
+      margin: -4px -4px 4px -4px;
+      border-radius: 8px;
+    }
+    .block-header:hover {
+      background: #f9fafb;
+    }
+    .block-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .block-toggle {
+      font-size: 10px;
+      color: #6b7280;
     }
     .block-number {
       font-size: 11px;
@@ -124,6 +141,13 @@
       background: #111827;
       color: white;
       border-radius: 4px;
+    }
+    .block-content {
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    .block-content.collapsed {
+      max-height: 0 !important;
     }
     .block-formula {
       font-size: 11px;
@@ -509,23 +533,52 @@ function createBlockElement(f, number) {
 
   block.innerHTML = `
     <div class="block-header">
-      <span>${f.name}</span>
+      <div class="block-title">
+        <span class="block-toggle">▼</span>
+        <span>${f.name}</span>
+      </div>
       <span class="block-number">#${number}</span>
     </div>
-    <div class="block-formula">${f.formulaText}</div>
-    ${fieldsHtml}
-    <div class="output-row">
-      <div class="output-label">Output: ${f.output}</div>
-      <div class="output-value" data-output>—</div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-calc" type="button">Calculate</button>
+    <div class="block-content">
+      <div class="block-formula">${f.formulaText}</div>
+      ${fieldsHtml}
+      <div class="output-row">
+        <div class="output-label">Output: ${f.output}</div>
+        <div class="output-value" data-output>—</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-calc" type="button">Calculate</button>
+      </div>
     </div>
   `;
 
+  // Add collapse/expand handler
+  const header = block.querySelector('.block-header');
+  const content = block.querySelector('.block-content');
+  const toggle = block.querySelector('.block-toggle');
+
+  // Set initial max-height for smooth animation
+  content.style.maxHeight = content.scrollHeight + 'px';
+
+  header.addEventListener('click', (e) => {
+    // Don't collapse if clicking on the Calculate button
+    if (e.target.closest('.btn-calc')) return;
+
+    if (content.classList.contains('collapsed')) {
+      content.classList.remove('collapsed');
+      content.style.maxHeight = content.scrollHeight + 'px';
+      toggle.textContent = '▼';
+    } else {
+      content.style.maxHeight = content.scrollHeight + 'px';
+      content.classList.add('collapsed');
+      toggle.textContent = '▶';
+    }
+  });
+
   // Add individual calculate button handler
   const calcBtn = block.querySelector('.btn-calc');
-  calcBtn.addEventListener('click', () => {
+  calcBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent collapse when clicking Calculate
     calculateSingleBlock(block, f);
   });
 
@@ -541,13 +594,17 @@ function calculateSingleBlock(blockElement, formula) {
   const logLines = [];
   const inputs = {};
 
+  logLines.push(`━━━ Block #${blockIndex + 1}: ${formula.name} (单独计算) ━━━`);
+  logLines.push(`公式: ${formula.formulaText}`);
+  logLines.push(`\n📥 输入解析:`);
+
   // Collect and parse inputs
   formula.inputs.forEach(varName => {
     const inputEl = blockElement.querySelector(`input[data-input-name="${varName}"]`);
     const inputStr = inputEl.value;
 
     // Parse input (may be reference or number)
-    const value = parseInput(inputStr, blockIndex, logLines);
+    const value = parseInput(inputStr, blockIndex, logLines, varName);
     inputs[varName] = value;
 
     // Mark input if it's a reference
@@ -558,25 +615,46 @@ function calculateSingleBlock(blockElement, formula) {
     }
   });
 
+  logLines.push(`\n🔢 计算过程:`);
+  logLines.push(`  输入参数: ${JSON.stringify(inputs)}`);
+
   // Calculate output
   let result;
   try {
     result = formula.compute(inputs);
+    logLines.push(`  执行公式: ${formula.formulaText}`);
+    logLines.push(`  ✓ 计算成功`);
   } catch (err) {
     result = NaN;
+    logLines.push(`  ❌ 计算错误: ${err.message}`);
   }
 
   // Store output
   activeBlocks[blockIndex].output = result;
 
+  logLines.push(`\n📤 输出结果:`);
+  logLines.push(`  ${formula.output} = ${fmt(result)}`);
+  logLines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+
   // Update display
   const outputEl = blockElement.querySelector('[data-output]');
   outputEl.textContent = fmt(result);
+
+  // Show log in results area
+  resultsEl.textContent = logLines.join('\n');
+  resultsEl.style.display = 'block';
 }
 
-// 解析输入：支持 "block1(v)" 或 "#1(v)" 或 数字
-function parseInput(inputStr, blockIndex, logLines) {
+// 解析输入：支持 "block1(v)" 或 "#1(v)" 或 数字（增强版日志）
+function parseInput(inputStr, blockIndex, logLines, varName) {
+  const original = inputStr;
   inputStr = inputStr.trim();
+
+  // 如果为空，使用默认值
+  if (!inputStr) {
+    logLines.push(`    ${varName}: [空值] → 默认值 0`);
+    return 0;
+  }
 
   // 匹配 block1(v) 或 #1(v) 格式
   const refMatch = inputStr.match(/^(?:block)?#?(\d+)\((\w+)\)$/i);
@@ -587,33 +665,35 @@ function parseInput(inputStr, blockIndex, logLines) {
 
     // 检查引用的Block是否存在且在当前Block之前
     if (targetBlockNum < 1 || targetBlockNum >= blockIndex + 1) {
-      logLines.push(`  ⚠ 引用无效: ${inputStr} (Block #${targetBlockNum} 不存在或在后面)`);
+      logLines.push(`    ${varName}: "${inputStr}" → ⚠️ 引用无效 (Block #${targetBlockNum} 不存在或未先执行) → 使用 0`);
       return 0;
     }
 
     const targetBlock = activeBlocks[targetBlockNum - 1];
     if (!targetBlock) {
-      logLines.push(`  ⚠ 引用无效: ${inputStr} (Block #${targetBlockNum} 不存在)`);
+      logLines.push(`    ${varName}: "${inputStr}" → ⚠️ Block #${targetBlockNum} 不存在 → 使用 0`);
       return 0;
     }
 
     // 检查输出变量名是否匹配
     if (targetBlock.formula.output !== outputVar) {
-      logLines.push(`  ⚠ 引用无效: ${inputStr} (Block #${targetBlockNum} 的输出是 ${targetBlock.formula.output}，不是 ${outputVar})`);
+      logLines.push(`    ${varName}: "${inputStr}" → ⚠️ 变量名不匹配 (应为 ${targetBlock.formula.output} 而非 ${outputVar}) → 使用 Block #${targetBlockNum} 的输出 ${fmt(targetBlock.output || 0)}`);
       return targetBlock.output || 0;
     }
 
-    logLines.push(`  ✓ 引用 Block #${targetBlockNum}(${outputVar}) = ${fmt(targetBlock.output)}`);
-    return targetBlock.output;
+    const refValue = targetBlock.output !== null && targetBlock.output !== undefined ? targetBlock.output : 0;
+    logLines.push(`    ${varName}: "${inputStr}" → ✓ 引用 Block #${targetBlockNum}(${outputVar}) = ${fmt(refValue)}`);
+    return refValue;
   }
 
   // 否则尝试解析为数字
   const num = parseFloat(inputStr);
   if (!isNaN(num)) {
+    logLines.push(`    ${varName}: ${num} (直接输入)`);
     return num;
   }
 
-  logLines.push(`  ⚠ 输入无效: "${inputStr}" (使用默认值 0)`);
+  logLines.push(`    ${varName}: "${inputStr}" → ⚠️ 无法解析 → 使用默认值 0`);
   return 0;
 }
 
@@ -625,13 +705,21 @@ document.getElementById('runBtn').addEventListener('click', () => {
   }
 
   const logLines = [];
-  logLines.push('=== 开始执行流水线（按勾选顺序） ===\n');
+  const startTime = new Date();
+  logLines.push('╔════════════════════════════════════════╗');
+  logLines.push('║   🚀 开始执行流水线（按勾选顺序）   ║');
+  logLines.push('╚════════════════════════════════════════╝');
+  logLines.push(`执行时间: ${startTime.toLocaleTimeString()}`);
+  logLines.push(`总共 ${activeBlocks.length} 个 Block\n`);
 
   activeBlocks.forEach((blockData, index) => {
     const { formula, element } = blockData;
 
-    logLines.push(`>>> Block #${index + 1}: ${formula.name}`);
+    logLines.push(`${'='.repeat(50)}`);
+    logLines.push(`📦 Block #${index + 1}: ${formula.name}`);
+    logLines.push(`${'='.repeat(50)}`);
     logLines.push(`公式: ${formula.formulaText}`);
+    logLines.push(`\n📥 输入解析:`);
 
     // 收集输入
     const inputs = {};
@@ -641,7 +729,7 @@ document.getElementById('runBtn').addEventListener('click', () => {
       const inputStr = inputEl.value;
 
       // 解析输入（可能是引用或数字）
-      const value = parseInput(inputStr, index, logLines);
+      const value = parseInput(inputStr, index, logLines, varName);
       inputs[varName] = value;
 
       // 如果是引用，标记输入框
@@ -652,10 +740,15 @@ document.getElementById('runBtn').addEventListener('click', () => {
       }
     });
 
+    logLines.push(`\n🔢 计算过程:`);
+    logLines.push(`  输入参数: ${JSON.stringify(inputs)}`);
+
     // 计算输出
     let result;
     try {
       result = formula.compute(inputs);
+      logLines.push(`  执行公式: ${formula.formulaText}`);
+      logLines.push(`  ✓ 计算成功`);
     } catch (err) {
       result = NaN;
       logLines.push(`  ❌ 计算错误: ${err.message}`);
@@ -668,10 +761,27 @@ document.getElementById('runBtn').addEventListener('click', () => {
     const outputEl = element.querySelector('[data-output]');
     outputEl.textContent = fmt(result);
 
-    logLines.push(`  → ${formula.output} = ${fmt(result)}\n`);
+    logLines.push(`\n📤 输出结果:`);
+    logLines.push(`  ${formula.output} = ${fmt(result)}`);
+    logLines.push(`  状态: ${Number.isNaN(result) ? '❌ NaN' : Number.isFinite(result) ? '✓ 有效' : '⚠️ 无穷'}`);
+    logLines.push('');
   });
 
-  logLines.push('=== 流水线执行完毕 ===');
+  const endTime = new Date();
+  const duration = endTime - startTime;
+
+  logLines.push(`${'='.repeat(50)}`);
+  logLines.push('╔════════════════════════════════════════╗');
+  logLines.push('║      ✅ 流水线执行完毕                ║');
+  logLines.push('╚════════════════════════════════════════╝');
+  logLines.push(`完成时间: ${endTime.toLocaleTimeString()}`);
+  logLines.push(`执行耗时: ${duration}ms`);
+  logLines.push(`\n📊 执行汇总:`);
+
+  activeBlocks.forEach((blockData, index) => {
+    const statusIcon = Number.isNaN(blockData.output) ? '❌' : Number.isFinite(blockData.output) ? '✓' : '⚠️';
+    logLines.push(`  ${statusIcon} Block #${index + 1}: ${blockData.formula.output} = ${fmt(blockData.output)}`);
+  });
 
   resultsEl.textContent = logLines.join('\n');
   resultsEl.style.display = 'block';
