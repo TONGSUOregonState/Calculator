@@ -42,6 +42,15 @@ Physics formula calculator with block-based data flow
 
 :::
 
+::: {.g-col-6}
+### [Block Drag & Connect](./block-drag-connect.html) 🔗
+Drag-and-drop block connection demo
+- Drag blocks to reposition
+- Connect output ports to input ports
+- Auto-calculate values through connections
+
+:::
+
 ::::::
 
 ## About this site

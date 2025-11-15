@@ -25,6 +25,8 @@ website:
         text: Drawflow Visual Calc
       - href: block-formula-demo.html
         text: Block Formula Demo
+      - href: block-drag-connect.html
+        text: Block Drag & Connect
 
 format:
   html:

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Block 2-input / 1-output 拖曳连线 Demo</title>
+<style>
+  body {
+    margin: 0;
+    background: #f3f4f6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  #svg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .block {
+    width: 180px;
+    height: 120px;
+    background: #ffffff;
+    border-radius: 14px;
+    position: absolute;
+    box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+    border: 1px solid rgba(148,163,184,0.6);
+    cursor: grab;
+    user-select: none;
+    padding: 8px 10px;
+    box-sizing: border-box;
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .formula {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+
+  .io-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .io-row label {
+    font-size: 11px;
+    color: #4b5563;
+    width: 28px;
+  }
+
+  .io-row input[type="number"] {
+    flex: 1;
+    padding: 3px 6px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 12px;
+  }
+
+  .io-row input[type="number"]:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px rgba(59,130,246,0.3);
+  }
+
+  .output-label {
+    font-size: 12px;
+    margin-top: 4px;
+    color: #111827;
+  }
+
+  .output-value {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    background: #eef2ff;
+    display: inline-block;
+    margin-top: 2px;
+  }
+
+  .port {
+    width: 14px;
+    height: 14px;
+    background: #3b82f6;
+    border-radius: 50%;
+    position: absolute;
+    cursor: crosshair;
+    box-shadow: 0 0 0 2px #e5e7eb;
+  }
+
+  .input-port {
+    left: -7px;
+  }
+
+  .input-port[data-input-index="0"] {
+    top: 40px;  /* 对应 in1 */
+  }
+
+  .input-port[data-input-index="1"] {
+    top: 70px;  /* 对应 in2 */
+  }
+
+  .output-port {
+    right: -7px;
+    top: 55px;
+  }
+</style>
+</head>
+<body>
+
+<svg id="svg" width="100%" height="100%"></svg>
+
+<!-- Block 1 -->
+<div class="block" id="block1" style="top: 80px; left: 80px;" data-block-id="block1">
+  <div class="title">Block 1</div>
+  <div class="formula">out = in1 + in2</div>
+  <div class="io-row">
+    <label>in1</label>
+    <input type="number" class="num-input" data-input-index="0" value="1">
+  </div>
+  <div class="io-row">
+    <label>in2</label>
+    <input type="number" class="num-input" data-input-index="1" value="2">
+  </div>
+  <div class="output-label">out:</div>
+  <div class="output-value" data-output>3</div>
+
+  <!-- ports -->
+  <div class="port input-port" data-port-type="input" data-input-index="0"></div>
+  <div class="port input-port" data-port-type="input" data-input-index="1"></div>
+  <div class="port output-port" data-port-type="output"></div>
+</div>
+
+<!-- Block 2 -->
+<div class="block" id="block2" style="top: 260px; left: 360px;" data-block-id="block2">
+  <div class="title">Block 2</div>
+  <div class="formula">out = in1 + in2</div>
+  <div class="io-row">
+    <label>in1</label>
+    <input type="number" class="num-input" data-input-index="0" value="0">
+  </div>
+  <div class="io-row">
+    <label>in2</label>
+    <input type="number" class="num-input" data-input-index="1" value="0">
+  </div>
+  <div class="output-label">out:</div>
+  <div class="output-value" data-output>0</div>
+
+  <!-- ports -->
+  <div class="port input-port" data-port-type="input" data-input-index="0"></div>
+  <div class="port input-port" data-port-type="input" data-input-index="1"></div>
+  <div class="port output-port" data-port-type="output"></div>
+</div>
+
+<!-- Block 3（可以作为链式第三个） -->
+<div class="block" id="block3" style="top: 120px; left: 560px;" data-block-id="block3">
+  <div class="title">Block 3</div>
+  <div class="formula">out = in1 + in2</div>
+  <div class="io-row">
+    <label>in1</label>
+    <input type="number" class="num-input" data-input-index="0" value="5">
+  </div>
+  <div class="io-row">
+    <label>in2</label>
+    <input type="number" class="num-input" data-input-index="1" value="6">
+  </div>
+  <div class="output-label">out:</div>
+  <div class="output-value" data-output>11</div>
+
+  <!-- ports -->
+  <div class="port input-port" data-port-type="input" data-input-index="0"></div>
+  <div class="port input-port" data-port-type="input" data-input-index="1"></div>
+  <div class="port output-port" data-port-type="output"></div>
+</div>
+
+<script>
+const svg = document.getElementById('svg');
+
+// ====== 状态：Block 与连接关系 ======
+const blocks = {};      // blockId -> { in1, in2, out, manualIn1/2 }
+const connections = []; // { fromBlockId, toBlockId, toInputIndex }
+
+// 初始化 block 状态
+document.querySelectorAll('.block').forEach(blockEl => {
+  const id = blockEl.dataset.blockId;
+  blocks[id] = {
+    manualIn: [0, 0],
+    in: [0, 0],
+    out: 0,
+    el: blockEl
+  };
+});
+
+// 读取当前输入框，刷新计算
+function recomputeAll() {
+  // 1. 从 DOM 读取 manual 输入
+  for (const id in blocks) {
+    const blk = blocks[id];
+    const inputs = blk.el.querySelectorAll('.num-input');
+    inputs.forEach(inp => {
+      const idx = Number(inp.dataset.inputIndex);
+      const val = parseFloat(inp.value);
+      blk.manualIn[idx] = isNaN(val) ? 0 : val;
+      blk.in[idx] = blk.manualIn[idx]; // 初始 = manual
+    });
+  }
+
+  // 2. 多次迭代，传播连接的值（避免链式时一次不够）
+  for (let iter = 0; iter < 4; iter++) {
+    // 2.1 用当前 in 计算 out（这里 out = in1 + in2，你之后可以换成别的公式）
+    for (const id in blocks) {
+      const blk = blocks[id];
+      blk.out = blk.in[0] + blk.in[1];
+    }
+
+    // 2.2 用连接关系把源 out 填到目标 in 里
+    connections.forEach(conn => {
+      const fromBlk = blocks[conn.fromBlockId];
+      const toBlk = blocks[conn.toBlockId];
+      if (!fromBlk || !toBlk) return;
+      const val = fromBlk.out;
+      toBlk.in[conn.toInputIndex] = val;
+
+      // 同步写回 DOM 输入框，让你看到值被"带入"
+      const inputEl = toBlk.el.querySelector(
+        `.num-input[data-input-index="${conn.toInputIndex}"]`
+      );
+      if (inputEl) {
+        inputEl.value = val;
+      }
+    });
+  }
+
+  // 3. 将最终 out 写回 DOM
+  for (const id in blocks) {
+    const blk = blocks[id];
+    const outEl = blk.el.querySelector('[data-output]');
+    if (outEl) {
+      outEl.textContent = formatNumber(blk.out);
+    }
+  }
+}
+
+// 数字格式化
+function formatNumber(x) {
+  if (Number.isNaN(x)) return 'NaN';
+  if (!Number.isFinite(x)) return x > 0 ? '+∞' : '-∞';
+  return Number(x).toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+}
+
+// ====== Block 拖动 ======
+let draggingBlock = null;
+let offsetX = 0;
+let offsetY = 0;
+
+document.querySelectorAll('.block').forEach(block => {
+  block.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('port')) return;
+
+    draggingBlock = block;
+    offsetX = e.clientX - block.offsetLeft;
+    offsetY = e.clientY - block.offsetTop;
+    block.style.cursor = 'grabbing';
+  });
+});
+
+document.addEventListener('mousemove', e => {
+  if (draggingBlock) {
+    draggingBlock.style.left = (e.clientX - offsetX) + 'px';
+    draggingBlock.style.top = (e.clientY - offsetY) + 'px';
+    updateAllLines();
+  }
+
+  if (draggingLine) {
+    draggingLine.setAttribute('x2', e.clientX);
+    draggingLine.setAttribute('y2', e.clientY);
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (draggingBlock) draggingBlock.style.cursor = 'grab';
+  draggingBlock = null;
+});
+
+// ====== 端口拖曳连线 ======
+let draggingLine = null;
+let startPort = null;
+
+document.querySelectorAll('.port').forEach(port => {
+  port.addEventListener('mousedown', e => {
+    if (port.dataset.portType !== 'output') return;
+
+    startPort = port;
+    const rect = port.getBoundingClientRect();
+    const x = rect.left + rect.width/2;
+    const y = rect.top + rect.height/2;
+
+    draggingLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    draggingLine.setAttribute('x1', x);
+    draggingLine.setAttribute('y1', y);
+    draggingLine.setAttribute('x2', x);
+    draggingLine.setAttribute('y2', y);
+    draggingLine.setAttribute('stroke', '#3b82f6');
+    draggingLine.setAttribute('stroke-width', '3');
+    draggingLine.setAttribute('stroke-linecap', 'round');
+
+    svg.appendChild(draggingLine);
+  });
+});
+
+// 松手尝试连接
+document.querySelectorAll('.port').forEach(port => {
+  port.addEventListener('mouseup', e => {
+    if (!draggingLine || !startPort) return;
+
+    if (port.dataset.portType === 'input') {
+      finalizeConnection(startPort, port);
+    } else {
+      draggingLine.remove();
+    }
+
+    draggingLine = null;
+    startPort = null;
+  });
+});
+
+// 创建真正的连接 + line
+function finalizeConnection(outputPort, inputPort) {
+  const fromBlock = outputPort.closest('.block');
+  const toBlock = inputPort.closest('.block');
+  if (!fromBlock || !toBlock) return;
+
+  const fromId = fromBlock.dataset.blockId;
+  const toId = toBlock.dataset.blockId;
+  const inputIndex = Number(inputPort.dataset.inputIndex);
+
+  // 同一个 input 只允许一个来源：删除旧的
+  for (let i = connections.length - 1; i >= 0; i--) {
+    if (connections[i].toBlockId === toId &&
+        connections[i].toInputIndex === inputIndex) {
+      // 删除对应的旧线
+      const oldLine = svg.querySelector(
+        `line[data-from="${connections[i].fromBlockId}"][data-to="${connections[i].toBlockId}"][data-input-index="${connections[i].toInputIndex}"]`
+      );
+      if (oldLine) oldLine.remove();
+      connections.splice(i, 1);
+    }
+  }
+
+  // 添加新连接
+  connections.push({
+    fromBlockId: fromId,
+    toBlockId: toId,
+    toInputIndex: inputIndex
+  });
+
+  // 这条才是"正式线"
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.dataset.from = fromId;
+  line.dataset.to = toId;
+  line.dataset.inputIndex = inputIndex;
+  svg.appendChild(line);
+
+  updateLine(line, outputPort, inputPort);
+
+  // 更新一次计算（把 out 值带到 input 里）
+  recomputeAll();
+}
+
+// ====== 连线位置更新 ======
+function updateAllLines() {
+  svg.querySelectorAll('line[data-from]').forEach(line => {
+    const fromId = line.dataset.from;
+    const toId = line.dataset.to;
+    const idx = Number(line.dataset.inputIndex);
+
+    const fromBlk = document.querySelector(`.block[data-block-id="${fromId}"]`);
+    const toBlk = document.querySelector(`.block[data-block-id="${toId}"]`);
+
+    if (!fromBlk || !toBlk) return;
+
+    const outPort = fromBlk.querySelector('.output-port');
+    const inPort = toBlk.querySelector(`.input-port[data-input-index="${idx}"]`);
+
+    if (outPort && inPort) {
+      updateLine(line, outPort, inPort);
+    }
+  });
+}
+
+function updateLine(line, outPort, inPort) {
+  const r1 = outPort.getBoundingClientRect();
+  const r2 = inPort.getBoundingClientRect();
+
+  const x1 = r1.left + r1.width/2;
+  const y1 = r1.top + r1.height/2;
+  const x2 = r2.left + r2.width/2;
+  const y2 = r2.top + r2.height/2;
+
+  line.setAttribute('x1', x1);
+  line.setAttribute('y1', y1);
+  line.setAttribute('x2', x2);
+  line.setAttribute('y2', y2);
+  line.setAttribute('stroke', '#2563eb');
+  line.setAttribute('stroke-width', '3');
+  line.setAttribute('stroke-linecap', 'round');
+}
+
+// ====== 输入框变化时，触发重新计算 ======
+document.querySelectorAll('.num-input').forEach(inp => {
+  inp.addEventListener('input', () => {
+    recomputeAll();
+  });
+});
+
+// 初始算一次
+recomputeAll();
+</script>
+
+</body>
+</html>
