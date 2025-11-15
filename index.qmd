@@ -69,6 +69,24 @@ Auto-connected physics formula pipeline
 
 :::
 
+::: {.g-col-6}
+### [Pipeline - 1 Formula](./physics-pipeline-1formula/index.html) 🧪
+Single formula demo version
+- Simplified version with only 1 formula
+- Perfect for learning the basics
+- All features included
+
+:::
+
+::: {.g-col-6}
+### [Pipeline - 2 Formulas](./physics-pipeline-2formulas/index.html) 🔭
+Two formulas demo version
+- Velocity and displacement formulas
+- Practice connecting blocks
+- Full pipeline functionality
+
+:::
+
 ::::::
 
 ## About this site

@@ -3,6 +3,8 @@ project:
   resources:
     - "*.html"
     - "physics-pipeline/**"
+    - "physics-pipeline-1formula/**"
+    - "physics-pipeline-2formulas/**"
 
 website:
   title: "calculator"
