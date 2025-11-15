@@ -60,6 +60,15 @@ College Physics Mechanics formula calculator
 
 :::
 
+::: {.g-col-6}
+### [Physics Pipeline](./physics-blocks-pipeline.html) 🔬
+Auto-connected physics formula pipeline
+- Choose formulas, create blocks in sequence
+- Outputs auto-feed into next block inputs
+- View complete calculation flow
+
+:::
+
 ::::::
 
 ## About this site
