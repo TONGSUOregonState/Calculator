@@ -97,31 +97,38 @@
       font-family: "SF Mono", Menlo, Consolas, monospace;
     }
     .field {
-      display: flex;
-      align-items: center;
-      gap: 6px;
       margin-bottom: 6px;
       font-size: 12px;
     }
     .field label {
-      width: 38px;
+      display: block;
       color: #374151;
+      margin-bottom: 2px;
+      font-weight: 500;
     }
-    .field input[type="number"] {
-      flex: 1;
-      padding: 3px 6px;
+    .field input {
+      width: 100%;
+      padding: 4px 8px;
       border-radius: 6px;
       border: 1px solid #d1d5db;
       font-size: 12px;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
     }
-    .field input[type="number"]:disabled {
-      background: #f3f4f6;
-      color: #6b7280;
-    }
-    .field input[type="number"]:focus {
+    .field input:focus {
       outline: none;
       border-color: #3b82f6;
       box-shadow: 0 0 0 1px rgba(59,130,246,0.3);
+    }
+    .field input.referenced {
+      background: #dbeafe;
+      border-color: #3b82f6;
+      color: #1e40af;
+      font-weight: 600;
+    }
+    .field .hint {
+      font-size: 10px;
+      color: #9ca3af;
+      margin-top: 2px;
     }
     .output-row {
       margin-top: 6px;
@@ -178,18 +185,17 @@
       overflow-y: auto;
       line-height: 1.5;
     }
-    .hint {
+    .instruction {
       font-size: 12px;
       color: #6b7280;
       margin-top: 8px;
+      padding: 8px;
+      background: #f9fafb;
+      border-radius: 6px;
+      border-left: 3px solid #3b82f6;
     }
-    .auto-badge {
-      font-size: 9px;
-      padding: 1px 4px;
-      background: #dbeafe;
+    .instruction strong {
       color: #1e40af;
-      border-radius: 3px;
-      margin-left: 4px;
     }
   </style>
 </head>
@@ -199,7 +205,7 @@
   <div class="sidebar">
     <h1>📐 物理公式库</h1>
     <p style="font-size: 12px; color: #9ca3af; margin-bottom: 12px;">
-      勾选公式创建Block，按顺序自动传递计算结果
+      勾选公式创建Block，输入框支持引用其他Block
     </p>
     <div id="formula-list"></div>
   </div>
@@ -210,9 +216,12 @@
       <h1>🔗 公式流水线</h1>
       <button id="runBtn" class="btn-primary">▶ Run Pipeline</button>
       <button id="clearBtn" class="btn-secondary">Clear All</button>
-      <p class="hint">
-        Block按添加顺序执行。如果某个Block的输入在之前Block的输出中，会自动使用该值。
-      </p>
+      <div class="instruction">
+        <strong>💡 使用方法：</strong><br>
+        在输入框输入 <code>block1(v)</code> 引用Block 1的输出v<br>
+        或输入 <code>#1(x)</code> 引用第1个Block的输出x<br>
+        或直接输入数字如 <code>10</code>
+      </div>
     </div>
 
     <div class="blocks-area">
@@ -323,7 +332,7 @@ const blocksContainer = document.getElementById('blocks-container');
 const resultsEl = document.getElementById('results');
 
 // 存储已创建的 Block
-const activeBlocks = []; // 按顺序存储 {formula, element}
+const activeBlocks = []; // 按顺序存储 {formula, element, outputs}
 
 FORMULAS.forEach(f => {
   const item = document.createElement('div');
@@ -352,7 +361,11 @@ formulaListEl.addEventListener('change', e => {
     if (e.target.checked) {
       const blockEl = createBlockElement(formula, activeBlocks.length + 1);
       blocksContainer.appendChild(blockEl);
-      activeBlocks.push({ formula, element: blockEl });
+      activeBlocks.push({
+        formula,
+        element: blockEl,
+        output: null
+      });
     } else {
       const idx = activeBlocks.findIndex(b => b.formula.id === formulaId);
       if (idx >= 0) {
@@ -374,8 +387,9 @@ function createBlockElement(f, number) {
 
   const fieldsHtml = f.inputs.map(name => `
     <div class="field">
-      <label>${name}</label>
-      <input type="number" step="any" data-input-name="${name}" placeholder="0">
+      <label>${name}:</label>
+      <input type="text" data-input-name="${name}" placeholder="数字 或 block1(x)">
+      <div class="hint">例: 10 或 #1(v)</div>
     </div>
   `).join('');
 
@@ -395,6 +409,49 @@ function createBlockElement(f, number) {
   return block;
 }
 
+// 解析输入：支持 "block1(v)" 或 "#1(v)" 或 数字
+function parseInput(inputStr, blockIndex, logLines) {
+  inputStr = inputStr.trim();
+
+  // 匹配 block1(v) 或 #1(v) 格式
+  const refMatch = inputStr.match(/^(?:block)?#?(\d+)\((\w+)\)$/i);
+
+  if (refMatch) {
+    const targetBlockNum = parseInt(refMatch[1]);
+    const outputVar = refMatch[2];
+
+    // 检查引用的Block是否存在且在当前Block之前
+    if (targetBlockNum < 1 || targetBlockNum >= blockIndex + 1) {
+      logLines.push(`  ⚠ 引用无效: ${inputStr} (Block #${targetBlockNum} 不存在或在后面)`);
+      return 0;
+    }
+
+    const targetBlock = activeBlocks[targetBlockNum - 1];
+    if (!targetBlock) {
+      logLines.push(`  ⚠ 引用无效: ${inputStr} (Block #${targetBlockNum} 不存在)`);
+      return 0;
+    }
+
+    // 检查输出变量名是否匹配
+    if (targetBlock.formula.output !== outputVar) {
+      logLines.push(`  ⚠ 引用无效: ${inputStr} (Block #${targetBlockNum} 的输出是 ${targetBlock.formula.output}，不是 ${outputVar})`);
+      return targetBlock.output || 0;
+    }
+
+    logLines.push(`  ✓ 引用 Block #${targetBlockNum}(${outputVar}) = ${fmt(targetBlock.output)}`);
+    return targetBlock.output;
+  }
+
+  // 否则尝试解析为数字
+  const num = parseFloat(inputStr);
+  if (!isNaN(num)) {
+    return num;
+  }
+
+  logLines.push(`  ⚠ 输入无效: "${inputStr}" (使用默认值 0)`);
+  return 0;
+}
+
 // Run Pipeline 按钮
 document.getElementById('runBtn').addEventListener('click', () => {
   if (activeBlocks.length === 0) {
@@ -402,7 +459,6 @@ document.getElementById('runBtn').addEventListener('click', () => {
     return;
   }
 
-  const state = {}; // 全局状态存储所有变量
   const logLines = [];
   logLines.push('=== 开始执行流水线 ===\n');
 
@@ -414,29 +470,21 @@ document.getElementById('runBtn').addEventListener('click', () => {
 
     // 收集输入
     const inputs = {};
-    let hasAutoInput = false;
 
     formula.inputs.forEach(varName => {
       const inputEl = element.querySelector(`input[data-input-name="${varName}"]`);
-      let value;
+      const inputStr = inputEl.value;
 
-      // 优先从state获取（之前block的输出）
-      if (state[varName] !== undefined && state[varName] !== null) {
-        value = state[varName];
-        inputEl.value = fmt(value);
-        inputEl.disabled = true;
-        inputEl.style.background = '#f0fdf4';
-        hasAutoInput = true;
-        logLines.push(`  ${varName} = ${fmt(value)} (来自上游Block)`);
-      } else {
-        value = parseFloat(inputEl.value);
-        if (isNaN(value)) value = 0;
-        inputEl.disabled = false;
-        inputEl.style.background = '';
-        logLines.push(`  ${varName} = ${fmt(value)} (手动输入)`);
-      }
-
+      // 解析输入（可能是引用或数字）
+      const value = parseInput(inputStr, index, logLines);
       inputs[varName] = value;
+
+      // 如果是引用，标记输入框
+      if (/^(?:block)?#?\d+\(\w+\)$/i.test(inputStr.trim())) {
+        inputEl.classList.add('referenced');
+      } else {
+        inputEl.classList.remove('referenced');
+      }
     });
 
     // 计算输出
@@ -445,10 +493,11 @@ document.getElementById('runBtn').addEventListener('click', () => {
       result = formula.compute(inputs);
     } catch (err) {
       result = NaN;
+      logLines.push(`  ❌ 计算错误: ${err.message}`);
     }
 
-    // 存储到state
-    state[formula.output] = result;
+    // 存储输出
+    blockData.output = result;
 
     // 更新显示
     const outputEl = element.querySelector('[data-output]');
@@ -458,10 +507,6 @@ document.getElementById('runBtn').addEventListener('click', () => {
   });
 
   logLines.push('=== 流水线执行完毕 ===');
-  logLines.push('\n最终状态:');
-  for (const [key, value] of Object.entries(state)) {
-    logLines.push(`  ${key} = ${fmt(value)}`);
-  }
 
   resultsEl.textContent = logLines.join('\n');
   resultsEl.style.display = 'block';
@@ -472,11 +517,11 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   activeBlocks.forEach(({ element }) => {
     element.querySelectorAll('input[data-input-name]').forEach(inp => {
       inp.value = '';
-      inp.disabled = false;
-      inp.style.background = '';
+      inp.classList.remove('referenced');
     });
     element.querySelector('[data-output]').textContent = '—';
   });
+  activeBlocks.forEach(b => b.output = null);
   resultsEl.style.display = 'none';
 });
 </script>
