@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Formula Pipeline - 公式流水线</title>
+
+  <!-- CSS 样式 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 左侧：公式选择 -->
+  <div class="sidebar">
+    <h1>📐 物理公式库</h1>
+    <p style="font-size: 12px; color: #9ca3af; margin-bottom: 12px;">
+      选择公式创建Block（按勾选顺序编号）
+    </p>
+    <div id="formula-categories"></div>
+  </div>
+
+  <!-- 右侧：Blocks + 控制 -->
+  <div class="main">
+    <div class="top-bar">
+      <h1>🔗 公式流水线（按勾选顺序执行）</h1>
+      <button id="runBtn" class="btn-primary">▶ Run Pipeline</button>
+      <button id="clearBtn" class="btn-secondary">Clear All</button>
+      <div class="instruction">
+        <strong>💡 使用方法：</strong><br>
+        在输入框输入 <code>block1(v)</code> 引用Block 1的输出v<br>
+        或输入 <code>#1(x)</code> 引用第1个Block的输出x<br>
+        或直接输入数字如 <code>10</code>
+      </div>
+    </div>
+
+    <div class="blocks-area">
+      <div class="blocks-container" id="blocks-container"></div>
+      <div id="results" class="results" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript 模块（按依赖顺序加载） -->
+  <script defer src="js/utils.js"></script>
+  <script defer src="js/formulas.js"></script>
+  <script defer src="js/block-manager.js"></script>
+  <script defer src="js/calculation.js"></script>
+  <script defer src="js/ui.js"></script>
+
+</body>
+</html>

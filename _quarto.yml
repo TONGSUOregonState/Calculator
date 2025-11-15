@@ -29,7 +29,7 @@ website:
         text: Block Drag & Connect
       - href: physics-blocks.html
         text: Physics Formula Blocks
-      - href: physics-blocks-pipeline.html
+      - href: physics-pipeline/index.html
         text: Physics Pipeline
 
 format:
