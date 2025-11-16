@@ -135,7 +135,7 @@ elif solve_for == 't':
 # Return both LaTeX and numeric value
 {
     'latex': latex(result_eq),
-    'value': float(result_value),
+    'value': float(result_value.evalf()),
     'symbolic': str(solution)
 }
       `
