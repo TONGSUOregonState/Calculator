@@ -9,82 +9,104 @@ date: last-modified
 
 Welcome to my personal website where I share interactive calculators, physics simulations, and programming resources.
 
-## 🚀 Featured Projects
+---
 
-:::::: {.grid}
+## 🚀 Featured React Projects
 
-::: {.g-col-12}
-### Physics Formula Pipeline System
-
-Interactive physics calculators with block-based formula connections.
-:::
-
-::::::
-
-### 🔬 Production Versions
+All projects below use **React 18 + Vite** for modern, modular architecture.
 
 :::::: {.grid}
 
 ::: {.g-col-4}
-#### [Physics Pipeline](./physics-pipeline/index.html)
-**Vanilla JavaScript** • Full Version
+### [Physics Pipeline](./physics-pipeline-react/dist/index.html)
+⚛️ **React + Vite**
 
 - 10+ physics formulas
 - Auto-connected pipeline
-- Instant calculation
-- No build required ✅
+- Modern component architecture
+- [View Source Code](https://github.com/TONGSUOregonState/Calculator)
 :::
 
 ::: {.g-col-4}
-#### [React Pipeline](./physics-pipeline-react/dist/index.html)
-**React + Vite** • Full Version
+### [Python Runner](./donkey-react/dist/index.html)
+🐍 **Pyodide Integration**
 
-- 10+ physics formulas
-- Modern modular architecture
-- Component-based design
-- Requires build ⚠️
+- Run Python in browser
+- Code editor with syntax highlighting
+- Sequential blackbox demo
+- Real-time execution
 :::
 
 ::: {.g-col-4}
-#### [Physics Formula Blocks](./physics-blocks.html)
-**Interactive Blocks**
+### [DSP R(z) Analysis](./dsp-rz-react/dist/index.html)
+🎛️ **Signal Processing**
 
-- 10 mechanics formulas
-- Drag & calculate
-- Visual block interface
-- Quick calculations
+- Zero-pole analysis
+- SymPy computation
+- MathJax equations
+- Interactive plots
 :::
 
 ::::::
 
-### 🧪 Demo Versions (Learning)
+::: {.callout-note collapse="true"}
+## 📦 Alternative Versions (Vanilla JavaScript)
+
+**These are older, single-file versions without build requirements:**
+
+- [Physics Pipeline (Vanilla JS)](./physics-pipeline/index.html) - No build needed
+- [Python Runner (Vanilla JS)](./donkey.html) - Original version
+- [DSP R(z) Analysis (Vanilla JS)](./dsp_rz.html) - Original version
+- [Physics Formula Blocks](./physics-blocks.html) - Drag & calculate interface
+:::
+
+---
+
+## 🧪 Learning Resources & Demos
+
+::: {.panel-tabset}
+
+### React Demos
+
+**Step-by-step learning with React + Vite:**
 
 :::::: {.grid}
 
 ::: {.g-col-6}
-#### Vanilla JavaScript Demos
-- [**1 Formula Demo**](./physics-pipeline-1formula/index.html) 🧪
-  Single formula • Perfect for learning basics
+#### [React 1-Formula Demo](./physics-pipeline-react-1formula/dist/index.html)
+🧬 **Beginner Level**
 
-- [**2 Formulas Demo**](./physics-pipeline-2formulas/index.html) 🔭
-  Velocity + Displacement • Practice connections
+- Single formula implementation
+- Component structure basics
+- State management intro
+- Perfect for learning React
 :::
 
 ::: {.g-col-6}
-#### React + Vite Demos
-- [**React 1-Formula**](./physics-pipeline-react-1formula/dist/index.html) 🧬
-  Component structure • State management
+#### [React 2-Formulas Demo](./physics-pipeline-react-2formulas/dist/index.html)
+🔮 **Intermediate Level**
 
-- [**React 2-Formulas**](./physics-pipeline-react-2formulas/dist/index.html) 🔮
-  Props flow • Component composition
+- Multiple formula connections
+- Props flow between components
+- Component composition
+- Practice data passing
 :::
 
 ::::::
 
-::: {.callout-note}
-## 🛠️ React Projects Setup Required
+### Vanilla JS Demos
 
-React + Vite versions need to be built before use:
+**Simple, no-build demos for quick learning:**
+
+- [**1 Formula Demo**](./physics-pipeline-1formula/index.html) 🧪 - Single formula, instant run
+- [**2 Formulas Demo**](./physics-pipeline-2formulas/index.html) 🔭 - Velocity + Displacement connections
+
+:::
+
+::: {.callout-tip collapse="true"}
+## 🛠️ Building React Projects
+
+To build React projects locally (optional - pre-built versions already included):
 
 **Windows:**
 ```bash
@@ -96,140 +118,137 @@ build-all-react.bat
 ./build-all-react.sh
 ```
 
-See [React Projects Guide](./REACT_PROJECTS_GUIDE.md) for details.
+See [React Projects Guide](./REACT_PROJECTS_GUIDE.md) for detailed instructions.
 :::
 
 ---
 
 ## 🎯 Other Interactive Tools
 
+::: {.panel-tabset}
+
+### Block-based Calculators
+
 :::::: {.grid}
 
-::: {.g-col-4}
-### [Block Formula Demo](./block-formula-demo.html)
-🧮 **Block-based Calculator**
+::: {.g-col-6}
+#### [Block Formula Demo](./block-formula-demo.html)
+🧮 **Interactive Blocks**
 
-- Interactive v, a, d calculations
+- v, a, d calculations
 - Visual data flow
 - Manual or connected inputs
+- Drag to position
 :::
 
-::: {.g-col-4}
-### [Block Drag & Connect](./block-drag-connect.html)
-🔗 **Drag & Drop Interface**
+::: {.g-col-6}
+#### [Block Drag & Connect](./block-drag-connect.html)
+🔗 **Drag & Drop**
 
-- Reposition blocks
-- Connect ports
-- Auto-calculate
-:::
-
-::: {.g-col-4}
-### Python Runner + Block Chain
-🐍 **Pyodide-powered**
-
-- [Vanilla JS Version](./donkey.html)
-- [React Version](./donkey-react/dist/index.html) ⚛️
-- Run Python in browser
-- Sequential blackbox demo
+- Reposition blocks freely
+- Connect input/output ports
+- Auto-calculate on connection
+- Visual programming style
 :::
 
 ::::::
 
-:::::: {.grid}
+### DSP Tools
 
-::: {.g-col-6}
-### DSP R(z) Analysis
-🎛️ **Signal Processing**
+- [**DSP Tutorial**](./dsp_tutorial.html) 📚 - Learn zero-pole analysis concepts
+- [**DSP R(z) Analysis (React)**](./dsp-rz-react/dist/index.html) ⚛️ - Modern React version
+- [**DSP R(z) Analysis (Vanilla)**](./dsp_rz.html) - Original JavaScript version
 
-**Vanilla JavaScript:**
-- [DSP R(z) Analysis](./dsp_rz.html)
-- [📚 Tutorial](./dsp_tutorial.html)
+### Other Demos
 
-**React + Vite:**
-- [DSP R(z) React](./dsp-rz-react/dist/index.html) ⚛️
-- Zero-pole visualization
-- SymPy + MathJax integration
+<details>
+<summary>**Click to expand additional demos**</summary>
+
+- [Drawflow Visual Calculator](./drawflow-demo.html) - Visual node-based calculator
+- [Block Sequencer](./blocks-sequencer.html) - Sequential block execution
+- [Blocks Drag I/O](./blocks-drag-io.html) - Input/output block system
+- [PyScript Calculator](./pyscript.html) - Python-powered calculator
+
+</details>
+
 :::
-
-::: {.g-col-6}
-### Technology Features
-
-**Both versions support:**
-- Zero-pole analysis
-- SymPy-based computation
-- Interactive plots
-- Pyodide (Python in browser)
-
-**React version adds:**
-- Component-based architecture
-- Modern build tooling
-- Better code organization
-:::
-
-::::::
 
 ---
 
 ## 📚 Programming Resources
 
-:::::: {.grid}
+::: {.callout-note collapse="true"}
+## 💻 C Programming
 
-::: {.g-col-6}
-### [C Programming](./c-programming/index.qmd)
-💻 **C Language Resources**
-
-- [C Programming: Modern Approach](https://github.com/williamgherman/c-solutions)
-- [K&R Solutions](https://github.com/ohkimur/the-c-programming-language-2nd-edition-solutions)
+### External Resources
+- [C Programming: Modern Approach - Solutions](https://github.com/williamgherman/c-solutions)
+- [K&R C Solutions](https://github.com/ohkimur/the-c-programming-language-2nd-edition-solutions)
 - [DigitalJS Circuit Visualizer](https://digitaljs.tilk.eu/)
+
+### Local Resources
+- [View C Programming Section](./c-programming/index.qmd)
 :::
 
-::: {.g-col-6}
-### [MATLAB](./matlab/index.qmd)
-📊 **MATLAB Resources**
+::: {.callout-note collapse="true"}
+## 📊 MATLAB Resources
 
 - MATLAB scripts and tutorials
 - Numerical computing examples
 - Signal processing demos
-:::
 
-::::::
+[View MATLAB Section](./matlab/index.qmd)
+:::
 
 ---
 
 ## 📖 Documentation
 
+::: {.panel-tabset}
+
+### Quick Start
+
 - [**🚀 Quick Start (Netlify)**](./QUICK_START_NETLIFY.md) - 5-minute automated deployment
+- [**⚛️ React Projects Guide**](./REACT_PROJECTS_GUIDE.md) - Build and run React projects
+
+### Deployment
+
 - [**🌐 Netlify Deployment Guide**](./NETLIFY_DEPLOYMENT_GUIDE.md) - Complete CI/CD setup
-- [**⚛️ React Projects Guide**](./REACT_PROJECTS_GUIDE.md) - React setup and build
-- [**📐 React + Vite Architecture**](./README-REACT-VITE.md) - Technical details
-- [**📝 Project Updates**](./UPDATES.md) - Latest changes
+- [**📐 React + Vite Architecture**](./README-REACT-VITE.md) - Technical architecture details
+
+### Updates
+
+- [**📝 Project Updates**](./UPDATES.md) - Latest changes and version history
+
+:::
 
 ---
 
-## 🔗 Quick Links
+## 🔗 Technology Stack
 
 :::::: {.grid}
 
 ::: {.g-col-4}
-### Technology Stack
-- Quarto for static site
-- React 18 + Vite
+### Frontend
+- React 18 + Vite 5
 - Vanilla JavaScript
+- Quarto for static site
+- Pyodide (Python in browser)
+:::
+
+::: {.g-col-4}
+### Libraries
+- SymPy (symbolic math)
+- MathJax (LaTeX rendering)
+- Matplotlib (plotting)
 - PyScript integration
 :::
 
 ::: {.g-col-4}
 ### Resources
-- [Quarto Documentation](https://quarto.org)
-- [React Documentation](https://react.dev)
-- [Vite Documentation](https://vitejs.dev)
-:::
-
-::: {.g-col-4}
-### Contact
-- 🌐 [GitHub Profile](https://github.com/TONGSUOregonState)
-- 📧 Project source code available
-- ⭐ Star this project!
+- [Quarto Docs](https://quarto.org)
+- [React Docs](https://react.dev)
+- [Vite Docs](https://vitejs.dev)
+- [GitHub Repo](https://github.com/TONGSUOregonState)
 :::
 
 ::::::
@@ -240,26 +259,33 @@ See [React Projects Guide](./REACT_PROJECTS_GUIDE.md) for details.
 
 {{< include _includes/updates-badge.html >}}
 
-### Latest Features
+::: {.callout-important}
+### Latest Features (2025)
 
-- ✨ Added React + Vite modular architecture (5 React projects total)
-  - Physics Pipeline (full + 2 demos)
-  - Python Runner (Donkey) with Pyodide
+**New React Projects:**
+- ✨ **5 React + Vite projects** with modular architecture
+  - Physics Pipeline (full version + 2 learning demos)
+  - Python Runner with Pyodide integration
   - DSP R(z) Analysis with SymPy + MathJax
+
+**Improvements:**
 - 🔧 One-click build scripts for all React projects
-- 📚 Comprehensive documentation and guides
-- 🎨 Improved project organization and layout
-- 🐍 Pyodide integration for browser-based Python execution
+- 📚 Comprehensive documentation and deployment guides
+- 🎨 Reorganized project structure with collapsible sections
+- 🐍 Browser-based Python execution via Pyodide
+- 🚀 Automated Netlify deployment pipeline
+:::
 
 ---
 
 ::: {.callout-tip}
 ## 💡 Getting Started
 
-1. **Quick Start**: Try the vanilla JS versions (no setup needed)
-2. **Learn React**: Build the React demos with `build-all-react.bat`
-3. **Explore**: Check out different physics formulas and connections
-4. **Read Docs**: See the guides for customization options
+1. **Try React Projects**: Click any of the featured React projects above
+2. **Learn Gradually**: Start with 1-formula demo, progress to 2-formulas
+3. **Explore Alternatives**: Check vanilla JS versions for simpler, no-build options
+4. **Build Locally** (optional): Use `build-all-react.bat` to build from source
+5. **Read Docs**: See guides for deployment and customization
 :::
 
 ---
