@@ -1,5 +1,9 @@
 project:
   type: website
+  render:
+    - "*.qmd"
+    - "*.md"
+    - "!pyscript.qmd"  # Skip pyscript.qmd as it requires Jupyter
   resources:
     - "*.html"
     - "*.md"
