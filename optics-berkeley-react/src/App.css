@@ -1,0 +1,44 @@
+.app {
+  min-height: 100vh;
+}
+
+.header {
+  background: white;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #3498db;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.header h1 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.error-page {
+  text-align: center;
+  padding: 40px;
+}
+
+.error-page h1 {
+  color: #e74c3c;
+  margin-bottom: 20px;
+}
+
