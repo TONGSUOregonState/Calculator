@@ -1,0 +1,18 @@
+.sidebar {
+  width: 280px;
+  padding: 16px;
+  background: #111827;
+  color: #e5e7eb;
+  overflow-y: auto;
+}
+
+.sidebar h1 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+.sidebar-description {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}

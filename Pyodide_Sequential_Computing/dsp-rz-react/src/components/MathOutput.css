@@ -1,0 +1,18 @@
+.equation-box {
+  background: #f8f9fa;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+.equation-box h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.equation-box p {
+  margin: 0.5rem 0;
+  line-height: 1.8;
+}

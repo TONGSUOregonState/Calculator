@@ -49,6 +49,46 @@ All projects below use **React 18 + Vite** for modern, modular architecture.
 
 ::::::
 
+---
+
+## 🔬 Pyodide Sequential Computing Projects
+
+**Advanced React projects with Pyodide integration for browser-based Python execution.**
+
+:::::: {.grid}
+
+::: {.g-col-4}
+### [Pyodide Physics Pipeline](./Pyodide_Sequential_Computing/physics-pipeline-react/dist/index.html)
+🔗 **Sequential Pipeline**
+
+- Python-based physics formulas
+- Block-by-block execution
+- Detailed computation logs
+- Powered by Pyodide + SymPy
+:::
+
+::: {.g-col-4}
+### [Pyodide DSP R(z)](./Pyodide_Sequential_Computing/dsp-rz-react/dist/index.html)
+📡 **Signal Processing**
+
+- Advanced DSP analysis
+- Python SymPy backend
+- Zero-pole computation
+- Browser-based execution
+:::
+
+::: {.g-col-4}
+### [PyScript Pipeline](./Pyodide_Sequential_Computing/pyscript-pipeline-react/dist/index.html)
+🐍 **PyScript Integration**
+
+- PyScript + React hybrid
+- Python formulas in browser
+- Interactive calculations
+- Modern web stack
+:::
+
+::::::
+
 ::: {.callout-note collapse="true"}
 ## 📦 Alternative Versions (Vanilla JavaScript)
 
@@ -167,6 +207,7 @@ See [React Projects Guide](./REACT_PROJECTS_GUIDE.md) for detailed instructions.
 - [Drawflow Visual Calculator](./drawflow-demo.html) - Visual node-based calculator
 - [Block Sequencer](./blocks-sequencer.html) - Sequential block execution
 - [Blocks Drag I/O](./blocks-drag-io.html) - Input/output block system
+- [Physics Blocks Pipeline](./physics-blocks-pipeline.html) - Multi-formula drag pipeline
 - [PyScript Calculator](./pyscript.html) - Python-powered calculator
 
 </details>

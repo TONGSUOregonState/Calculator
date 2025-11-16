@@ -1,0 +1,63 @@
+.category {
+  margin-bottom: 12px;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(59,130,246,0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.category-header:hover {
+  background: rgba(59,130,246,0.3);
+}
+
+.category-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.category-toggle {
+  font-size: 12px;
+  color: #93c5fd;
+}
+
+.category-items {
+  margin-top: 6px;
+  padding-left: 8px;
+}
+
+.category-items.collapsed {
+  display: none;
+}
+
+.formula-item {
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(31,41,55,0.7);
+}
+
+.formula-item label {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.formula-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.formula-brief {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 2px;
+}

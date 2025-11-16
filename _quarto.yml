@@ -13,6 +13,9 @@ project:
     - "physics-pipeline-react-2formulas/dist/**"
     - "donkey-react/dist/**"
     - "dsp-rz-react/dist/**"
+    - "Pyodide_Sequential_Computing/physics-pipeline-react/dist/**"
+    - "Pyodide_Sequential_Computing/dsp-rz-react/dist/**"
+    - "Pyodide_Sequential_Computing/pyscript-pipeline-react/dist/**"
 
 website:
   title: "calculator"
@@ -28,6 +31,13 @@ website:
             text: "Python Runner"
           - href: dsp-rz-react/dist/index.html
             text: "DSP R(z) Analysis"
+          - text: "--- Pyodide Sequential Computing ---"
+          - href: Pyodide_Sequential_Computing/physics-pipeline-react/dist/index.html
+            text: "Pyodide Physics Pipeline"
+          - href: Pyodide_Sequential_Computing/dsp-rz-react/dist/index.html
+            text: "Pyodide DSP R(z)"
+          - href: Pyodide_Sequential_Computing/pyscript-pipeline-react/dist/index.html
+            text: "PyScript Pipeline"
       - text: "🧪 Learning Demos"
         menu:
           - text: "--- React Demos ---"

@@ -1,0 +1,24 @@
+.plot-container {
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.plot-container h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.plot-container img {
+  max-width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.plot-container p {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 10px;
+}
