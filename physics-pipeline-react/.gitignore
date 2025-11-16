@@ -8,7 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+# dist  # Need to commit dist for Quarto Pub/GitHub Pages
 dist-ssr
 *.local
 
