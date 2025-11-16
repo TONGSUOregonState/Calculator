@@ -1,105 +1,235 @@
-﻿---
+---
 title: "Welcome to My Blog"
+subtitle: "Physics Calculators, DSP Tools, and Programming Resources"
+author: "Tong Su"
+date: last-modified
 ---
 
-# Hello, My name is Tong Su! ðŸ‘‹
+# Hello, I'm Tong Su! 👋
 
-This is my first Quarto website. Here I can publish notes, code, and experiments.
+Welcome to my personal website where I share interactive calculators, physics simulations, and programming resources.
 
- 
-
-## åšå®¢åˆ†ç±»
+## 🚀 Featured Projects
 
 :::::: {.grid}
 
-::: {.g-col-6}
-### [MATLAB](/matlab/index.qmd) ðŸ“Š
+::: {.g-col-12}
+### Physics Formula Pipeline System
 
-
-::: {.g-col-6}
-### [C Programming](/c-programming/index.qmd) ðŸ'»
-- [C programming Modern Approach ](https://github.com/williamgherman/c-solutions?utm_source=chatgpt.com)
-
-- [C solutions](https://github.com/williamgherman/c-solutions?utm_source=chatgpt.com)
-- [The C answer book](https://github.com/ohkimur/the-c-programming-language-2nd-edition-solutions)
-
--  [logic circuit visualizer DigitalJS](https://digitaljs.tilk.eu/)
-
-:::
-
-::: {.g-col-6}
-### [DSP R(z) Analysis](./dsp_rz.html) ðŸŽ›ï¸
-零点极点分析工具 - Browser-based symbolic analysis using SymPy
-- [📚 技术文档教程](./dsp_tutorial.html)
-
-:::
-
-::: {.g-col-6}
-### [Block Formula Demo](./block-formula-demo.html) 🧮
-Physics formula calculator with block-based data flow
-- Interactive v, a, d calculations
-- Choose input sources (upstream blocks or manual)
-
-:::
-
-::: {.g-col-6}
-### [Block Drag & Connect](./block-drag-connect.html) 🔗
-Drag-and-drop block connection demo
-- Drag blocks to reposition
-- Connect output ports to input ports
-- Auto-calculate values through connections
-
-:::
-
-::: {.g-col-6}
-### [Physics Formula Blocks](./physics-blocks.html) 📐
-College Physics Mechanics formula calculator
-- 10 mechanics formulas to choose from
-- Check formulas to generate blocks
-- Input values and calculate results
-
-:::
-
-::: {.g-col-6}
-### [Physics Pipeline](./physics-pipeline/index.html) 🔬
-Auto-connected physics formula pipeline
-- Choose formulas, create blocks in sequence
-- Outputs auto-feed into next block inputs
-- View complete calculation flow
-
-:::
-
-::: {.g-col-6}
-### [Pipeline - 1 Formula](./physics-pipeline-1formula/index.html) 🧪
-Single formula demo version
-- Simplified version with only 1 formula
-- Perfect for learning the basics
-- All features included
-
-:::
-
-::: {.g-col-6}
-### [Pipeline - 2 Formulas](./physics-pipeline-2formulas/index.html) 🔭
-Two formulas demo version
-- Velocity and displacement formulas
-- Practice connecting blocks
-- Full pipeline functionality
-
+Interactive physics calculators with block-based formula connections.
 :::
 
 ::::::
 
-## About this site
-- Built with [Quarto](https://quarto.org)
-- Published on [Quarto Pub](https://quartopub.com)  
-- Source code available on [GitHub](https://github.com/TONGSUOregonState)
-`r`n## 更新日志`r`n{{< include _includes/updates-badge.html >}}`r`n`r`n
-## è”ç³»æ–¹å¼ Contact
-- ðŸŒ GitHub: [@TONGSUOregonState](https://github.com/TONGSUOregonState)
+### 🔬 Production Versions
 
+:::::: {.grid}
 
+::: {.g-col-4}
+#### [Physics Pipeline](./physics-pipeline/index.html)
+**Vanilla JavaScript** • Full Version
 
+- 10+ physics formulas
+- Auto-connected pipeline
+- Instant calculation
+- No build required ✅
+:::
 
-## 更新日志
+::: {.g-col-4}
+#### [React Pipeline](./physics-pipeline-react/dist/index.html)
+**React + Vite** • Full Version
+
+- 10+ physics formulas
+- Modern modular architecture
+- Component-based design
+- Requires build ⚠️
+:::
+
+::: {.g-col-4}
+#### [Physics Formula Blocks](./physics-blocks.html)
+**Interactive Blocks**
+
+- 10 mechanics formulas
+- Drag & calculate
+- Visual block interface
+- Quick calculations
+:::
+
+::::::
+
+### 🧪 Demo Versions (Learning)
+
+:::::: {.grid}
+
+::: {.g-col-6}
+#### Vanilla JavaScript Demos
+- [**1 Formula Demo**](./physics-pipeline-1formula/index.html) 🧪
+  Single formula • Perfect for learning basics
+
+- [**2 Formulas Demo**](./physics-pipeline-2formulas/index.html) 🔭
+  Velocity + Displacement • Practice connections
+:::
+
+::: {.g-col-6}
+#### React + Vite Demos
+- [**React 1-Formula**](./physics-pipeline-react-1formula/dist/index.html) 🧬
+  Component structure • State management
+
+- [**React 2-Formulas**](./physics-pipeline-react-2formulas/dist/index.html) 🔮
+  Props flow • Component composition
+:::
+
+::::::
+
+::: {.callout-note}
+## 🛠️ React Projects Setup Required
+
+React + Vite versions need to be built before use:
+
+**Windows:**
+```bash
+build-all-react.bat
+```
+
+**Mac/Linux:**
+```bash
+./build-all-react.sh
+```
+
+See [React Projects Guide](./REACT_PROJECTS_GUIDE.md) for details.
+:::
+
+---
+
+## 🎯 Other Interactive Tools
+
+:::::: {.grid}
+
+::: {.g-col-4}
+### [Block Formula Demo](./block-formula-demo.html)
+🧮 **Block-based Calculator**
+
+- Interactive v, a, d calculations
+- Visual data flow
+- Manual or connected inputs
+:::
+
+::: {.g-col-4}
+### [Block Drag & Connect](./block-drag-connect.html)
+🔗 **Drag & Drop Interface**
+
+- Reposition blocks
+- Connect ports
+- Auto-calculate
+:::
+
+::: {.g-col-4}
+### [DSP R(z) Analysis](./dsp_rz.html)
+🎛️ **Signal Processing**
+
+- Zero-pole analysis
+- SymPy-based computation
+- [📚 Tutorial](./dsp_tutorial.html)
+:::
+
+::::::
+
+---
+
+## 📚 Programming Resources
+
+:::::: {.grid}
+
+::: {.g-col-6}
+### [C Programming](./c-programming/index.qmd)
+💻 **C Language Resources**
+
+- [C Programming: Modern Approach](https://github.com/williamgherman/c-solutions)
+- [K&R Solutions](https://github.com/ohkimur/the-c-programming-language-2nd-edition-solutions)
+- [DigitalJS Circuit Visualizer](https://digitaljs.tilk.eu/)
+:::
+
+::: {.g-col-6}
+### [MATLAB](./matlab/index.qmd)
+📊 **MATLAB Resources**
+
+- MATLAB scripts and tutorials
+- Numerical computing examples
+- Signal processing demos
+:::
+
+::::::
+
+---
+
+## 📖 Documentation
+
+- [**🚀 Quick Start (Netlify)**](./QUICK_START_NETLIFY.md) - 5-minute automated deployment
+- [**🌐 Netlify Deployment Guide**](./NETLIFY_DEPLOYMENT_GUIDE.md) - Complete CI/CD setup
+- [**⚛️ React Projects Guide**](./REACT_PROJECTS_GUIDE.md) - React setup and build
+- [**📐 React + Vite Architecture**](./README-REACT-VITE.md) - Technical details
+- [**📝 Project Updates**](./UPDATES.md) - Latest changes
+
+---
+
+## 🔗 Quick Links
+
+:::::: {.grid}
+
+::: {.g-col-4}
+### Technology Stack
+- Quarto for static site
+- React 18 + Vite
+- Vanilla JavaScript
+- PyScript integration
+:::
+
+::: {.g-col-4}
+### Resources
+- [Quarto Documentation](https://quarto.org)
+- [React Documentation](https://react.dev)
+- [Vite Documentation](https://vitejs.dev)
+:::
+
+::: {.g-col-4}
+### Contact
+- 🌐 [GitHub Profile](https://github.com/TONGSUOregonState)
+- 📧 Project source code available
+- ⭐ Star this project!
+:::
+
+::::::
+
+---
+
+## 📝 Recent Updates
+
 {{< include _includes/updates-badge.html >}}
 
+### Latest Features
+
+- ✨ Added React + Vite modular architecture (3 versions)
+- 🔧 One-click build scripts for all React projects
+- 📚 Comprehensive documentation and guides
+- 🎨 Improved project organization and layout
+
+---
+
+::: {.callout-tip}
+## 💡 Getting Started
+
+1. **Quick Start**: Try the vanilla JS versions (no setup needed)
+2. **Learn React**: Build the React demos with `build-all-react.bat`
+3. **Explore**: Check out different physics formulas and connections
+4. **Read Docs**: See the guides for customization options
+:::
+
+---
+
+<div style="text-align: center; margin-top: 2rem; padding: 1rem; background: #f0f0f0; border-radius: 8px;">
+
+**Built with ❤️ using [Quarto](https://quarto.org) • Published on [Quarto Pub](https://quartopub.com)**
+
+*Last updated: {{< meta date >}}*
+
+</div>

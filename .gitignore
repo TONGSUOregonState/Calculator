@@ -14,8 +14,25 @@ Thumbs.db
 __pycache__/
 *.pyc
 
-# Node (if used later)
+# Node.js
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# React build outputs (不要忽略，需要提交到 GitHub)
+# physics-pipeline-react/dist/
+# physics-pipeline-react-1formula/dist/
+# physics-pipeline-react-2formulas/dist/
+
+# Local development
+*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 
 /.quarto/

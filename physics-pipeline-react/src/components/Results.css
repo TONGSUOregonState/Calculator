@@ -1,0 +1,13 @@
+.results {
+  margin-top: 16px;
+  padding: 12px;
+  background: #111827;
+  color: #f9fafb;
+  border-radius: 8px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+  line-height: 1.5;
+}

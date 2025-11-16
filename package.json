@@ -1,0 +1,21 @@
+{
+  "name": "quarto-blog-calculator",
+  "version": "1.0.0",
+  "description": "Physics calculators and DSP tools with React + Quarto",
+  "scripts": {
+    "build": "node build-react-projects.js",
+    "build:react": "./build-all-react.sh",
+    "build:quarto": "quarto render",
+    "build:all": "npm run build:react && npm run build:quarto",
+    "clean": "rm -rf _site && rm -rf physics-pipeline-react/dist && rm -rf physics-pipeline-react-1formula/dist && rm -rf physics-pipeline-react-2formulas/dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TONGSUOregonState/Quarto_Blog_Calculator.git"
+  },
+  "author": "Tong Su",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

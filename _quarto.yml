@@ -2,9 +2,15 @@ project:
   type: website
   resources:
     - "*.html"
+    - "*.md"
+    - "*.bat"
+    - "*.sh"
     - "physics-pipeline/**"
     - "physics-pipeline-1formula/**"
     - "physics-pipeline-2formulas/**"
+    - "physics-pipeline-react/dist/**"
+    - "physics-pipeline-react-1formula/dist/**"
+    - "physics-pipeline-react-2formulas/dist/**"
 
 website:
   title: "calculator"
@@ -36,6 +42,8 @@ website:
         text: Physics Formula Blocks
       - href: physics-pipeline/index.html
         text: Physics Pipeline
+      - href: physics-pipeline-react/dist/index.html
+        text: Physics Pipeline (React)
 
 format:
   html:

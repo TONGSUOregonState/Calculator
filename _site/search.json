@@ -1,5 +1,306 @@
 [
   {
+    "objectID": "UPDATES.html",
+    "href": "UPDATES.html",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "physics-pipeline-react/ - 完整版 React + Vite 项目\nphysics-pipeline-react-1formula/ - 1公式 Demo 版本\nphysics-pipeline-react-2formulas/ - 2公式 Demo 版本\n\n\n\n\n\nbuild-all-react.bat - Windows 一键构建脚本\nbuild-all-react.sh - Unix/Linux/Mac 构建脚本\nREACT_PROJECTS_GUIDE.md - 详细使用指南\nREADME-REACT-VITE.md - 项目架构说明\nUPDATES.md - 本文件\n\n\n\n\n\nindex.qmd\n\n添加了3个新的React项目链接（行90-118）\n链接指向构建后的 dist/index.html 文件\n添加了构建说明提示\n\n**_quarto.yml**\n\n添加资源路径：\n- \"physics-pipeline-react/dist/**\"\n- \"physics-pipeline-react-1formula/dist/**\"\n- \"physics-pipeline-react-2formulas/dist/**\"\n- \"*.md\"\n- \"*.bat\"\n- \"*.sh\"\n添加导航栏链接：\n- href: physics-pipeline-react/dist/index.html\n  text: Physics Pipeline (React)\n\n\n\n\n\n\n\n\n这些是原始的vanilla JavaScript版本：\n::: {.g-col-6}\n### [Physics Pipeline](./physics-pipeline/index.html) 🔬\nAuto-connected physics formula pipeline\n:::\n\n::: {.g-col-6}\n### [Pipeline - 1 Formula](./physics-pipeline-1formula/index.html) 🧪\nSingle formula demo version\n:::\n\n::: {.g-col-6}\n### [Pipeline - 2 Formulas](./physics-pipeline-2formulas/index.html) 🔭\nTwo formulas demo version\n:::\n\n\n\n这些是新的模块化React版本：\n::: {.g-col-6}\n### [Physics Pipeline (React + Vite)](./physics-pipeline-react/dist/index.html) ⚛️\nModern React version with modular architecture\n- **需要先运行 `build-all-react.bat` 构建**\n:::\n\n::: {.g-col-6}\n### [React Pipeline - 1 Formula](./physics-pipeline-react-1formula/dist/index.html) 🧬\nReact single formula demo (Vite)\n- **需要先构建**\n:::\n\n::: {.g-col-6}\n### [React Pipeline - 2 Formulas](./physics-pipeline-react-2formulas/dist/index.html) 🔮\nReact two formulas demo (Vite)\n- **需要先构建**\n:::\n\n\n\n\n\n\n首次使用前必须执行此步骤！\nWindows用户：\nbuild-all-react.bat\nMac/Linux用户：\nchmod +x build-all-react.sh\n./build-all-react.sh\n这将： - 安装所有npm依赖 - 构建所有3个React项目 - 生成 dist/ 文件夹\n\n\n\n检查是否生成了以下文件夹：\nphysics-pipeline-react/dist/\nphysics-pipeline-react-1formula/dist/\nphysics-pipeline-react-2formulas/dist/\n每个dist文件夹应包含： - index.html - assets/ 文件夹（包含JS和CSS文件）\n\n\n\nquarto render\n或\nquarto publish\n\n\n\n\nQuarto_Blog_Calculator/\n│\n├── physics-pipeline/              # 原始 vanilla JS 版本\n├── physics-pipeline-1formula/     # 原始 1-formula 版本\n├── physics-pipeline-2formulas/    # 原始 2-formulas 版本\n│\n├── physics-pipeline-react/        # ⭐ 新：React 完整版\n│   ├── src/\n│   │   ├── components/\n│   │   ├── data/\n│   │   ├── utils/\n│   │   └── ...\n│   ├── dist/                      # ← 构建后生成\n│   └── package.json\n│\n├── physics-pipeline-react-1formula/   # ⭐ 新：React 1-formula\n│   ├── src/\n│   ├── dist/                      # ← 构建后生成\n│   └── package.json\n│\n├── physics-pipeline-react-2formulas/  # ⭐ 新：React 2-formulas\n│   ├── src/\n│   ├── dist/                      # ← 构建后生成\n│   └── package.json\n│\n├── build-all-react.bat            # ⭐ 新：Windows 构建脚本\n├── build-all-react.sh             # ⭐ 新：Unix 构建脚本\n├── REACT_PROJECTS_GUIDE.md        # ⭐ 新：详细指南\n├── README-REACT-VITE.md           # ⭐ 新：架构说明\n├── UPDATES.md                     # ⭐ 新：本文件\n├── index.qmd                      # ✏️ 已更新\n├── _quarto.yml                    # ✏️ 已更新\n└── ...\n\n\n\n\n\nReact + Vite 项目需要构建才能运行： - 开发代码：在 src/ 文件夹中（JSX、ES6模块等） - 生产代码：在 dist/ 文件夹中（构建后的纯HTML/JS/CSS） - 浏览器只能运行构建后的代码\n\n\n\n\n\n\n\n\n\n\n\n\n版本\n路径\n技术栈\n适用场景\n\n\n\n\n原始版本\nphysics-pipeline/\nVanilla JS\n直接运行，无需构建\n\n\nReact版本\nphysics-pipeline-react/\nReact + Vite\n模块化开发，需要构建\n\n\n\n两套版本功能相同，可以根据需求选择： - 快速使用：选择原始vanilla JS版本 - 开发维护：选择React + Vite版本\n\n\n\n_quarto.yml 配置了资源路径：\nresources:\n  - \"physics-pipeline-react/dist/**\"\n  - \"physics-pipeline-react-1formula/dist/**\"\n  - \"physics-pipeline-react-2formulas/dist/**\"\n当运行 quarto render 或 quarto publish 时： 1. Quarto 会将这些文件复制到 _site/ 文件夹 2. 保持相对路径结构 3. index.qmd 中的链接能正确指向这些文件\n\n\n\n\n\n\n# 进入项目目录\ncd physics-pipeline-react\n\n# 重新构建\nnpm run build\n\n# 构建完成后，运行 Quarto\ncd ..\nquarto render\n\n\n\ncd physics-pipeline-react\nnpm run dev\n# 访问 http://localhost:5173\n开发完成后，再构建并发布到Quarto。\n\n\n\n\n\n\n\n特性\nVanilla JS\nReact + Vite\n\n\n\n\n文件数量\n1个HTML\n10+个文件\n\n\n模块化\n❌\n✅\n\n\n需要构建\n❌\n✅\n\n\n热更新\n❌\n✅\n\n\n代码组织\n全在一起\n分模块\n\n\n易维护性\n低\n高\n\n\n易扩展性\n低\n高\n\n\n生产优化\n无\n自动\n\n\n文件大小\n~50KB\n~150KB（压缩后）\n\n\n学习成本\n低\n中\n\n\n\n\n\n\n\n\nA: 需要先运行构建脚本：\nbuild-all-react.bat  # Windows\n# 或\n./build-all-react.sh  # Mac/Linux\n\n\n\nA: 需要重新构建：\ncd physics-pipeline-react\nnpm run build\n\n\n\nA: 不建议。src/ 包含源代码，用于： - 开发和修改 - 版本控制 - 重新构建\ndist/ 是自动生成的，可以删除并重新构建。\n\n\n\nA: 只需要部署 Quarto 生成的 _site/ 文件夹，其中已包含： - 所有 HTML 文件 - React 项目的 dist/ 内容 - 所有资源文件\n\n\n\n\n\nREACT_PROJECTS_GUIDE.md - 完整使用指南\nREADME-REACT-VITE.md - 架构和技术说明\nphysics-pipeline-react/README.md - 项目说明\nReact 官方文档\nVite 官方文档\n\n\n\n\n现在你的项目包含： - ✅ 3个原始vanilla JS版本（直接运行） - ✅ 3个现代React + Vite版本（需要构建） - ✅ 完整的构建脚本和文档 - ✅ 更新的index.qmd和_quarto.yml配置\n开始使用： 1. 运行 build-all-react.bat（首次） 2. 运行 quarto render 3. 访问你的网站，所有链接都可以正常工作！"
+  },
+  {
+    "objectID": "UPDATES.html#更新内容概览",
+    "href": "UPDATES.html#更新内容概览",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "physics-pipeline-react/ - 完整版 React + Vite 项目\nphysics-pipeline-react-1formula/ - 1公式 Demo 版本\nphysics-pipeline-react-2formulas/ - 2公式 Demo 版本\n\n\n\n\n\nbuild-all-react.bat - Windows 一键构建脚本\nbuild-all-react.sh - Unix/Linux/Mac 构建脚本\nREACT_PROJECTS_GUIDE.md - 详细使用指南\nREADME-REACT-VITE.md - 项目架构说明\nUPDATES.md - 本文件\n\n\n\n\n\nindex.qmd\n\n添加了3个新的React项目链接（行90-118）\n链接指向构建后的 dist/index.html 文件\n添加了构建说明提示\n\n**_quarto.yml**\n\n添加资源路径：\n- \"physics-pipeline-react/dist/**\"\n- \"physics-pipeline-react-1formula/dist/**\"\n- \"physics-pipeline-react-2formulas/dist/**\"\n- \"*.md\"\n- \"*.bat\"\n- \"*.sh\"\n添加导航栏链接：\n- href: physics-pipeline-react/dist/index.html\n  text: Physics Pipeline (React)"
+  },
+  {
+    "objectID": "UPDATES.html#index.qmd-中的超链接",
+    "href": "UPDATES.html#index.qmd-中的超链接",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "这些是原始的vanilla JavaScript版本：\n::: {.g-col-6}\n### [Physics Pipeline](./physics-pipeline/index.html) 🔬\nAuto-connected physics formula pipeline\n:::\n\n::: {.g-col-6}\n### [Pipeline - 1 Formula](./physics-pipeline-1formula/index.html) 🧪\nSingle formula demo version\n:::\n\n::: {.g-col-6}\n### [Pipeline - 2 Formulas](./physics-pipeline-2formulas/index.html) 🔭\nTwo formulas demo version\n:::\n\n\n\n这些是新的模块化React版本：\n::: {.g-col-6}\n### [Physics Pipeline (React + Vite)](./physics-pipeline-react/dist/index.html) ⚛️\nModern React version with modular architecture\n- **需要先运行 `build-all-react.bat` 构建**\n:::\n\n::: {.g-col-6}\n### [React Pipeline - 1 Formula](./physics-pipeline-react-1formula/dist/index.html) 🧬\nReact single formula demo (Vite)\n- **需要先构建**\n:::\n\n::: {.g-col-6}\n### [React Pipeline - 2 Formulas](./physics-pipeline-react-2formulas/dist/index.html) 🔮\nReact two formulas demo (Vite)\n- **需要先构建**\n:::"
+  },
+  {
+    "objectID": "UPDATES.html#使用步骤",
+    "href": "UPDATES.html#使用步骤",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "首次使用前必须执行此步骤！\nWindows用户：\nbuild-all-react.bat\nMac/Linux用户：\nchmod +x build-all-react.sh\n./build-all-react.sh\n这将： - 安装所有npm依赖 - 构建所有3个React项目 - 生成 dist/ 文件夹\n\n\n\n检查是否生成了以下文件夹：\nphysics-pipeline-react/dist/\nphysics-pipeline-react-1formula/dist/\nphysics-pipeline-react-2formulas/dist/\n每个dist文件夹应包含： - index.html - assets/ 文件夹（包含JS和CSS文件）\n\n\n\nquarto render\n或\nquarto publish"
+  },
+  {
+    "objectID": "UPDATES.html#完整项目结构",
+    "href": "UPDATES.html#完整项目结构",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "Quarto_Blog_Calculator/\n│\n├── physics-pipeline/              # 原始 vanilla JS 版本\n├── physics-pipeline-1formula/     # 原始 1-formula 版本\n├── physics-pipeline-2formulas/    # 原始 2-formulas 版本\n│\n├── physics-pipeline-react/        # ⭐ 新：React 完整版\n│   ├── src/\n│   │   ├── components/\n│   │   ├── data/\n│   │   ├── utils/\n│   │   └── ...\n│   ├── dist/                      # ← 构建后生成\n│   └── package.json\n│\n├── physics-pipeline-react-1formula/   # ⭐ 新：React 1-formula\n│   ├── src/\n│   ├── dist/                      # ← 构建后生成\n│   └── package.json\n│\n├── physics-pipeline-react-2formulas/  # ⭐ 新：React 2-formulas\n│   ├── src/\n│   ├── dist/                      # ← 构建后生成\n│   └── package.json\n│\n├── build-all-react.bat            # ⭐ 新：Windows 构建脚本\n├── build-all-react.sh             # ⭐ 新：Unix 构建脚本\n├── REACT_PROJECTS_GUIDE.md        # ⭐ 新：详细指南\n├── README-REACT-VITE.md           # ⭐ 新：架构说明\n├── UPDATES.md                     # ⭐ 新：本文件\n├── index.qmd                      # ✏️ 已更新\n├── _quarto.yml                    # ✏️ 已更新\n└── ..."
+  },
+  {
+    "objectID": "UPDATES.html#关键点说明",
+    "href": "UPDATES.html#关键点说明",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "React + Vite 项目需要构建才能运行： - 开发代码：在 src/ 文件夹中（JSX、ES6模块等） - 生产代码：在 dist/ 文件夹中（构建后的纯HTML/JS/CSS） - 浏览器只能运行构建后的代码\n\n\n\n\n\n\n\n\n\n\n\n\n版本\n路径\n技术栈\n适用场景\n\n\n\n\n原始版本\nphysics-pipeline/\nVanilla JS\n直接运行，无需构建\n\n\nReact版本\nphysics-pipeline-react/\nReact + Vite\n模块化开发，需要构建\n\n\n\n两套版本功能相同，可以根据需求选择： - 快速使用：选择原始vanilla JS版本 - 开发维护：选择React + Vite版本\n\n\n\n_quarto.yml 配置了资源路径：\nresources:\n  - \"physics-pipeline-react/dist/**\"\n  - \"physics-pipeline-react-1formula/dist/**\"\n  - \"physics-pipeline-react-2formulas/dist/**\"\n当运行 quarto render 或 quarto publish 时： 1. Quarto 会将这些文件复制到 _site/ 文件夹 2. 保持相对路径结构 3. index.qmd 中的链接能正确指向这些文件"
+  },
+  {
+    "objectID": "UPDATES.html#开发工作流",
+    "href": "UPDATES.html#开发工作流",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "# 进入项目目录\ncd physics-pipeline-react\n\n# 重新构建\nnpm run build\n\n# 构建完成后，运行 Quarto\ncd ..\nquarto render\n\n\n\ncd physics-pipeline-react\nnpm run dev\n# 访问 http://localhost:5173\n开发完成后，再构建并发布到Quarto。"
+  },
+  {
+    "objectID": "UPDATES.html#版本对比",
+    "href": "UPDATES.html#版本对比",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "特性\nVanilla JS\nReact + Vite\n\n\n\n\n文件数量\n1个HTML\n10+个文件\n\n\n模块化\n❌\n✅\n\n\n需要构建\n❌\n✅\n\n\n热更新\n❌\n✅\n\n\n代码组织\n全在一起\n分模块\n\n\n易维护性\n低\n高\n\n\n易扩展性\n低\n高\n\n\n生产优化\n无\n自动\n\n\n文件大小\n~50KB\n~150KB（压缩后）\n\n\n学习成本\n低\n中"
+  },
+  {
+    "objectID": "UPDATES.html#常见问题",
+    "href": "UPDATES.html#常见问题",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "A: 需要先运行构建脚本：\nbuild-all-react.bat  # Windows\n# 或\n./build-all-react.sh  # Mac/Linux\n\n\n\nA: 需要重新构建：\ncd physics-pipeline-react\nnpm run build\n\n\n\nA: 不建议。src/ 包含源代码，用于： - 开发和修改 - 版本控制 - 重新构建\ndist/ 是自动生成的，可以删除并重新构建。\n\n\n\nA: 只需要部署 Quarto 生成的 _site/ 文件夹，其中已包含： - 所有 HTML 文件 - React 项目的 dist/ 内容 - 所有资源文件"
+  },
+  {
+    "objectID": "UPDATES.html#相关文档",
+    "href": "UPDATES.html#相关文档",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "REACT_PROJECTS_GUIDE.md - 完整使用指南\nREADME-REACT-VITE.md - 架构和技术说明\nphysics-pipeline-react/README.md - 项目说明\nReact 官方文档\nVite 官方文档"
+  },
+  {
+    "objectID": "UPDATES.html#总结",
+    "href": "UPDATES.html#总结",
+    "title": "项目更新说明 - React + Vite 版本",
+    "section": "",
+    "text": "现在你的项目包含： - ✅ 3个原始vanilla JS版本（直接运行） - ✅ 3个现代React + Vite版本（需要构建） - ✅ 完整的构建脚本和文档 - ✅ 更新的index.qmd和_quarto.yml配置\n开始使用： 1. 运行 build-all-react.bat（首次） 2. 运行 quarto render 3. 访问你的网站，所有链接都可以正常工作！"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html",
+    "href": "REACT_PROJECTS_GUIDE.html",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "本指南介绍如何安装和构建三个React + Vite物理公式流水线项目。\n\n\n确保已安装 Node.js (推荐 v18 或更高版本)\n# 检查 Node.js 版本\nnode --version\n\n# 检查 npm 版本\nnpm --version\n如未安装，请访问 nodejs.org 下载安装。\n\n\n\n\nphysics-pipeline-react - 完整版 (10+ 公式)\nphysics-pipeline-react-1formula - Demo版 (1个公式)\nphysics-pipeline-react-2formulas - Demo版 (2个公式)\n\n\n\n\n\n\n# 1. 构建完整版\ncd physics-pipeline-react\nnpm install\nnpm run build\ncd ..\n\n# 2. 构建 1-formula demo\ncd physics-pipeline-react-1formula\nnpm install\nnpm run build\ncd ..\n\n# 3. 构建 2-formulas demo\ncd physics-pipeline-react-2formulas\nnpm install\nnpm run build\ncd ..\n\n\n\n创建文件 build-all-react.bat:\n@echo off\necho Building all React projects...\n\necho.\necho [1/3] Building physics-pipeline-react...\ncd physics-pipeline-react\ncall npm install\ncall npm run build\ncd ..\n\necho.\necho [2/3] Building physics-pipeline-react-1formula...\ncd physics-pipeline-react-1formula\ncall npm install\ncall npm run build\ncd ..\n\necho.\necho [3/3] Building physics-pipeline-react-2formulas...\ncd physics-pipeline-react-2formulas\ncall npm install\ncall npm run build\ncd ..\n\necho.\necho ✅ All projects built successfully!\npause\n运行批处理文件:\nbuild-all-react.bat\n\n\n\n创建文件 build-all-react.sh:\n#!/bin/bash\n\necho \"Building all React projects...\"\n\necho \"\"\necho \"[1/3] Building physics-pipeline-react...\"\ncd physics-pipeline-react\nnpm install\nnpm run build\ncd ..\n\necho \"\"\necho \"[2/3] Building physics-pipeline-react-1formula...\"\ncd physics-pipeline-react-1formula\nnpm install\nnpm run build\ncd ..\n\necho \"\"\necho \"[3/3] Building physics-pipeline-react-2formulas...\"\ncd physics-pipeline-react-2formulas\nnpm install\nnpm run build\ncd ..\n\necho \"\"\necho \"✅ All projects built successfully!\"\n添加执行权限并运行:\nchmod +x build-all-react.sh\n./build-all-react.sh\n\n\n\n\n构建完成后，每个项目会生成一个 dist 文件夹：\nphysics-pipeline-react/\n└── dist/\n    ├── index.html\n    ├── assets/\n    │   ├── index-[hash].js\n    │   └── index-[hash].css\n    └── ...\n\nphysics-pipeline-react-1formula/\n└── dist/\n    └── ...\n\nphysics-pipeline-react-2formulas/\n└── dist/\n    └── ...\n\n\n\n\n\ncd physics-pipeline-react\nnpm run preview\n默认访问: http://localhost:4173\n\n\n\n由于配置了 base: './'，可以直接在浏览器中打开：\nphysics-pipeline-react/dist/index.html\n\n\n\ncd physics-pipeline-react/dist\npython -m http.server 8000\n访问: http://localhost:8000\n\n\n\n\n启动开发服务器进行实时开发：\ncd physics-pipeline-react\nnpm run dev\n\n热模块替换 (HMR)\n即时更新\n默认端口: 5173\n\n\n\n\nphysics-pipeline-react/\n├── src/\n│   ├── components/         # React 组件\n│   │   ├── Block.jsx\n│   │   ├── Block.css\n│   │   ├── Category.jsx\n│   │   ├── Category.css\n│   │   ├── Sidebar.jsx\n│   │   ├── Sidebar.css\n│   │   ├── TopBar.jsx\n│   │   ├── TopBar.css\n│   │   ├── Results.jsx\n│   │   └── Results.css\n│   ├── data/              # 数据定义\n│   │   └── formulas.js\n│   ├── utils/             # 工具函数\n│   │   ├── calculator.js\n│   │   └── formatter.js\n│   ├── App.jsx            # 主应用\n│   ├── App.css\n│   ├── main.jsx           # 入口\n│   └── index.css\n├── index.html\n├── package.json\n├── vite.config.js\n└── README.md\n\n\n\n\n\n编辑 src/data/formulas.js 文件：\nexport const FORMULA_CATEGORIES = [\n  {\n    name: '分类名称',\n    formulas: [\n      {\n        id: 'unique_id',\n        name: '公式名称',\n        formulaText: '公式显示',\n        inputs: ['input1', 'input2'],\n        output: 'output',\n        compute: ({ input1, input2 }) =&gt; input1 + input2\n      }\n    ]\n  }\n];\n\n\n\n每个组件都有对应的 CSS 文件，可以独立修改样式。\n\n\n\n\n在 src/components/ 创建新的 .jsx 和 .css 文件\n在 App.jsx 中导入和使用\n\n\n\n\n\n\n\n解决方案:\n# 清除缓存\nnpm cache clean --force\n\n# 删除 node_modules 和 package-lock.json\nrm -rf node_modules package-lock.json\n\n# 重新安装\nnpm install\n\n\n\n解决方案: 确保 vite.config.js 中设置了：\nexport default defineConfig({\n  base: './',  // 使用相对路径\n  // ...\n})\n\n\n\n解决方案:\n# 指定其他端口\nnpm run dev -- --port 3000\n\n\n\n\n\nReact 文档\nVite 文档\n项目 GitHub\n\n\n\n\n\nReact: 18.3.1\nReact DOM: 18.3.1\nVite: 5.4.2\n@vitejs/plugin-react: 4.3.1"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#前提条件",
+    "href": "REACT_PROJECTS_GUIDE.html#前提条件",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "确保已安装 Node.js (推荐 v18 或更高版本)\n# 检查 Node.js 版本\nnode --version\n\n# 检查 npm 版本\nnpm --version\n如未安装，请访问 nodejs.org 下载安装。"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#项目列表",
+    "href": "REACT_PROJECTS_GUIDE.html#项目列表",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "physics-pipeline-react - 完整版 (10+ 公式)\nphysics-pipeline-react-1formula - Demo版 (1个公式)\nphysics-pipeline-react-2formulas - Demo版 (2个公式)"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#安装和构建步骤",
+    "href": "REACT_PROJECTS_GUIDE.html#安装和构建步骤",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "# 1. 构建完整版\ncd physics-pipeline-react\nnpm install\nnpm run build\ncd ..\n\n# 2. 构建 1-formula demo\ncd physics-pipeline-react-1formula\nnpm install\nnpm run build\ncd ..\n\n# 3. 构建 2-formulas demo\ncd physics-pipeline-react-2formulas\nnpm install\nnpm run build\ncd ..\n\n\n\n创建文件 build-all-react.bat:\n@echo off\necho Building all React projects...\n\necho.\necho [1/3] Building physics-pipeline-react...\ncd physics-pipeline-react\ncall npm install\ncall npm run build\ncd ..\n\necho.\necho [2/3] Building physics-pipeline-react-1formula...\ncd physics-pipeline-react-1formula\ncall npm install\ncall npm run build\ncd ..\n\necho.\necho [3/3] Building physics-pipeline-react-2formulas...\ncd physics-pipeline-react-2formulas\ncall npm install\ncall npm run build\ncd ..\n\necho.\necho ✅ All projects built successfully!\npause\n运行批处理文件:\nbuild-all-react.bat\n\n\n\n创建文件 build-all-react.sh:\n#!/bin/bash\n\necho \"Building all React projects...\"\n\necho \"\"\necho \"[1/3] Building physics-pipeline-react...\"\ncd physics-pipeline-react\nnpm install\nnpm run build\ncd ..\n\necho \"\"\necho \"[2/3] Building physics-pipeline-react-1formula...\"\ncd physics-pipeline-react-1formula\nnpm install\nnpm run build\ncd ..\n\necho \"\"\necho \"[3/3] Building physics-pipeline-react-2formulas...\"\ncd physics-pipeline-react-2formulas\nnpm install\nnpm run build\ncd ..\n\necho \"\"\necho \"✅ All projects built successfully!\"\n添加执行权限并运行:\nchmod +x build-all-react.sh\n./build-all-react.sh"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#构建输出",
+    "href": "REACT_PROJECTS_GUIDE.html#构建输出",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "构建完成后，每个项目会生成一个 dist 文件夹：\nphysics-pipeline-react/\n└── dist/\n    ├── index.html\n    ├── assets/\n    │   ├── index-[hash].js\n    │   └── index-[hash].css\n    └── ...\n\nphysics-pipeline-react-1formula/\n└── dist/\n    └── ...\n\nphysics-pipeline-react-2formulas/\n└── dist/\n    └── ..."
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#本地预览",
+    "href": "REACT_PROJECTS_GUIDE.html#本地预览",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "cd physics-pipeline-react\nnpm run preview\n默认访问: http://localhost:4173\n\n\n\n由于配置了 base: './'，可以直接在浏览器中打开：\nphysics-pipeline-react/dist/index.html\n\n\n\ncd physics-pipeline-react/dist\npython -m http.server 8000\n访问: http://localhost:8000"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#开发模式",
+    "href": "REACT_PROJECTS_GUIDE.html#开发模式",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "启动开发服务器进行实时开发：\ncd physics-pipeline-react\nnpm run dev\n\n热模块替换 (HMR)\n即时更新\n默认端口: 5173"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#项目结构",
+    "href": "REACT_PROJECTS_GUIDE.html#项目结构",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "physics-pipeline-react/\n├── src/\n│   ├── components/         # React 组件\n│   │   ├── Block.jsx\n│   │   ├── Block.css\n│   │   ├── Category.jsx\n│   │   ├── Category.css\n│   │   ├── Sidebar.jsx\n│   │   ├── Sidebar.css\n│   │   ├── TopBar.jsx\n│   │   ├── TopBar.css\n│   │   ├── Results.jsx\n│   │   └── Results.css\n│   ├── data/              # 数据定义\n│   │   └── formulas.js\n│   ├── utils/             # 工具函数\n│   │   ├── calculator.js\n│   │   └── formatter.js\n│   ├── App.jsx            # 主应用\n│   ├── App.css\n│   ├── main.jsx           # 入口\n│   └── index.css\n├── index.html\n├── package.json\n├── vite.config.js\n└── README.md"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#使用技巧",
+    "href": "REACT_PROJECTS_GUIDE.html#使用技巧",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "编辑 src/data/formulas.js 文件：\nexport const FORMULA_CATEGORIES = [\n  {\n    name: '分类名称',\n    formulas: [\n      {\n        id: 'unique_id',\n        name: '公式名称',\n        formulaText: '公式显示',\n        inputs: ['input1', 'input2'],\n        output: 'output',\n        compute: ({ input1, input2 }) =&gt; input1 + input2\n      }\n    ]\n  }\n];\n\n\n\n每个组件都有对应的 CSS 文件，可以独立修改样式。\n\n\n\n\n在 src/components/ 创建新的 .jsx 和 .css 文件\n在 App.jsx 中导入和使用"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#常见问题",
+    "href": "REACT_PROJECTS_GUIDE.html#常见问题",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "解决方案:\n# 清除缓存\nnpm cache clean --force\n\n# 删除 node_modules 和 package-lock.json\nrm -rf node_modules package-lock.json\n\n# 重新安装\nnpm install\n\n\n\n解决方案: 确保 vite.config.js 中设置了：\nexport default defineConfig({\n  base: './',  // 使用相对路径\n  // ...\n})\n\n\n\n解决方案:\n# 指定其他端口\nnpm run dev -- --port 3000"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#更多资源",
+    "href": "REACT_PROJECTS_GUIDE.html#更多资源",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "React 文档\nVite 文档\n项目 GitHub"
+  },
+  {
+    "objectID": "REACT_PROJECTS_GUIDE.html#版本信息",
+    "href": "REACT_PROJECTS_GUIDE.html#版本信息",
+    "title": "React + Vite 项目使用指南",
+    "section": "",
+    "text": "React: 18.3.1\nReact DOM: 18.3.1\nVite: 5.4.2\n@vitejs/plugin-react: 4.3.1"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "Welcome to my personal website where I share interactive calculators, physics simulations, and programming resources.\n\n\n\n\n\nInteractive physics calculators with block-based formula connections.\n\n\n\n\n\n\n\nVanilla JavaScript • Full Version\n\n10+ physics formulas\nAuto-connected pipeline\nInstant calculation\nNo build required ✅\n\n\n\n\nReact + Vite • Full Version\n\n10+ physics formulas\nModern modular architecture\nComponent-based design\nRequires build ⚠️\n\n\n\n\nInteractive Blocks\n\n10 mechanics formulas\nDrag & calculate\nVisual block interface\nQuick calculations\n\n\n\n\n\n\n\n\n\n\n1 Formula Demo 🧪 Single formula • Perfect for learning basics\n2 Formulas Demo 🔭 Velocity + Displacement • Practice connections\n\n\n\n\n\nReact 1-Formula 🧬 Component structure • State management\nReact 2-Formulas 🔮 Props flow • Component composition\n\n\n\n\n\n\n\n\n\nNote🛠️ React Projects Setup Required\n\n\n\nReact + Vite versions need to be built before use:\nWindows:\nbuild-all-react.bat\nMac/Linux:\n./build-all-react.sh\nSee React Projects Guide for details.\n\n\n\n\n\n\n\n\n\n\n🧮 Block-based Calculator\n\nInteractive v, a, d calculations\nVisual data flow\nManual or connected inputs\n\n\n\n\n🔗 Drag & Drop Interface\n\nReposition blocks\nConnect ports\nAuto-calculate\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy-based computation\n📚 Tutorial\n\n\n\n\n\n\n\n\n\n\n💻 C Language Resources\n\nC Programming: Modern Approach\nK&R Solutions\nDigitalJS Circuit Visualizer\n\n\n\n\n📊 MATLAB Resources\n\nMATLAB scripts and tutorials\nNumerical computing examples\nSignal processing demos\n\n\n\n\n\n\n\n\nReact Projects Guide - Complete setup and build instructions\nProject Updates - Latest changes and features\nReact + Vite Architecture - Technical details\n\n\n\n\n\n\n\n\n\nQuarto for static site\nReact 18 + Vite\nVanilla JavaScript\nPyScript integration\n\n\n\n\n\nQuarto Documentation\nReact Documentation\nVite Documentation\n\n\n\n\n\n🌐 GitHub Profile\n📧 Project source code available\n⭐ Star this project!\n\n\n\n\n\n\n\n\nUpdates\n\n\n\n\n\n✨ Added React + Vite modular architecture (3 versions)\n🔧 One-click build scripts for all React projects\n📚 Comprehensive documentation and guides\n🎨 Improved project organization and layout\n\n\n\n\n\n\n\n\nTip💡 Getting Started\n\n\n\n\nQuick Start: Try the vanilla JS versions (no setup needed)\nLearn React: Build the React demos with build-all-react.bat\nExplore: Check out different physics formulas and connections\nRead Docs: See the guides for customization options\n\n\n\n\n\nBuilt with ❤️ using Quarto • Published on Quarto Pub\nLast updated: November 16, 2025"
+  },
+  {
+    "objectID": "index.html#featured-projects",
+    "href": "index.html#featured-projects",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "Interactive physics calculators with block-based formula connections.\n\n\n\n\n\n\n\nVanilla JavaScript • Full Version\n\n10+ physics formulas\nAuto-connected pipeline\nInstant calculation\nNo build required ✅\n\n\n\n\nReact + Vite • Full Version\n\n10+ physics formulas\nModern modular architecture\nComponent-based design\nRequires build ⚠️\n\n\n\n\nInteractive Blocks\n\n10 mechanics formulas\nDrag & calculate\nVisual block interface\nQuick calculations\n\n\n\n\n\n\n\n\n\n\n1 Formula Demo 🧪 Single formula • Perfect for learning basics\n2 Formulas Demo 🔭 Velocity + Displacement • Practice connections\n\n\n\n\n\nReact 1-Formula 🧬 Component structure • State management\nReact 2-Formulas 🔮 Props flow • Component composition\n\n\n\n\n\n\n\n\n\nNote🛠️ React Projects Setup Required\n\n\n\nReact + Vite versions need to be built before use:\nWindows:\nbuild-all-react.bat\nMac/Linux:\n./build-all-react.sh\nSee React Projects Guide for details."
+  },
+  {
+    "objectID": "index.html#other-interactive-tools",
+    "href": "index.html#other-interactive-tools",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "🧮 Block-based Calculator\n\nInteractive v, a, d calculations\nVisual data flow\nManual or connected inputs\n\n\n\n\n🔗 Drag & Drop Interface\n\nReposition blocks\nConnect ports\nAuto-calculate\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy-based computation\n📚 Tutorial"
+  },
+  {
+    "objectID": "index.html#programming-resources",
+    "href": "index.html#programming-resources",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "💻 C Language Resources\n\nC Programming: Modern Approach\nK&R Solutions\nDigitalJS Circuit Visualizer\n\n\n\n\n📊 MATLAB Resources\n\nMATLAB scripts and tutorials\nNumerical computing examples\nSignal processing demos"
+  },
+  {
+    "objectID": "index.html#documentation",
+    "href": "index.html#documentation",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "React Projects Guide - Complete setup and build instructions\nProject Updates - Latest changes and features\nReact + Vite Architecture - Technical details"
+  },
+  {
+    "objectID": "index.html#quick-links",
+    "href": "index.html#quick-links",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "Quarto for static site\nReact 18 + Vite\nVanilla JavaScript\nPyScript integration\n\n\n\n\n\nQuarto Documentation\nReact Documentation\nVite Documentation\n\n\n\n\n\n🌐 GitHub Profile\n📧 Project source code available\n⭐ Star this project!"
+  },
+  {
+    "objectID": "index.html#recent-updates",
+    "href": "index.html#recent-updates",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "Updates\n\n\n\n\n\n✨ Added React + Vite modular architecture (3 versions)\n🔧 One-click build scripts for all React projects\n📚 Comprehensive documentation and guides\n🎨 Improved project organization and layout\n\n\n\n\n\n\n\n\nTip💡 Getting Started\n\n\n\n\nQuick Start: Try the vanilla JS versions (no setup needed)\nLearn React: Build the React demos with build-all-react.bat\nExplore: Check out different physics formulas and connections\nRead Docs: See the guides for customization options\n\n\n\n\n\nBuilt with ❤️ using Quarto • Published on Quarto Pub\nLast updated: November 16, 2025"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html",
+    "href": "BUILD_AND_DEPLOY.html",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "✅ 已完成： - 网站已发布到：https://tongsuoregonstate11.quarto.pub/calculator - Vanilla JavaScript 版本全部正常工作 - 所有文档已创建\n⚠️ 待完成： - React 项目需要构建 - 需要安装 Node.js\n\n\n\n\n\n\n\n下载 Node.js\n\n访问：https://nodejs.org/\n下载 LTS 版本（推荐 v18 或 v20）\n选择 Windows Installer (.msi) 64-bit\n\n安装 Node.js\n\n运行下载的 .msi 文件\n点击 “Next” 接受默认设置\n✅ 确保勾选 “Automatically install necessary tools”\n点击 “Install”\n安装完成后重启命令行\n\n验证安装 打开新的命令提示符（CMD）或 Git Bash，运行：\nnode --version\nnpm --version\n应该看到类似输出：\nv20.11.0\n10.2.4\n\n\n\n\n\n\n安装好 Node.js 后，在项目根目录运行：\n\n\nWindows（在 CMD 或 PowerShell 中）：\nbuild-all-react.bat\nGit Bash / WSL：\n./build-all-react.sh\n\n\n\n如果脚本出错，可以手动构建每个项目：\n# 1. 完整版\ncd physics-pipeline-react\nnpm install\nnpm run build\ncd ..\n\n# 2. 1-formula demo\ncd physics-pipeline-react-1formula\nnpm install\nnpm run build\ncd ..\n\n# 3. 2-formulas demo\ncd physics-pipeline-react-2formulas\nnpm install\nnpm run build\ncd ..\n\n\n\n\n\n检查是否成功生成了 dist 文件夹：\nls physics-pipeline-react/dist\nls physics-pipeline-react-1formula/dist\nls physics-pipeline-react-2formulas/dist\n每个 dist 文件夹应包含：\ndist/\n├── index.html\n├── assets/\n│   ├── index-[hash].js\n│   └── index-[hash].css\n└── ...\n\n\n\n\n在发布前，可以本地预览 React 项目：\n\n\ncd physics-pipeline-react\nnpm run preview\n访问：http://localhost:4173\n\n\n\n# 在浏览器中打开\nstart physics-pipeline-react/dist/index.html\n\n\n\n\n\n构建完成后，重新发布网站：\nquarto publish quarto-pub\n这会： 1. 重新渲染所有页面 2. 包含新构建的 React 项目的 dist 文件夹 3. 上传到 Quarto Pub 4. 更新网站\n\n\n\n\n打开 Git Bash 或 命令提示符，在项目根目录运行：\n# 1. 构建所有 React 项目\n./build-all-react.sh   # Mac/Linux/Git Bash\n# 或\nbuild-all-react.bat    # Windows CMD\n\n# 2. 等待构建完成（大约 1-2 分钟）\n\n# 3. 发布到 Quarto Pub\nquarto publish quarto-pub\n\n\n\n\n\n首次构建（下载依赖）：2-5 分钟\n后续构建（已有依赖）：30-60 秒\nQuarto 发布：30-60 秒\n\n总计首次部署时间：约 3-6 分钟\n\n\n\n\n\n\nA: 使用国内镜像：\nnpm config set registry https://registry.npmmirror.com\n\n\n\nA: 确保在正确的目录，并且 package.json 存在：\npwd  # 检查当前目录\nls package.json  # 检查文件是否存在\n\n\n\nA: Windows 上以管理员身份运行命令提示符。\n\n\n\nA:\n# 使用不同端口\nnpm run dev -- --port 3000\n\n\n\nA: 检查 _quarto.yml 中的 resources 配置是否包含：\nresources:\n  - \"physics-pipeline-react/dist/**\"\n  - \"physics-pipeline-react-1formula/dist/**\"\n  - \"physics-pipeline-react-2formulas/dist/**\"\n\n\n\n\n\n如果遇到问题，按顺序检查：\n\nNode.js 已正确安装（node --version）\nnpm 已正确安装（npm --version）\n在正确的项目目录\npackage.json 文件存在\nnpm install 成功完成（无错误）\nnpm run build 成功完成\ndist 文件夹已生成\ndist/index.html 文件存在\n_quarto.yml 配置正确\nquarto publish 没有错误\n\n\n\n\n\n如果遇到问题： 1. 检查上面的故障排查清单 2. 查看 REACT_PROJECTS_GUIDE.md 3. 查看构建输出的错误信息 4. 在 GitHub Issues 提问\n\n\n\n\n当一切就绪，你应该能：\n\n✅ 访问 https://tongsuoregonstate11.quarto.pub/calculator\n✅ 点击所有链接都能正常工作\n✅ React 版本可以正常加载和使用\n✅ 所有公式计算正常\n✅ 文档页面可以访问\n\n\n祝你构建顺利！ 🚀"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#当前状态",
+    "href": "BUILD_AND_DEPLOY.html#当前状态",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "✅ 已完成： - 网站已发布到：https://tongsuoregonstate11.quarto.pub/calculator - Vanilla JavaScript 版本全部正常工作 - 所有文档已创建\n⚠️ 待完成： - React 项目需要构建 - 需要安装 Node.js"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#步骤-1-安装-node.js",
+    "href": "BUILD_AND_DEPLOY.html#步骤-1-安装-node.js",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "下载 Node.js\n\n访问：https://nodejs.org/\n下载 LTS 版本（推荐 v18 或 v20）\n选择 Windows Installer (.msi) 64-bit\n\n安装 Node.js\n\n运行下载的 .msi 文件\n点击 “Next” 接受默认设置\n✅ 确保勾选 “Automatically install necessary tools”\n点击 “Install”\n安装完成后重启命令行\n\n验证安装 打开新的命令提示符（CMD）或 Git Bash，运行：\nnode --version\nnpm --version\n应该看到类似输出：\nv20.11.0\n10.2.4"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#步骤-2-构建-react-项目",
+    "href": "BUILD_AND_DEPLOY.html#步骤-2-构建-react-项目",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "安装好 Node.js 后，在项目根目录运行：\n\n\nWindows（在 CMD 或 PowerShell 中）：\nbuild-all-react.bat\nGit Bash / WSL：\n./build-all-react.sh\n\n\n\n如果脚本出错，可以手动构建每个项目：\n# 1. 完整版\ncd physics-pipeline-react\nnpm install\nnpm run build\ncd ..\n\n# 2. 1-formula demo\ncd physics-pipeline-react-1formula\nnpm install\nnpm run build\ncd ..\n\n# 3. 2-formulas demo\ncd physics-pipeline-react-2formulas\nnpm install\nnpm run build\ncd .."
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#步骤-3-验证构建",
+    "href": "BUILD_AND_DEPLOY.html#步骤-3-验证构建",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "检查是否成功生成了 dist 文件夹：\nls physics-pipeline-react/dist\nls physics-pipeline-react-1formula/dist\nls physics-pipeline-react-2formulas/dist\n每个 dist 文件夹应包含：\ndist/\n├── index.html\n├── assets/\n│   ├── index-[hash].js\n│   └── index-[hash].css\n└── ..."
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#步骤-4-本地预览可选",
+    "href": "BUILD_AND_DEPLOY.html#步骤-4-本地预览可选",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "在发布前，可以本地预览 React 项目：\n\n\ncd physics-pipeline-react\nnpm run preview\n访问：http://localhost:4173\n\n\n\n# 在浏览器中打开\nstart physics-pipeline-react/dist/index.html"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#步骤-5-重新发布到-quarto-pub",
+    "href": "BUILD_AND_DEPLOY.html#步骤-5-重新发布到-quarto-pub",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "构建完成后，重新发布网站：\nquarto publish quarto-pub\n这会： 1. 重新渲染所有页面 2. 包含新构建的 React 项目的 dist 文件夹 3. 上传到 Quarto Pub 4. 更新网站"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#完整命令序列一次性执行",
+    "href": "BUILD_AND_DEPLOY.html#完整命令序列一次性执行",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "打开 Git Bash 或 命令提示符，在项目根目录运行：\n# 1. 构建所有 React 项目\n./build-all-react.sh   # Mac/Linux/Git Bash\n# 或\nbuild-all-react.bat    # Windows CMD\n\n# 2. 等待构建完成（大约 1-2 分钟）\n\n# 3. 发布到 Quarto Pub\nquarto publish quarto-pub"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#构建时间估计",
+    "href": "BUILD_AND_DEPLOY.html#构建时间估计",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "首次构建（下载依赖）：2-5 分钟\n后续构建（已有依赖）：30-60 秒\nQuarto 发布：30-60 秒\n\n总计首次部署时间：约 3-6 分钟"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#常见问题",
+    "href": "BUILD_AND_DEPLOY.html#常见问题",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "A: 使用国内镜像：\nnpm config set registry https://registry.npmmirror.com\n\n\n\nA: 确保在正确的目录，并且 package.json 存在：\npwd  # 检查当前目录\nls package.json  # 检查文件是否存在\n\n\n\nA: Windows 上以管理员身份运行命令提示符。\n\n\n\nA:\n# 使用不同端口\nnpm run dev -- --port 3000\n\n\n\nA: 检查 _quarto.yml 中的 resources 配置是否包含：\nresources:\n  - \"physics-pipeline-react/dist/**\"\n  - \"physics-pipeline-react-1formula/dist/**\"\n  - \"physics-pipeline-react-2formulas/dist/**\""
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#故障排查检查清单",
+    "href": "BUILD_AND_DEPLOY.html#故障排查检查清单",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "如果遇到问题，按顺序检查：\n\nNode.js 已正确安装（node --version）\nnpm 已正确安装（npm --version）\n在正确的项目目录\npackage.json 文件存在\nnpm install 成功完成（无错误）\nnpm run build 成功完成\ndist 文件夹已生成\ndist/index.html 文件存在\n_quarto.yml 配置正确\nquarto publish 没有错误"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#需要帮助",
+    "href": "BUILD_AND_DEPLOY.html#需要帮助",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "如果遇到问题： 1. 检查上面的故障排查清单 2. 查看 REACT_PROJECTS_GUIDE.md 3. 查看构建输出的错误信息 4. 在 GitHub Issues 提问"
+  },
+  {
+    "objectID": "BUILD_AND_DEPLOY.html#成功标志",
+    "href": "BUILD_AND_DEPLOY.html#成功标志",
+    "title": "构建和部署指南",
+    "section": "",
+    "text": "当一切就绪，你应该能：\n\n✅ 访问 https://tongsuoregonstate11.quarto.pub/calculator\n✅ 点击所有链接都能正常工作\n✅ React 版本可以正常加载和使用\n✅ 所有公式计算正常\n✅ 文档页面可以访问\n\n\n祝你构建顺利！ 🚀"
+  },
+  {
     "objectID": "pyscript.html",
     "href": "pyscript.html",
     "title": "匀加速位移计算（Python + JS）",
@@ -21,31 +322,115 @@
     "text": "在同一页面底部加入一个原生 JS 交互计算器，读者可以输入 a 与 t 并立即看到结果。\n\n\n\n  \n  公式：d = 0.5 × a × t²（假设初速度为 0）\n\n  \n    a (m/s²)\n    \n  \n  \n    t (s)\n    \n  \n\n  计算 d = 0.5 · a · t²\n  位移 d：— m\n\n  提示：输入为空或非法时会给出提示；结果使用 6 位有效数字。\n\n\n\n\n\n\n上面的 Python 代码在构建时运行，适合生成稳定、可复现的演示结果；\n下面的 JS 交互模块不依赖外部 CDN，兼容 Quarto Pub 的 CSP；\n如需更复杂的交互，也可以把 JS 另外拆到本地脚本文件中再引用。"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Welcome to My Blog",
+    "objectID": "README-REACT-VITE.html",
+    "href": "README-REACT-VITE.html",
+    "title": "Physics Pipeline - React + Vite 版本说明",
     "section": "",
-    "text": "This is my first Quarto website. Here I can publish notes, code, and experiments.\n\n\n\n\n\n\n\n\n\n\nC programming Modern Approach\nC solutions\nThe C answer book\nlogic circuit visualizer DigitalJS\n\n\n\n\n零点极点分析工具 - Browser-based symbolic analysis using SymPy - 📚 技术文档教程\n\n\n\nPhysics formula calculator with block-based data flow - Interactive v, a, d calculations - Choose input sources (upstream blocks or manual)\n\n\n\n\n\nBuilt with Quarto\nPublished on Quarto Pub\n\nSource code available on GitHub rn## 更新日志rn{{&lt; include _includes/updates-badge.html &gt;}}rnrn ## è”ç³»æ–¹å¼ Contact\nðŸŒ GitHub: @TONGSUOregonState\n\n\n\n\n\nUpdates"
+    "text": "这是物理公式流水线计算器的现代化重写版本，使用 React 18 + Vite 构建，采用模块化组件架构。\n\n\n\nQuarto_Blog_Calculator/\n│\n├── physics-pipeline-react/              # 完整版 (10+ 公式)\n│   ├── src/\n│   │   ├── components/                  # React 组件\n│   │   │   ├── Block.jsx/.css          # Block 组件\n│   │   │   ├── Category.jsx/.css       # 公式分类组件\n│   │   │   ├── Sidebar.jsx/.css        # 侧边栏组件\n│   │   │   ├── TopBar.jsx/.css         # 顶部工具栏组件\n│   │   │   └── Results.jsx/.css        # 结果显示组件\n│   │   ├── data/\n│   │   │   └── formulas.js             # 公式数据定义\n│   │   ├── utils/\n│   │   │   ├── calculator.js           # 计算逻辑\n│   │   │   └── formatter.js            # 格式化工具\n│   │   ├── App.jsx                     # 主应用组件\n│   │   ├── App.css\n│   │   ├── main.jsx                    # 入口文件\n│   │   └── index.css                   # 全局样式\n│   ├── index.html\n│   ├── package.json\n│   ├── vite.config.js\n│   └── dist/                           # 构建输出 (运行 npm run build 后生成)\n│\n├── physics-pipeline-react-1formula/     # Demo版 (1个公式)\n│   └── (同上结构，仅 formulas.js 不同)\n│\n├── physics-pipeline-react-2formulas/    # Demo版 (2个公式)\n│   └── (同上结构，仅 formulas.js 不同)\n│\n├── build-all-react.bat                  # Windows 构建脚本\n├── build-all-react.sh                   # Unix/Linux/Mac 构建脚本\n└── REACT_PROJECTS_GUIDE.md              # 详细使用指南\n\n\n\n\n\n\n❌ 所有代码在一个 HTML 文件中\n❌ 使用 &lt;script src=\"...\"&gt; CDN 引用 React\n❌ 没有模块化\n❌ 难以维护和扩展\n✅ 无需构建，直接运行\n\n\n\n\n\n✅ 代码按组件分离到独立文件\n✅ 使用 ES 模块 import/export\n✅ 模块化架构，易于维护\n✅ 热模块替换 (HMR) 开发体验\n✅ 优化的生产构建\n❌ 需要 Node.js 和构建步骤\n\n\n\n\n\n\n\n确保已安装 Node.js (推荐 v18+)\n\n\n\nWindows:\nbuild-all-react.bat\nmacOS/Linux:\nchmod +x build-all-react.sh\n./build-all-react.sh\n\n\n\n# 完整版\ncd physics-pipeline-react\nnpm install\nnpm run build\n\n# Demo - 1 公式\ncd ../physics-pipeline-react-1formula\nnpm install\nnpm run build\n\n# Demo - 2 公式\ncd ../physics-pipeline-react-2formulas\nnpm install\nnpm run build\n\n\n\ncd physics-pipeline-react\nnpm install\nnpm run dev\n访问: http://localhost:5173\n\n\n\n\n构建后，每个项目的 dist/ 文件夹包含：\ndist/\n├── index.html              # 入口文件\n├── assets/\n│   ├── index-[hash].js    # 打包的 JavaScript\n│   └── index-[hash].css   # 打包的 CSS\n└── ...\n可以直接部署 dist/ 文件夹，或在浏览器中打开 dist/index.html。\n\n\n\n\n\n每个功能都是独立的 React 组件：\n// 示例：Block.jsx\nimport { useState } from 'react';\nimport './Block.css';\n\nfunction Block({ formula, blockNumber, ... }) {\n  const [collapsed, setCollapsed] = useState(false);\n  // ... 组件逻辑\n}\n\nexport default Block;\n\n\n\n// utils/calculator.js\nexport function parseInput(inputStr, blockIndex, blocks, logLines, varName) {\n  // 解析逻辑\n}\n\nexport function runPipeline(blocks) {\n  // 流水线执行逻辑\n}\n\n\n\n// data/formulas.js\nexport const FORMULA_CATEGORIES = [\n  {\n    name: '运动学 Kinematics',\n    formulas: [\n      {\n        id: 'v_v0_at',\n        name: '匀加速末速度',\n        formulaText: 'v = v0 + a·t',\n        inputs: ['v0', 'a', 't'],\n        output: 'v',\n        compute: ({ v0, a, t }) =&gt; v0 + a * t\n      }\n    ]\n  }\n];\n\n\n\n每个组件都有自己的样式文件：\n/* Block.css */\n.block {\n  width: 260px;\n  background: #ffffff;\n  border-radius: 14px;\n  /* ... */\n}\n\n\n\n\n\n\n编辑 src/data/formulas.js:\n{\n  id: 'your_formula_id',\n  name: '公式名称',\n  formulaText: 'F = m·a',\n  inputs: ['m', 'a'],\n  output: 'F',\n  compute: ({ m, a }) =&gt; m * a\n}\n\n\n\n\n创建 src/components/YourComponent.jsx\n创建 src/components/YourComponent.css\n在 App.jsx 中导入并使用\n\n\n\n\n编辑对应组件的 .css 文件，或修改 src/index.css 全局样式。\n\n\n\n\n\n\n\n特性\n完整版\n1-Formula\n2-Formulas\n\n\n\n\n公式数量\n10+\n1\n2\n\n\n适用场景\n生产使用\n学习基础\n学习连接\n\n\n文件大小\n~150KB\n~120KB\n~130KB\n\n\n构建时间\n~5s\n~3s\n~4s\n\n\n\n\n\n\n\nReact 18.3.1 - UI 框架\nReact DOM 18.3.1 - DOM 渲染\nVite 5.4.2 - 构建工具\n@vitejs/plugin-react 4.3.1 - React 插件\n\n\n\n\n# 安装依赖\nnpm install\n\n# 开发模式 (热更新)\nnpm run dev\n\n# 生产构建\nnpm run build\n\n# 预览构建结果\nnpm run preview\n\n\n\n详见 REACT_PROJECTS_GUIDE.md\n\n\n\n\n详细使用指南\nReact 文档\nVite 文档\n项目主页\n\n\n\n\n\n初学者: 从 physics-pipeline-react-1formula 开始\n\n理解 React 组件结构\n学习 props 和 state\n了解事件处理\n\n进阶: 学习 physics-pipeline-react-2formulas\n\n多组件交互\n数据流管理\nBlock 间引用\n\n高级: 研究 physics-pipeline-react 完整版\n\n复杂状态管理\n组件复用\n性能优化\n\n\n\n\n\n与主项目相同\n\n\n\nTong Su - @TONGSUOregonState\n\n注意: 首次使用前必须运行构建命令！构建脚本会自动安装依赖并生成可用的 HTML 文件。"
   },
   {
-    "objectID": "index.html#åšååˆç",
-    "href": "index.html#åšååˆç",
-    "title": "Welcome to My Blog",
+    "objectID": "README-REACT-VITE.html#概述",
+    "href": "README-REACT-VITE.html#概述",
+    "title": "Physics Pipeline - React + Vite 版本说明",
     "section": "",
-    "text": "C programming Modern Approach\nC solutions\nThe C answer book\nlogic circuit visualizer DigitalJS\n\n\n\n\n零点极点分析工具 - Browser-based symbolic analysis using SymPy - 📚 技术文档教程\n\n\n\nPhysics formula calculator with block-based data flow - Interactive v, a, d calculations - Choose input sources (upstream blocks or manual)\n\n\n\n\n\nBuilt with Quarto\nPublished on Quarto Pub\n\nSource code available on GitHub rn## 更新日志rn{{&lt; include _includes/updates-badge.html &gt;}}rnrn ## è”ç³»æ–¹å¼ Contact\nðŸŒ GitHub: @TONGSUOregonState\n\n\n\n\n\nUpdates"
+    "text": "这是物理公式流水线计算器的现代化重写版本，使用 React 18 + Vite 构建，采用模块化组件架构。"
   },
   {
-    "objectID": "index.html#about-this-site",
-    "href": "index.html#about-this-site",
-    "title": "Welcome to My Blog",
+    "objectID": "README-REACT-VITE.html#项目结构",
+    "href": "README-REACT-VITE.html#项目结构",
+    "title": "Physics Pipeline - React + Vite 版本说明",
     "section": "",
-    "text": "Built with Quarto\nPublished on Quarto Pub\n\nSource code available on GitHub rn## 更新日志rn{{&lt; include _includes/updates-badge.html &gt;}}rnrn ## è”ç³»æ–¹å¼ Contact\nðŸŒ GitHub: @TONGSUOregonState"
+    "text": "Quarto_Blog_Calculator/\n│\n├── physics-pipeline-react/              # 完整版 (10+ 公式)\n│   ├── src/\n│   │   ├── components/                  # React 组件\n│   │   │   ├── Block.jsx/.css          # Block 组件\n│   │   │   ├── Category.jsx/.css       # 公式分类组件\n│   │   │   ├── Sidebar.jsx/.css        # 侧边栏组件\n│   │   │   ├── TopBar.jsx/.css         # 顶部工具栏组件\n│   │   │   └── Results.jsx/.css        # 结果显示组件\n│   │   ├── data/\n│   │   │   └── formulas.js             # 公式数据定义\n│   │   ├── utils/\n│   │   │   ├── calculator.js           # 计算逻辑\n│   │   │   └── formatter.js            # 格式化工具\n│   │   ├── App.jsx                     # 主应用组件\n│   │   ├── App.css\n│   │   ├── main.jsx                    # 入口文件\n│   │   └── index.css                   # 全局样式\n│   ├── index.html\n│   ├── package.json\n│   ├── vite.config.js\n│   └── dist/                           # 构建输出 (运行 npm run build 后生成)\n│\n├── physics-pipeline-react-1formula/     # Demo版 (1个公式)\n│   └── (同上结构，仅 formulas.js 不同)\n│\n├── physics-pipeline-react-2formulas/    # Demo版 (2个公式)\n│   └── (同上结构，仅 formulas.js 不同)\n│\n├── build-all-react.bat                  # Windows 构建脚本\n├── build-all-react.sh                   # Unix/Linux/Mac 构建脚本\n└── REACT_PROJECTS_GUIDE.md              # 详细使用指南"
   },
   {
-    "objectID": "index.html#更新日志",
-    "href": "index.html#更新日志",
-    "title": "Welcome to My Blog",
+    "objectID": "README-REACT-VITE.html#与旧版本的区别",
+    "href": "README-REACT-VITE.html#与旧版本的区别",
+    "title": "Physics Pipeline - React + Vite 版本说明",
     "section": "",
-    "text": "Updates"
+    "text": "❌ 所有代码在一个 HTML 文件中\n❌ 使用 &lt;script src=\"...\"&gt; CDN 引用 React\n❌ 没有模块化\n❌ 难以维护和扩展\n✅ 无需构建，直接运行\n\n\n\n\n\n✅ 代码按组件分离到独立文件\n✅ 使用 ES 模块 import/export\n✅ 模块化架构，易于维护\n✅ 热模块替换 (HMR) 开发体验\n✅ 优化的生产构建\n❌ 需要 Node.js 和构建步骤"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#快速开始",
+    "href": "README-REACT-VITE.html#快速开始",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "确保已安装 Node.js (推荐 v18+)\n\n\n\nWindows:\nbuild-all-react.bat\nmacOS/Linux:\nchmod +x build-all-react.sh\n./build-all-react.sh\n\n\n\n# 完整版\ncd physics-pipeline-react\nnpm install\nnpm run build\n\n# Demo - 1 公式\ncd ../physics-pipeline-react-1formula\nnpm install\nnpm run build\n\n# Demo - 2 公式\ncd ../physics-pipeline-react-2formulas\nnpm install\nnpm run build\n\n\n\ncd physics-pipeline-react\nnpm install\nnpm run dev\n访问: http://localhost:5173"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#构建输出",
+    "href": "README-REACT-VITE.html#构建输出",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "构建后，每个项目的 dist/ 文件夹包含：\ndist/\n├── index.html              # 入口文件\n├── assets/\n│   ├── index-[hash].js    # 打包的 JavaScript\n│   └── index-[hash].css   # 打包的 CSS\n└── ...\n可以直接部署 dist/ 文件夹，或在浏览器中打开 dist/index.html。"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#主要改进",
+    "href": "README-REACT-VITE.html#主要改进",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "每个功能都是独立的 React 组件：\n// 示例：Block.jsx\nimport { useState } from 'react';\nimport './Block.css';\n\nfunction Block({ formula, blockNumber, ... }) {\n  const [collapsed, setCollapsed] = useState(false);\n  // ... 组件逻辑\n}\n\nexport default Block;\n\n\n\n// utils/calculator.js\nexport function parseInput(inputStr, blockIndex, blocks, logLines, varName) {\n  // 解析逻辑\n}\n\nexport function runPipeline(blocks) {\n  // 流水线执行逻辑\n}\n\n\n\n// data/formulas.js\nexport const FORMULA_CATEGORIES = [\n  {\n    name: '运动学 Kinematics',\n    formulas: [\n      {\n        id: 'v_v0_at',\n        name: '匀加速末速度',\n        formulaText: 'v = v0 + a·t',\n        inputs: ['v0', 'a', 't'],\n        output: 'v',\n        compute: ({ v0, a, t }) =&gt; v0 + a * t\n      }\n    ]\n  }\n];\n\n\n\n每个组件都有自己的样式文件：\n/* Block.css */\n.block {\n  width: 260px;\n  background: #ffffff;\n  border-radius: 14px;\n  /* ... */\n}"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#自定义和扩展",
+    "href": "README-REACT-VITE.html#自定义和扩展",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "编辑 src/data/formulas.js:\n{\n  id: 'your_formula_id',\n  name: '公式名称',\n  formulaText: 'F = m·a',\n  inputs: ['m', 'a'],\n  output: 'F',\n  compute: ({ m, a }) =&gt; m * a\n}\n\n\n\n\n创建 src/components/YourComponent.jsx\n创建 src/components/YourComponent.css\n在 App.jsx 中导入并使用\n\n\n\n\n编辑对应组件的 .css 文件，或修改 src/index.css 全局样式。"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#三个版本对比",
+    "href": "README-REACT-VITE.html#三个版本对比",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "特性\n完整版\n1-Formula\n2-Formulas\n\n\n\n\n公式数量\n10+\n1\n2\n\n\n适用场景\n生产使用\n学习基础\n学习连接\n\n\n文件大小\n~150KB\n~120KB\n~130KB\n\n\n构建时间\n~5s\n~3s\n~4s"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#技术栈",
+    "href": "README-REACT-VITE.html#技术栈",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "React 18.3.1 - UI 框架\nReact DOM 18.3.1 - DOM 渲染\nVite 5.4.2 - 构建工具\n@vitejs/plugin-react 4.3.1 - React 插件"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#开发命令",
+    "href": "README-REACT-VITE.html#开发命令",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "# 安装依赖\nnpm install\n\n# 开发模式 (热更新)\nnpm run dev\n\n# 生产构建\nnpm run build\n\n# 预览构建结果\nnpm run preview"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#故障排除",
+    "href": "README-REACT-VITE.html#故障排除",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "详见 REACT_PROJECTS_GUIDE.md"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#更多资源",
+    "href": "README-REACT-VITE.html#更多资源",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "详细使用指南\nReact 文档\nVite 文档\n项目主页"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#学习路径",
+    "href": "README-REACT-VITE.html#学习路径",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "初学者: 从 physics-pipeline-react-1formula 开始\n\n理解 React 组件结构\n学习 props 和 state\n了解事件处理\n\n进阶: 学习 physics-pipeline-react-2formulas\n\n多组件交互\n数据流管理\nBlock 间引用\n\n高级: 研究 physics-pipeline-react 完整版\n\n复杂状态管理\n组件复用\n性能优化"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#许可",
+    "href": "README-REACT-VITE.html#许可",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "与主项目相同"
+  },
+  {
+    "objectID": "README-REACT-VITE.html#作者",
+    "href": "README-REACT-VITE.html#作者",
+    "title": "Physics Pipeline - React + Vite 版本说明",
+    "section": "",
+    "text": "Tong Su - @TONGSUOregonState\n\n注意: 首次使用前必须运行构建命令！构建脚本会自动安装依赖并生成可用的 HTML 文件。"
   }
 ]

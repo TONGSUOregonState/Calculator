@@ -1,0 +1,142 @@
+.block {
+  width: 260px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+  border: 2px solid rgba(148,163,184,0.6);
+  padding: 10px 12px 12px;
+}
+
+.block-header {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px;
+  margin: -4px -4px 4px -4px;
+  border-radius: 8px;
+}
+
+.block-header:hover {
+  background: #f9fafb;
+}
+
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.block-toggle {
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.block-number {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: #111827;
+  color: white;
+  border-radius: 4px;
+}
+
+.block-content {
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.block-content.collapsed {
+  max-height: 0 !important;
+}
+
+.block-formula {
+  font-size: 11px;
+  color: #6b7280;
+  margin-bottom: 8px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+}
+
+.field {
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.field label {
+  display: block;
+  color: #374151;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.field input {
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 12px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.3);
+}
+
+.field input.referenced {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.field .hint {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.output-row {
+  margin-top: 6px;
+  font-size: 12px;
+  padding: 6px;
+  background: #f0fdf4;
+  border-radius: 6px;
+}
+
+.output-label {
+  color: #166534;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.output-value {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  color: #059669;
+  font-weight: 600;
+}
+
+.btn-row {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-calc {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: none;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 500;
+  background: #10b981;
+  color: white;
+}
+
+.btn-calc:hover {
+  background: #059669;
+}
