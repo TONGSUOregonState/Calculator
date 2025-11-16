@@ -204,8 +204,8 @@ total_rounded_cents = int(total_cost * 100.0 + 0.5)
 dollars = total_rounded_cents // 100
 cents = total_rounded_cents % 100
 
-print(f"Enter the price of the item to be purchased (e.g., 0.98): ${item_price:.2f}")
-print(f"\\nItem price of ${item_price:.2f} with sales tax is {dollars} dollars and {cents} cents")
+print(f"Enter the price of the item to be purchased (e.g., 0.98): \\${item_price:.2f}")
+print(f"\\nItem price of \\${item_price:.2f} with sales tax is {dollars} dollars and {cents} cents")
     `,
     params: [
       { name: 'item_price', label: '商品价格', unit: '美元', default: 0.98, step: 0.01 }
