@@ -31,7 +31,7 @@ website:
         text: Home
       - text: "🔬 Optics Programs"
         menu:
-          - href: optics-berkeley-react/dist/index.html
+          - href: ./optics-berkeley-react/dist/index.html
             text: "Optics & Berkeley Programs"
       - text: "⚛️ React Projects"
         menu:
