@@ -16,6 +16,7 @@ project:
     - "Pyodide_Sequential_Computing/physics-pipeline-react/dist/**"
     - "Pyodide_Sequential_Computing/dsp-rz-react/dist/**"
     - "Pyodide_Sequential_Computing/pyscript-pipeline-react/dist/**"
+    - "sympy-equation-solver-react/dist/**"
 
 website:
   title: "calculator"
@@ -38,6 +39,9 @@ website:
             text: "Pyodide DSP R(z)"
           - href: Pyodide_Sequential_Computing/pyscript-pipeline-react/dist/index.html
             text: "PyScript Pipeline"
+          - text: "--- SymPy Demos ---"
+          - href: sympy-equation-solver-react/dist/index.html
+            text: "SymPy Equation Solver"
       - text: "🧪 Learning Demos"
         menu:
           - text: "--- React Demos ---"

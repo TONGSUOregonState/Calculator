@@ -89,6 +89,31 @@ All projects below use **React 18 + Vite** for modern, modular architecture.
 
 ::::::
 
+---
+
+## 🧮 SymPy Interactive Demos
+
+**Symbolic mathematics with equation manipulation and variable swapping.**
+
+::: {.g-col-12}
+### [SymPy Equation Solver](./sympy-equation-solver-react/dist/index.html)
+🔀 **Variable Swapping Demo**
+
+**Features:**
+- **Symbolic Equation Rearrangement**: Automatically rearrange equations using SymPy
+- **Variable Swapping**: Solve for any variable in the same block (e.g., d=s/t → s=d*t → t=s/d)
+- **Unknown Variables**: Display equations with symbolic variables before substitution
+- **Pyodide Cache Status**: Visual indicator showing if Pyodide is loaded from cache
+- **LaTeX Rendering**: Beautiful equation display with MathJax
+
+**Example Equation:** `d = s / t` (distance = speed / time)
+- Solve for **d** (distance): Input s, t → Calculate d
+- Solve for **s** (speed): Input d, t → Calculate s
+- Solve for **t** (time): Input d, s → Calculate t
+
+All in the same interactive block!
+:::
+
 ::: {.callout-note collapse="true"}
 ## 📦 Alternative Versions (Vanilla JavaScript)
 
