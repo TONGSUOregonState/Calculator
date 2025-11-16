@@ -25,7 +25,8 @@ optics-berkeley-react/
 │   │   └── programs.js          # 程序数据（自动生成）
 │   ├── App.jsx                  # 主应用
 │   └── main.jsx                 # 入口文件
-├── convert-programs.js          # 转换脚本（MATLAB/C → Python）
+├── convert-programs.cjs         # 转换脚本（MATLAB/C → Python）
+├── OpticsMatlab/                # MATLAB 源代码
 ├── package.json
 └── vite.config.js
 ```
@@ -43,10 +44,10 @@ npm install
 如果你有 Node.js，可以运行转换脚本来自动生成所有程序的 Python 版本：
 
 ```bash
-node convert-programs.js
+node convert-programs.cjs
 ```
 
-这将读取 `../physics-pipeline-react/OpticsMatlab/` 和 `../physics-pipeline-react/Berkeley-Extension/` 目录下的所有文件，并生成 `src/data/programs.js`。
+这将读取 `OpticsMatlab/` 和 `Berkeley-Extension/` 目录下的所有文件，并生成 `src/data/programs.js`。
 
 **注意**：转换脚本是自动化的，可能需要对某些复杂程序进行手动调整。
 
@@ -139,7 +140,17 @@ npm run preview
 
 ### 自动转换
 
-运行 `convert-programs.js` 脚本会自动转换所有 MATLAB 和 C 文件。转换后的代码可能需要手动调整以确保正确运行。
+运行 `convert-programs.cjs` 脚本会自动转换所有 MATLAB 和 C 文件。转换后的代码可能需要手动调整以确保正确运行。
+
+```bash
+node convert-programs.cjs
+```
+
+脚本会自动：
+- 读取 `OpticsMatlab/` 目录下的所有 .m 文件
+- 将 MATLAB 语法转换为 Python 语法
+- 生成带有 matplotlib 绘图的 Python 代码
+- 输出到 `src/data/programs.js` 文件
 
 ## 注意事项
 

@@ -77,6 +77,48 @@
     "text": "现在你的项目包含： - ✅ 3个原始vanilla JS版本（直接运行） - ✅ 3个现代React + Vite版本（需要构建） - ✅ 完整的构建脚本和文档 - ✅ 更新的index.qmd和_quarto.yml配置\n开始使用： 1. 运行 build-all-react.bat（首次） 2. 运行 quarto render 3. 访问你的网站，所有链接都可以正常工作！"
   },
   {
+    "objectID": "RENDER_DEPLOYMENT.html",
+    "href": "RENDER_DEPLOYMENT.html",
+    "title": "Render.com 部署指南",
+    "section": "",
+    "text": "已修复构建错误：JavaScript 模板字符串中的 Python f-string 语法冲突。\n\n\n在 JavaScript 模板字符串（反引号）中，${} 被解释为 JavaScript 模板字符串插值语法，而不是 Python 代码的一部分。\n\n\n\n将所有 Python f-string 中的 $ 符号转义为 \\$：\n修复前：\nprint(f\"Enter the price: ${item_price:.2f}\")\n修复后：\nprint(f\"Enter the price: \\\\${item_price:.2f}\")\n\n\n\n\n\n\n# 安装依赖并构建所有 React 项目\nnpm install\nnode build-react-projects.js\n\n# 构建 Quarto 网站\nquarto render\n\n\n\nquarto publish quarto-pub\n\n\n\n确保在 Render.com 中设置以下环境变量（如果需要）： - QUARTO_PUB_TOKEN: QuartoPub 发布 token\n\n\n\n\n\n连接 GitHub 仓库\n\n在 Render.com 中连接到 https://github.com/TONGSUOregonState/calculator2.git\n\n配置构建设置\n\nBuild Command: npm install && node build-react-projects.js && quarto render\nPublish Command: quarto publish quarto-pub\n\n部署\n\nRender.com 会自动检测推送并重新部署\n\n\n\n\n\n部署成功后，检查： - ✅ 所有 React 项目构建成功 - ✅ Quarto 网站渲染成功 - ✅ 没有 JavaScript 语法错误 - ✅ 网站可以正常访问\n\n\n\n如果构建仍然失败： 1. 检查 Node.js 版本（建议 18+） 2. 检查 Quarto 是否已安装 3. 查看构建日志中的具体错误信息 4. 确保所有依赖都已正确安装"
+  },
+  {
+    "objectID": "RENDER_DEPLOYMENT.html#问题修复",
+    "href": "RENDER_DEPLOYMENT.html#问题修复",
+    "title": "Render.com 部署指南",
+    "section": "",
+    "text": "已修复构建错误：JavaScript 模板字符串中的 Python f-string 语法冲突。\n\n\n在 JavaScript 模板字符串（反引号）中，${} 被解释为 JavaScript 模板字符串插值语法，而不是 Python 代码的一部分。\n\n\n\n将所有 Python f-string 中的 $ 符号转义为 \\$：\n修复前：\nprint(f\"Enter the price: ${item_price:.2f}\")\n修复后：\nprint(f\"Enter the price: \\\\${item_price:.2f}\")"
+  },
+  {
+    "objectID": "RENDER_DEPLOYMENT.html#render.com-配置",
+    "href": "RENDER_DEPLOYMENT.html#render.com-配置",
+    "title": "Render.com 部署指南",
+    "section": "",
+    "text": "# 安装依赖并构建所有 React 项目\nnpm install\nnode build-react-projects.js\n\n# 构建 Quarto 网站\nquarto render\n\n\n\nquarto publish quarto-pub\n\n\n\n确保在 Render.com 中设置以下环境变量（如果需要）： - QUARTO_PUB_TOKEN: QuartoPub 发布 token"
+  },
+  {
+    "objectID": "RENDER_DEPLOYMENT.html#部署步骤",
+    "href": "RENDER_DEPLOYMENT.html#部署步骤",
+    "title": "Render.com 部署指南",
+    "section": "",
+    "text": "连接 GitHub 仓库\n\n在 Render.com 中连接到 https://github.com/TONGSUOregonState/calculator2.git\n\n配置构建设置\n\nBuild Command: npm install && node build-react-projects.js && quarto render\nPublish Command: quarto publish quarto-pub\n\n部署\n\nRender.com 会自动检测推送并重新部署"
+  },
+  {
+    "objectID": "RENDER_DEPLOYMENT.html#验证",
+    "href": "RENDER_DEPLOYMENT.html#验证",
+    "title": "Render.com 部署指南",
+    "section": "",
+    "text": "部署成功后，检查： - ✅ 所有 React 项目构建成功 - ✅ Quarto 网站渲染成功 - ✅ 没有 JavaScript 语法错误 - ✅ 网站可以正常访问"
+  },
+  {
+    "objectID": "RENDER_DEPLOYMENT.html#故障排除",
+    "href": "RENDER_DEPLOYMENT.html#故障排除",
+    "title": "Render.com 部署指南",
+    "section": "",
+    "text": "如果构建仍然失败： 1. 检查 Node.js 版本（建议 18+） 2. 检查 Quarto 是否已安装 3. 查看构建日志中的具体错误信息 4. 确保所有依赖都已正确安装"
+  },
+  {
     "objectID": "REACT_PROJECTS_GUIDE.html",
     "href": "REACT_PROJECTS_GUIDE.html",
     "title": "React + Vite 项目使用指南",
@@ -161,53 +203,270 @@
     "text": "React: 18.3.1\nReact DOM: 18.3.1\nVite: 5.4.2\n@vitejs/plugin-react: 4.3.1"
   },
   {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "Quarto 命令行工具似乎无法自动识别 _publish.yml 文件。以下是几种解决方案：\n\n\n\n\n打开终端/命令提示符\n导航到项目目录\n运行：\nquarto publish\n选择 quarto-pub 作为发布目标\n当提示输入 token 时，输入：\nqpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\n\n\n\n\n\n访问 https://quarto.org/\n登录您的账户\n使用网站界面发布项目\n\n\n\n\n确保 _publish.yml 文件格式正确：\n-\n  source: .\n  quarto-pub:\n    token: qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\n\n\n\n设置环境变量后发布：\nWindows PowerShell:\n$env:QUARTO_PUB_TOKEN=\"qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\"\nquarto publish quarto-pub\nWindows CMD:\nset QUARTO_PUB_TOKEN=qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\nquarto publish quarto-pub\nLinux/Mac:\nexport QUARTO_PUB_TOKEN=\"qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\"\nquarto publish quarto-pub\n\n\n\n\n构建网站：\nquarto render --no-execute\n**确保 _site 目录存在**： 构建后应该生成 _site/ 目录\n检查文件： 确保所有必要的文件都在 _site/ 目录中\n\n\n\n\n发布成功后，网站应该可以通过以下 URL 访问： - https://tongsuoregonstate11.quarto.pub/calculator2\n如果 URL 不同，Quarto 会在发布后显示实际的 URL。\n\n\n\n如果仍然无法发布：\n\n检查 Quarto 版本：\nquarto --version\n确保使用最新版本\n检查网络连接： 确保可以访问 quarto.pub\n检查 token： 确保 token 正确且未过期\n查看详细日志： 添加 --verbose 参数查看详细输出"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#问题",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#问题",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "Quarto 命令行工具似乎无法自动识别 _publish.yml 文件。以下是几种解决方案："
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-1-使用-quarto-交互式发布",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-1-使用-quarto-交互式发布",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "打开终端/命令提示符\n导航到项目目录\n运行：\nquarto publish\n选择 quarto-pub 作为发布目标\n当提示输入 token 时，输入：\nqpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-2-使用-quarto-网站界面",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-2-使用-quarto-网站界面",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "访问 https://quarto.org/\n登录您的账户\n使用网站界面发布项目"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-3-检查-_publish.yml-格式",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-3-检查-_publish.yml-格式",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "确保 _publish.yml 文件格式正确：\n-\n  source: .\n  quarto-pub:\n    token: qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-4-使用环境变量",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#解决方案-4-使用环境变量",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "设置环境变量后发布：\nWindows PowerShell:\n$env:QUARTO_PUB_TOKEN=\"qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\"\nquarto publish quarto-pub\nWindows CMD:\nset QUARTO_PUB_TOKEN=qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\nquarto publish quarto-pub\nLinux/Mac:\nexport QUARTO_PUB_TOKEN=\"qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0\"\nquarto publish quarto-pub"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#发布前准备",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#发布前准备",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "构建网站：\nquarto render --no-execute\n**确保 _site 目录存在**： 构建后应该生成 _site/ 目录\n检查文件： 确保所有必要的文件都在 _site/ 目录中"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#发布后",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#发布后",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "发布成功后，网站应该可以通过以下 URL 访问： - https://tongsuoregonstate11.quarto.pub/calculator2\n如果 URL 不同，Quarto 会在发布后显示实际的 URL。"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_INSTRUCTIONS.html#故障排除",
+    "href": "QUARTO_PUBLISH_INSTRUCTIONS.html#故障排除",
+    "title": "QuartoPub 发布说明",
+    "section": "",
+    "text": "如果仍然无法发布：\n\n检查 Quarto 版本：\nquarto --version\n确保使用最新版本\n检查网络连接： 确保可以访问 quarto.pub\n检查 token： 确保 token 正确且未过期\n查看详细日志： 添加 --verbose 参数查看详细输出"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "本指南将帮你设置 Netlify 自动构建和部署，无需在本地安装 Node.js。\n\n\n\n你的电脑          GitHub              Netlify 服务器\n   ↓                ↓                      ↓\n推送代码    →   存储仓库   →   自动检测更新\n                              ↓\n                         安装 Node.js\n                              ↓\n                         构建 React 项目\n                              ↓\n                         构建 Quarto 站点\n                              ↓\n                         发布到互联网 ✨\n你只需要推送代码，Netlify 处理所有构建！\n\n\n\n\n\n\n\n访问 https://github.com\n点击右上角 “+” → “New repository”\n填写信息：\n\nRepository name: Quarto_Blog_Calculator\nDescription: “Physics calculators with React + Quarto”\nVisibility: Public（推荐）或 Private\n\n✅ 不要勾选 “Initialize with README”（我们已有文件）\n点击 “Create repository”\n\n\n\n\n在你的项目目录打开 Git Bash 或命令提示符：\n# 初始化 Git（如果还没有）\ngit init\n\n# 添加远程仓库（替换成你的用户名）\ngit remote add origin https://github.com/TONGSUOregonState/Quarto_Blog_Calculator.git\n\n# 添加所有文件\ngit add .\n\n# 提交\ngit commit -m \"Initial commit with React + Vite projects and Netlify config\"\n\n# 推送到 GitHub\ngit push -u origin main\n如果提示需要登录，按照 GitHub 的指示操作。\n\n\n\n\n\n\n\n\n访问 https://www.netlify.com\n点击 “Sign up”\n选择 “Sign up with GitHub”（推荐）\n授权 Netlify 访问你的 GitHub\n\n\n\n\n\n登录后，点击 “Add new site” → “Import an existing project”\n选择 “Deploy with GitHub”\n授权 Netlify 访问仓库（如果还没授权）\n找到并选择 Quarto_Blog_Calculator 仓库\n\n\n\n\nNetlify 会自动检测 netlify.toml 文件，但你可以验证：\n\nBranch to deploy: main\nBuild command: chmod +x build-all-react.sh && ./build-all-react.sh && quarto render\nPublish directory: _site\n\n这些设置已经在 netlify.toml 中配置好了！\n\n\n\n\n点击 “Deploy site”\nNetlify 会：\n\n✅ 安装 Node.js\n✅ 安装 Quarto\n✅ 构建所有 React 项目\n✅ 生成静态网站\n✅ 发布到互联网\n\n\n首次部署大约需要 3-5 分钟。\n\n\n\n\n\n部署完成后，你会看到：\n✅ Site is live!\nhttps://amazing-name-123456.netlify.app\n\n\n\n在 Netlify 仪表板，点击 “Domain settings”\n点击 “Options” → “Edit site name”\n改成你想要的名字，例如：\n\ntongsu-physics-calculator.netlify.app\ntongsu-quarto-blog.netlify.app\n\n\n\n\n\n\n\n现在，每次你修改代码并推送到 GitHub，Netlify 会自动重新部署！\n# 修改代码后\ngit add .\ngit commit -m \"Update formulas\"\ngit push\n\n# Netlify 自动检测并重新部署！✨\n你可以在 Netlify 仪表板的 “Deploys” 标签查看部署状态。\n\n\n\n\n我已经为你创建了 netlify.toml，它包含：\n\n\n[build]\n  command = \"chmod +x build-all-react.sh && ./build-all-react.sh && quarto render\"\n  publish = \"_site\"\n\n\n\n[build.environment]\n  NODE_VERSION = \"20\"\n  QUARTO_VERSION = \"1.4.550\"\n\n\n\n\n✅ CSS/JS 压缩\n✅ 图片压缩\n✅ 缓存策略\n✅ 安全头部\n\n\n\n\n\n/react-pipeline → React 完整版\n/react-1formula → React 1公式版\n/react-2formulas → React 2公式版\n\n\n\n\n\n\n\n\n\n\n\n方面\n本地构建\nNetlify 自动构建\n\n\n\n\n需要 Node.js\n✅ 是\n❌ 否\n\n\n手动构建\n✅ 每次\n❌ 自动\n\n\n推送即部署\n❌ 否\n✅ 是\n\n\n构建环境\n你的电脑\n云端服务器\n\n\nCDN 加速\n❌\n✅ 全球 CDN\n\n\nHTTPS\n手动配置\n✅ 自动\n\n\n自定义域名\n有限\n✅ 完全支持\n\n\n\n\n\n\n\n\n\n\n解决方案: 确保安装了 Quarto 插件：\n[[plugins]]\n  package = \"netlify-plugin-quarto\"\n已经在 netlify.toml 中配置了。\n\n\n\n检查: 1. 所有 package.json 文件都已提交 2. build-all-react.sh 有执行权限 3. 查看 Netlify 构建日志找具体错误\n\n\n\n原因: 文件路径不正确\n检查: - _quarto.yml 中的 resources 配置 - index.qmd 中的链接路径\n\n\n\n正常: 首次部署需要安装依赖（3-5分钟） - 后续部署会快得多（30-60秒） - Netlify 会缓存 node_modules\n\n\n\n\n\n\n\n# 编辑 src/ 文件\n# 提交并推送\ngit add .\ngit commit -m \"Update Block component\"\ngit push\n\n# Netlify 自动构建和部署！\n\n\n\n# 编辑 .qmd 文件\ngit add .\ngit commit -m \"Add new blog post\"\ngit push\n\n# Netlify 自动重新渲染！\n\n\n\n# 编辑 src/data/formulas.js\ngit add .\ngit commit -m \"Add new physics formula\"\ngit push\n\n# 自动部署！\n\n\n\n\n\n\n\nNetlify 为每个 Pull Request 创建预览： 1. 创建新分支 2. 推送更改 3. 创建 PR 4. Netlify 自动创建预览 URL\n\n\n\n在 Netlify 仪表板设置环境变量： 1. Site settings → Environment variables 2. 添加 API keys 等敏感信息\n\n\n\nNetlify 内置表单处理（如果需要联系表单）\n\n\n\n可以添加后端功能（高级用法）\n\n\n\n\n\n\nNetlify 文档: https://docs.netlify.com\nQuarto + Netlify: https://quarto.org/docs/publishing/netlify.html\n你的仓库: https://github.com/TONGSUOregonState/Quarto_Blog_Calculator\nNetlify 仪表板: https://app.netlify.com\n\n\n\n\n\n部署成功后：\n\n✅ 测试所有链接\n✅ 验证 React 项目工作正常\n✅ 设置自定义域名（可选）\n✅ 配置 DNS（如果有自己的域名）\n✅ 享受自动部署！🎉\n\n\n\n\n\n\n查看 Netlify 构建日志找错误\n检查 GitHub Actions（如果配置了）\n访问 Netlify 社区论坛\n\n祝你部署顺利！ 🚀"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#工作原理",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#工作原理",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "你的电脑          GitHub              Netlify 服务器\n   ↓                ↓                      ↓\n推送代码    →   存储仓库   →   自动检测更新\n                              ↓\n                         安装 Node.js\n                              ↓\n                         构建 React 项目\n                              ↓\n                         构建 Quarto 站点\n                              ↓\n                         发布到互联网 ✨\n你只需要推送代码，Netlify 处理所有构建！"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-1-准备-github-仓库",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-1-准备-github-仓库",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "访问 https://github.com\n点击右上角 “+” → “New repository”\n填写信息：\n\nRepository name: Quarto_Blog_Calculator\nDescription: “Physics calculators with React + Quarto”\nVisibility: Public（推荐）或 Private\n\n✅ 不要勾选 “Initialize with README”（我们已有文件）\n点击 “Create repository”\n\n\n\n\n在你的项目目录打开 Git Bash 或命令提示符：\n# 初始化 Git（如果还没有）\ngit init\n\n# 添加远程仓库（替换成你的用户名）\ngit remote add origin https://github.com/TONGSUOregonState/Quarto_Blog_Calculator.git\n\n# 添加所有文件\ngit add .\n\n# 提交\ngit commit -m \"Initial commit with React + Vite projects and Netlify config\"\n\n# 推送到 GitHub\ngit push -u origin main\n如果提示需要登录，按照 GitHub 的指示操作。"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-2-连接-netlify",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-2-连接-netlify",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "访问 https://www.netlify.com\n点击 “Sign up”\n选择 “Sign up with GitHub”（推荐）\n授权 Netlify 访问你的 GitHub\n\n\n\n\n\n登录后，点击 “Add new site” → “Import an existing project”\n选择 “Deploy with GitHub”\n授权 Netlify 访问仓库（如果还没授权）\n找到并选择 Quarto_Blog_Calculator 仓库\n\n\n\n\nNetlify 会自动检测 netlify.toml 文件，但你可以验证：\n\nBranch to deploy: main\nBuild command: chmod +x build-all-react.sh && ./build-all-react.sh && quarto render\nPublish directory: _site\n\n这些设置已经在 netlify.toml 中配置好了！\n\n\n\n\n点击 “Deploy site”\nNetlify 会：\n\n✅ 安装 Node.js\n✅ 安装 Quarto\n✅ 构建所有 React 项目\n✅ 生成静态网站\n✅ 发布到互联网\n\n\n首次部署大约需要 3-5 分钟。"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-3-获取你的网站-url",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-3-获取你的网站-url",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "部署完成后，你会看到：\n✅ Site is live!\nhttps://amazing-name-123456.netlify.app\n\n\n\n在 Netlify 仪表板，点击 “Domain settings”\n点击 “Options” → “Edit site name”\n改成你想要的名字，例如：\n\ntongsu-physics-calculator.netlify.app\ntongsu-quarto-blog.netlify.app"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-4-自动部署最棒的部分",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#步骤-4-自动部署最棒的部分",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "现在，每次你修改代码并推送到 GitHub，Netlify 会自动重新部署！\n# 修改代码后\ngit add .\ngit commit -m \"Update formulas\"\ngit push\n\n# Netlify 自动检测并重新部署！✨\n你可以在 Netlify 仪表板的 “Deploys” 标签查看部署状态。"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#netlify-配置文件说明",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#netlify-配置文件说明",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "我已经为你创建了 netlify.toml，它包含：\n\n\n[build]\n  command = \"chmod +x build-all-react.sh && ./build-all-react.sh && quarto render\"\n  publish = \"_site\"\n\n\n\n[build.environment]\n  NODE_VERSION = \"20\"\n  QUARTO_VERSION = \"1.4.550\"\n\n\n\n\n✅ CSS/JS 压缩\n✅ 图片压缩\n✅ 缓存策略\n✅ 安全头部\n\n\n\n\n\n/react-pipeline → React 完整版\n/react-1formula → React 1公式版\n/react-2formulas → React 2公式版"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#关键优势",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#关键优势",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "方面\n本地构建\nNetlify 自动构建\n\n\n\n\n需要 Node.js\n✅ 是\n❌ 否\n\n\n手动构建\n✅ 每次\n❌ 自动\n\n\n推送即部署\n❌ 否\n✅ 是\n\n\n构建环境\n你的电脑\n云端服务器\n\n\nCDN 加速\n❌\n✅ 全球 CDN\n\n\nHTTPS\n手动配置\n✅ 自动\n\n\n自定义域名\n有限\n✅ 完全支持"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#故障排除",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#故障排除",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "解决方案: 确保安装了 Quarto 插件：\n[[plugins]]\n  package = \"netlify-plugin-quarto\"\n已经在 netlify.toml 中配置了。\n\n\n\n检查: 1. 所有 package.json 文件都已提交 2. build-all-react.sh 有执行权限 3. 查看 Netlify 构建日志找具体错误\n\n\n\n原因: 文件路径不正确\n检查: - _quarto.yml 中的 resources 配置 - index.qmd 中的链接路径\n\n\n\n正常: 首次部署需要安装依赖（3-5分钟） - 后续部署会快得多（30-60秒） - Netlify 会缓存 node_modules"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#维护和更新",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#维护和更新",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "# 编辑 src/ 文件\n# 提交并推送\ngit add .\ngit commit -m \"Update Block component\"\ngit push\n\n# Netlify 自动构建和部署！\n\n\n\n# 编辑 .qmd 文件\ngit add .\ngit commit -m \"Add new blog post\"\ngit push\n\n# Netlify 自动重新渲染！\n\n\n\n# 编辑 src/data/formulas.js\ngit add .\ngit commit -m \"Add new physics formula\"\ngit push\n\n# 自动部署！"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#额外功能",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#额外功能",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "Netlify 为每个 Pull Request 创建预览： 1. 创建新分支 2. 推送更改 3. 创建 PR 4. Netlify 自动创建预览 URL\n\n\n\n在 Netlify 仪表板设置环境变量： 1. Site settings → Environment variables 2. 添加 API keys 等敏感信息\n\n\n\nNetlify 内置表单处理（如果需要联系表单）\n\n\n\n可以添加后端功能（高级用法）"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#有用的链接",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#有用的链接",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "Netlify 文档: https://docs.netlify.com\nQuarto + Netlify: https://quarto.org/docs/publishing/netlify.html\n你的仓库: https://github.com/TONGSUOregonState/Quarto_Blog_Calculator\nNetlify 仪表板: https://app.netlify.com"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#下一步",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#下一步",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "部署成功后：\n\n✅ 测试所有链接\n✅ 验证 React 项目工作正常\n✅ 设置自定义域名（可选）\n✅ 配置 DNS（如果有自己的域名）\n✅ 享受自动部署！🎉"
+  },
+  {
+    "objectID": "NETLIFY_DEPLOYMENT_GUIDE.html#需要帮助",
+    "href": "NETLIFY_DEPLOYMENT_GUIDE.html#需要帮助",
+    "title": "Netlify 自动部署指南",
+    "section": "",
+    "text": "查看 Netlify 构建日志找错误\n检查 GitHub Actions（如果配置了）\n访问 Netlify 社区论坛\n\n祝你部署顺利！ 🚀"
+  },
+  {
+    "objectID": "index_blog.html",
+    "href": "index_blog.html",
+    "title": "Optics & Berkeley Extension Calculator",
+    "section": "",
+    "text": "This website hosts interactive optics and programming calculators that run entirely in your browser using Pyodide (Python in WebAssembly).\n\n\n\n\n\nA comprehensive collection of 143 programs converted from MATLAB and C to Python:\n\n138 MATLAB Programs covering:\n\nGeometrical Optics\nInterference\nDiffraction\nCoherence\nMatrix Methods\nFourier Transform\nWavefront Analysis\nAberrations\nAnd more…\n\n5 Berkeley Extension C Programs:\n\nSales Tax Calculator\nSeconds to Time Converter\nTrip Time Calculator\nPrint Odd Numbers\nDisplaying Consecutive Numbers\n\n\nAll programs run in the browser using React + Vite + Pyodide with interactive plots generated by Matplotlib.\n\n\n\n\n\n\n\n\n⚛️ React + Vite\n\n10+ physics formulas\nAuto-connected pipeline\nModern component architecture\n\n\n\n\n🐍 Pyodide Integration\n\nRun Python in browser\nCode editor\nSequential execution\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy computation\nInteractive plots\n\n\n\n\n\n\n\n\nReact 18 - Modern UI framework\nVite 5 - Fast build tool\nPyodide - Python runtime (WebAssembly)\nNumPy - Numerical computing\nMatplotlib - Data visualization\nQuarto - Static site generator\n\n\n\n\n\n\nBrowse Programs: Click on any program category to see available programs\nRun Programs: Click on a program card to open its interactive page\nAdjust Parameters: Many programs support parameter adjustment\nView Results: See both plots and text output\n\n\n\n\n\n\nGitHub Repository\nProject README\nOptics Programs README\n\n\n\n\n\n\n✨ Added 143 optics and programming programs\n🎨 Modern React + Vite architecture\n📊 Interactive matplotlib plots\n🔧 Parameter adjustment support"
+  },
+  {
+    "objectID": "index_blog.html#optics-programs",
+    "href": "index_blog.html#optics-programs",
+    "title": "Optics & Berkeley Extension Calculator",
+    "section": "",
+    "text": "A comprehensive collection of 143 programs converted from MATLAB and C to Python:\n\n138 MATLAB Programs covering:\n\nGeometrical Optics\nInterference\nDiffraction\nCoherence\nMatrix Methods\nFourier Transform\nWavefront Analysis\nAberrations\nAnd more…\n\n5 Berkeley Extension C Programs:\n\nSales Tax Calculator\nSeconds to Time Converter\nTrip Time Calculator\nPrint Odd Numbers\nDisplaying Consecutive Numbers\n\n\nAll programs run in the browser using React + Vite + Pyodide with interactive plots generated by Matplotlib."
+  },
+  {
+    "objectID": "index_blog.html#react-projects",
+    "href": "index_blog.html#react-projects",
+    "title": "Optics & Berkeley Extension Calculator",
+    "section": "",
+    "text": "⚛️ React + Vite\n\n10+ physics formulas\nAuto-connected pipeline\nModern component architecture\n\n\n\n\n🐍 Pyodide Integration\n\nRun Python in browser\nCode editor\nSequential execution\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy computation\nInteractive plots"
+  },
+  {
+    "objectID": "index_blog.html#technology-stack",
+    "href": "index_blog.html#technology-stack",
+    "title": "Optics & Berkeley Extension Calculator",
+    "section": "",
+    "text": "React 18 - Modern UI framework\nVite 5 - Fast build tool\nPyodide - Python runtime (WebAssembly)\nNumPy - Numerical computing\nMatplotlib - Data visualization\nQuarto - Static site generator"
+  },
+  {
+    "objectID": "index_blog.html#how-to-use",
+    "href": "index_blog.html#how-to-use",
+    "title": "Optics & Berkeley Extension Calculator",
+    "section": "",
+    "text": "Browse Programs: Click on any program category to see available programs\nRun Programs: Click on a program card to open its interactive page\nAdjust Parameters: Many programs support parameter adjustment\nView Results: See both plots and text output"
+  },
+  {
+    "objectID": "index_blog.html#links",
+    "href": "index_blog.html#links",
+    "title": "Optics & Berkeley Extension Calculator",
+    "section": "",
+    "text": "GitHub Repository\nProject README\nOptics Programs README"
+  },
+  {
+    "objectID": "index_blog.html#recent-updates",
+    "href": "index_blog.html#recent-updates",
+    "title": "Optics & Berkeley Extension Calculator",
+    "section": "",
+    "text": "✨ Added 143 optics and programming programs\n🎨 Modern React + Vite architecture\n📊 Interactive matplotlib plots\n🔧 Parameter adjustment support"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Welcome to My Blog",
     "section": "",
-    "text": "Welcome to my personal website where I share interactive calculators, physics simulations, and programming resources.\n\n\n\n\n\nInteractive physics calculators with block-based formula connections.\n\n\n\n\n\n\n\nVanilla JavaScript • Full Version\n\n10+ physics formulas\nAuto-connected pipeline\nInstant calculation\nNo build required ✅\n\n\n\n\nReact + Vite • Full Version\n\n10+ physics formulas\nModern modular architecture\nComponent-based design\nRequires build ⚠️\n\n\n\n\nInteractive Blocks\n\n10 mechanics formulas\nDrag & calculate\nVisual block interface\nQuick calculations\n\n\n\n\n\n\n\n\n\n\n1 Formula Demo 🧪 Single formula • Perfect for learning basics\n2 Formulas Demo 🔭 Velocity + Displacement • Practice connections\n\n\n\n\n\nReact 1-Formula 🧬 Component structure • State management\nReact 2-Formulas 🔮 Props flow • Component composition\n\n\n\n\n\n\n\n\n\nNote🛠️ React Projects Setup Required\n\n\n\nReact + Vite versions need to be built before use:\nWindows:\nbuild-all-react.bat\nMac/Linux:\n./build-all-react.sh\nSee React Projects Guide for details.\n\n\n\n\n\n\n\n\n\n\n🧮 Block-based Calculator\n\nInteractive v, a, d calculations\nVisual data flow\nManual or connected inputs\n\n\n\n\n🔗 Drag & Drop Interface\n\nReposition blocks\nConnect ports\nAuto-calculate\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy-based computation\n📚 Tutorial\n\n\n\n\n\n\n\n\n\n\n💻 C Language Resources\n\nC Programming: Modern Approach\nK&R Solutions\nDigitalJS Circuit Visualizer\n\n\n\n\n📊 MATLAB Resources\n\nMATLAB scripts and tutorials\nNumerical computing examples\nSignal processing demos\n\n\n\n\n\n\n\n\nReact Projects Guide - Complete setup and build instructions\nProject Updates - Latest changes and features\nReact + Vite Architecture - Technical details\n\n\n\n\n\n\n\n\n\nQuarto for static site\nReact 18 + Vite\nVanilla JavaScript\nPyScript integration\n\n\n\n\n\nQuarto Documentation\nReact Documentation\nVite Documentation\n\n\n\n\n\n🌐 GitHub Profile\n📧 Project source code available\n⭐ Star this project!\n\n\n\n\n\n\n\n\nUpdates\n\n\n\n\n\n✨ Added React + Vite modular architecture (3 versions)\n🔧 One-click build scripts for all React projects\n📚 Comprehensive documentation and guides\n🎨 Improved project organization and layout\n\n\n\n\n\n\n\n\nTip💡 Getting Started\n\n\n\n\nQuick Start: Try the vanilla JS versions (no setup needed)\nLearn React: Build the React demos with build-all-react.bat\nExplore: Check out different physics formulas and connections\nRead Docs: See the guides for customization options\n\n\n\n\n\nBuilt with ❤️ using Quarto • Published on Quarto Pub\nLast updated: November 16, 2025"
+    "text": "Welcome to my personal website where I share interactive calculators, physics simulations, and programming resources.\n\n\n\nAll projects below use React 18 + Vite for modern, modular architecture.\n\n\n\n⚛️ React + Vite\n\n10+ physics formulas\nAuto-connected pipeline\nModern component architecture\nView Source Code\n\n\n\n\n🐍 Pyodide Integration\n\nRun Python in browser\nCode editor with syntax highlighting\nSequential blackbox demo\nReal-time execution\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy computation\nMathJax equations\nInteractive plots\n\n\n\n\n\n\n\n\n\nNote📦 Alternative Versions (Vanilla JavaScript)\n\n\n\n\n\nThese are older, single-file versions without build requirements:\n\nPhysics Pipeline (Vanilla JS) - No build needed\nPython Runner (Vanilla JS) - Original version\nDSP R(z) Analysis (Vanilla JS) - Original version\nPhysics Formula Blocks - Drag & calculate interface\n\n\n\n\n\n\n\n\n\nReact DemosVanilla JS Demos\n\n\nStep-by-step learning with React + Vite:\n\n\n\n🧬 Beginner Level\n\nSingle formula implementation\nComponent structure basics\nState management intro\nPerfect for learning React\n\n\n\n\n🔮 Intermediate Level\n\nMultiple formula connections\nProps flow between components\nComponent composition\nPractice data passing\n\n\n\n\n\nSimple, no-build demos for quick learning:\n\n1 Formula Demo 🧪 - Single formula, instant run\n2 Formulas Demo 🔭 - Velocity + Displacement connections\n\n\n\n\n\n\n\n\n\n\nTip🛠️ Building React Projects\n\n\n\n\n\nTo build React projects locally (optional - pre-built versions already included):\nWindows:\nbuild-all-react.bat\nMac/Linux:\n./build-all-react.sh\nSee React Projects Guide for detailed instructions.\n\n\n\n\n\n\n\n\nBlock-based CalculatorsDSP ToolsOther Demos\n\n\n\n\n\n🧮 Interactive Blocks\n\nv, a, d calculations\nVisual data flow\nManual or connected inputs\nDrag to position\n\n\n\n\n🔗 Drag & Drop\n\nReposition blocks freely\nConnect input/output ports\nAuto-calculate on connection\nVisual programming style\n\n\n\n\n\n\nDSP Tutorial 📚 - Learn zero-pole analysis concepts\nDSP R(z) Analysis (React) ⚛️ - Modern React version\nDSP R(z) Analysis (Vanilla) - Original JavaScript version\n\n\n\n\n\nClick to expand additional demos\n\n\nDrawflow Visual Calculator - Visual node-based calculator\nBlock Sequencer - Sequential block execution\nBlocks Drag I/O - Input/output block system\nPyScript Calculator - Python-powered calculator\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote💻 C Programming\n\n\n\n\n\n\n\n\nC Programming: Modern Approach - Solutions\nK&R C Solutions\nDigitalJS Circuit Visualizer\n\n\n\n\n\nView C Programming Section\n\n\n\n\n\n\n\n\n\n\n\nNote📊 MATLAB Resources\n\n\n\n\n\n\nMATLAB scripts and tutorials\nNumerical computing examples\nSignal processing demos\n\nView MATLAB Section\n\n\n\n\n\n\n\n\nQuick StartDeploymentUpdates\n\n\n\n🚀 Quick Start (Netlify) - 5-minute automated deployment\n⚛️ React Projects Guide - Build and run React projects\n\n\n\n\n🌐 Netlify Deployment Guide - Complete CI/CD setup\n📐 React + Vite Architecture - Technical architecture details\n\n\n\n\n📝 Project Updates - Latest changes and version history\n\n\n\n\n\n\n\n\n\n\n\n\nReact 18 + Vite 5\nVanilla JavaScript\nQuarto for static site\nPyodide (Python in browser)\n\n\n\n\n\nSymPy (symbolic math)\nMathJax (LaTeX rendering)\nMatplotlib (plotting)\nPyScript integration\n\n\n\n\n\nQuarto Docs\nReact Docs\nVite Docs\nGitHub Repo\n\n\n\n\n\n\n\n\nUpdates\n\n\n\n\n\n\n\n\nImportantLatest Features (2025)\n\n\n\nNew React Projects: - ✨ 5 React + Vite projects with modular architecture - Physics Pipeline (full version + 2 learning demos) - Python Runner with Pyodide integration - DSP R(z) Analysis with SymPy + MathJax\nImprovements: - 🔧 One-click build scripts for all React projects - 📚 Comprehensive documentation and deployment guides - 🎨 Reorganized project structure with collapsible sections - 🐍 Browser-based Python execution via Pyodide - 🚀 Automated Netlify deployment pipeline\n\n\n\n\n\n\n\n\n\nTip💡 Getting Started\n\n\n\n\nTry React Projects: Click any of the featured React projects above\nLearn Gradually: Start with 1-formula demo, progress to 2-formulas\nExplore Alternatives: Check vanilla JS versions for simpler, no-build options\nBuild Locally (optional): Use build-all-react.bat to build from source\nRead Docs: See guides for deployment and customization\n\n\n\n\n\nBuilt with ❤️ using Quarto • Published on Quarto Pub\nLast updated: November 16, 2025"
   },
   {
-    "objectID": "index.html#featured-projects",
-    "href": "index.html#featured-projects",
+    "objectID": "index.html#featured-react-projects",
+    "href": "index.html#featured-react-projects",
     "title": "Welcome to My Blog",
     "section": "",
-    "text": "Interactive physics calculators with block-based formula connections.\n\n\n\n\n\n\n\nVanilla JavaScript • Full Version\n\n10+ physics formulas\nAuto-connected pipeline\nInstant calculation\nNo build required ✅\n\n\n\n\nReact + Vite • Full Version\n\n10+ physics formulas\nModern modular architecture\nComponent-based design\nRequires build ⚠️\n\n\n\n\nInteractive Blocks\n\n10 mechanics formulas\nDrag & calculate\nVisual block interface\nQuick calculations\n\n\n\n\n\n\n\n\n\n\n1 Formula Demo 🧪 Single formula • Perfect for learning basics\n2 Formulas Demo 🔭 Velocity + Displacement • Practice connections\n\n\n\n\n\nReact 1-Formula 🧬 Component structure • State management\nReact 2-Formulas 🔮 Props flow • Component composition\n\n\n\n\n\n\n\n\n\nNote🛠️ React Projects Setup Required\n\n\n\nReact + Vite versions need to be built before use:\nWindows:\nbuild-all-react.bat\nMac/Linux:\n./build-all-react.sh\nSee React Projects Guide for details."
+    "text": "All projects below use React 18 + Vite for modern, modular architecture.\n\n\n\n⚛️ React + Vite\n\n10+ physics formulas\nAuto-connected pipeline\nModern component architecture\nView Source Code\n\n\n\n\n🐍 Pyodide Integration\n\nRun Python in browser\nCode editor with syntax highlighting\nSequential blackbox demo\nReal-time execution\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy computation\nMathJax equations\nInteractive plots\n\n\n\n\n\n\n\n\n\nNote📦 Alternative Versions (Vanilla JavaScript)\n\n\n\n\n\nThese are older, single-file versions without build requirements:\n\nPhysics Pipeline (Vanilla JS) - No build needed\nPython Runner (Vanilla JS) - Original version\nDSP R(z) Analysis (Vanilla JS) - Original version\nPhysics Formula Blocks - Drag & calculate interface"
+  },
+  {
+    "objectID": "index.html#learning-resources-demos",
+    "href": "index.html#learning-resources-demos",
+    "title": "Welcome to My Blog",
+    "section": "",
+    "text": "React DemosVanilla JS Demos\n\n\nStep-by-step learning with React + Vite:\n\n\n\n🧬 Beginner Level\n\nSingle formula implementation\nComponent structure basics\nState management intro\nPerfect for learning React\n\n\n\n\n🔮 Intermediate Level\n\nMultiple formula connections\nProps flow between components\nComponent composition\nPractice data passing\n\n\n\n\n\nSimple, no-build demos for quick learning:\n\n1 Formula Demo 🧪 - Single formula, instant run\n2 Formulas Demo 🔭 - Velocity + Displacement connections\n\n\n\n\n\n\n\n\n\n\nTip🛠️ Building React Projects\n\n\n\n\n\nTo build React projects locally (optional - pre-built versions already included):\nWindows:\nbuild-all-react.bat\nMac/Linux:\n./build-all-react.sh\nSee React Projects Guide for detailed instructions."
   },
   {
     "objectID": "index.html#other-interactive-tools",
     "href": "index.html#other-interactive-tools",
     "title": "Welcome to My Blog",
     "section": "",
-    "text": "🧮 Block-based Calculator\n\nInteractive v, a, d calculations\nVisual data flow\nManual or connected inputs\n\n\n\n\n🔗 Drag & Drop Interface\n\nReposition blocks\nConnect ports\nAuto-calculate\n\n\n\n\n🎛️ Signal Processing\n\nZero-pole analysis\nSymPy-based computation\n📚 Tutorial"
+    "text": "Block-based CalculatorsDSP ToolsOther Demos\n\n\n\n\n\n🧮 Interactive Blocks\n\nv, a, d calculations\nVisual data flow\nManual or connected inputs\nDrag to position\n\n\n\n\n🔗 Drag & Drop\n\nReposition blocks freely\nConnect input/output ports\nAuto-calculate on connection\nVisual programming style\n\n\n\n\n\n\nDSP Tutorial 📚 - Learn zero-pole analysis concepts\nDSP R(z) Analysis (React) ⚛️ - Modern React version\nDSP R(z) Analysis (Vanilla) - Original JavaScript version\n\n\n\n\n\nClick to expand additional demos\n\n\nDrawflow Visual Calculator - Visual node-based calculator\nBlock Sequencer - Sequential block execution\nBlocks Drag I/O - Input/output block system\nPyScript Calculator - Python-powered calculator"
   },
   {
     "objectID": "index.html#programming-resources",
     "href": "index.html#programming-resources",
     "title": "Welcome to My Blog",
     "section": "",
-    "text": "💻 C Language Resources\n\nC Programming: Modern Approach\nK&R Solutions\nDigitalJS Circuit Visualizer\n\n\n\n\n📊 MATLAB Resources\n\nMATLAB scripts and tutorials\nNumerical computing examples\nSignal processing demos"
+    "text": "Note💻 C Programming\n\n\n\n\n\n\n\n\nC Programming: Modern Approach - Solutions\nK&R C Solutions\nDigitalJS Circuit Visualizer\n\n\n\n\n\nView C Programming Section\n\n\n\n\n\n\n\n\n\n\n\nNote📊 MATLAB Resources\n\n\n\n\n\n\nMATLAB scripts and tutorials\nNumerical computing examples\nSignal processing demos\n\nView MATLAB Section"
   },
   {
     "objectID": "index.html#documentation",
     "href": "index.html#documentation",
     "title": "Welcome to My Blog",
     "section": "",
-    "text": "React Projects Guide - Complete setup and build instructions\nProject Updates - Latest changes and features\nReact + Vite Architecture - Technical details"
+    "text": "Quick StartDeploymentUpdates\n\n\n\n🚀 Quick Start (Netlify) - 5-minute automated deployment\n⚛️ React Projects Guide - Build and run React projects\n\n\n\n\n🌐 Netlify Deployment Guide - Complete CI/CD setup\n📐 React + Vite Architecture - Technical architecture details\n\n\n\n\n📝 Project Updates - Latest changes and version history"
   },
   {
-    "objectID": "index.html#quick-links",
-    "href": "index.html#quick-links",
+    "objectID": "index.html#technology-stack",
+    "href": "index.html#technology-stack",
     "title": "Welcome to My Blog",
     "section": "",
-    "text": "Quarto for static site\nReact 18 + Vite\nVanilla JavaScript\nPyScript integration\n\n\n\n\n\nQuarto Documentation\nReact Documentation\nVite Documentation\n\n\n\n\n\n🌐 GitHub Profile\n📧 Project source code available\n⭐ Star this project!"
+    "text": "React 18 + Vite 5\nVanilla JavaScript\nQuarto for static site\nPyodide (Python in browser)\n\n\n\n\n\nSymPy (symbolic math)\nMathJax (LaTeX rendering)\nMatplotlib (plotting)\nPyScript integration\n\n\n\n\n\nQuarto Docs\nReact Docs\nVite Docs\nGitHub Repo"
   },
   {
     "objectID": "index.html#recent-updates",
     "href": "index.html#recent-updates",
     "title": "Welcome to My Blog",
     "section": "",
-    "text": "Updates\n\n\n\n\n\n✨ Added React + Vite modular architecture (3 versions)\n🔧 One-click build scripts for all React projects\n📚 Comprehensive documentation and guides\n🎨 Improved project organization and layout\n\n\n\n\n\n\n\n\nTip💡 Getting Started\n\n\n\n\nQuick Start: Try the vanilla JS versions (no setup needed)\nLearn React: Build the React demos with build-all-react.bat\nExplore: Check out different physics formulas and connections\nRead Docs: See the guides for customization options\n\n\n\n\n\nBuilt with ❤️ using Quarto • Published on Quarto Pub\nLast updated: November 16, 2025"
+    "text": "Updates\n\n\n\n\n\n\n\n\nImportantLatest Features (2025)\n\n\n\nNew React Projects: - ✨ 5 React + Vite projects with modular architecture - Physics Pipeline (full version + 2 learning demos) - Python Runner with Pyodide integration - DSP R(z) Analysis with SymPy + MathJax\nImprovements: - 🔧 One-click build scripts for all React projects - 📚 Comprehensive documentation and deployment guides - 🎨 Reorganized project structure with collapsible sections - 🐍 Browser-based Python execution via Pyodide - 🚀 Automated Netlify deployment pipeline\n\n\n\n\n\n\n\n\n\nTip💡 Getting Started\n\n\n\n\nTry React Projects: Click any of the featured React projects above\nLearn Gradually: Start with 1-formula demo, progress to 2-formulas\nExplore Alternatives: Check vanilla JS versions for simpler, no-build options\nBuild Locally (optional): Use build-all-react.bat to build from source\nRead Docs: See guides for deployment and customization\n\n\n\n\n\nBuilt with ❤️ using Quarto • Published on Quarto Pub\nLast updated: November 16, 2025"
   },
   {
     "objectID": "BUILD_AND_DEPLOY.html",
@@ -301,25 +560,151 @@
     "text": "当一切就绪，你应该能：\n\n✅ 访问 https://tongsuoregonstate11.quarto.pub/calculator\n✅ 点击所有链接都能正常工作\n✅ React 版本可以正常加载和使用\n✅ 所有公式计算正常\n✅ 文档页面可以访问\n\n\n祝你构建顺利！ 🚀"
   },
   {
-    "objectID": "pyscript.html",
-    "href": "pyscript.html",
-    "title": "匀加速位移计算（Python + JS）",
+    "objectID": "QUARTO_PUBLISH_GUIDE.html",
+    "href": "QUARTO_PUBLISH_GUIDE.html",
+    "title": "QuartoPub 发布指南",
     "section": "",
-    "text": "演示两种实现方式： - 构建时（Quarto Python 引擎）计算出静态结果； - 网页端（原生 JS）提供交互式输入，实时显示结果。\n\n物理公式：匀加速直线运动，初速度为 0 时，位移 d = 0.5 × a × t²\n\n\n\n下面的代码在构建时执行，并把结果渲染到 HTML 页面中：\n\na = 2.5  # m/s^2\nt = 3.0  # s\nd = 0.5 * a * (t ** 2)\nd\n\n11.25\n\n\n你可以把上面的 a 和 t 改成你想展示的默认示例值，然后重新渲染网站即可更新静态结果。\n\n\n\n在同一页面底部加入一个原生 JS 交互计算器，读者可以输入 a 与 t 并立即看到结果。\n\n\n\n  \n  公式：d = 0.5 × a × t²（假设初速度为 0）\n\n  \n    a (m/s²)\n    \n  \n  \n    t (s)\n    \n  \n\n  计算 d = 0.5 · a · t²\n  位移 d：— m\n\n  提示：输入为空或非法时会给出提示；结果使用 6 位有效数字。\n\n\n\n\n\n\n上面的 Python 代码在构建时运行，适合生成稳定、可复现的演示结果；\n下面的 JS 交互模块不依赖外部 CDN，兼容 Quarto Pub 的 CSP；\n如需更复杂的交互，也可以把 JS 另外拆到本地脚本文件中再引用。"
+    "text": "已配置 QuartoPub 发布设置，token 已保存在 _publish_blog.yml 中。\n\n\n\n\n\n首先需要构建所有 React 项目：\nWindows:\nbuild-all-react.bat\nLinux/Mac:\nnode build-react-projects.js\n这将构建： - physics-pipeline-react - physics-pipeline-react-1formula - physics-pipeline-react-2formulas - optics-berkeley-react\n\n\n\n使用 Quarto blog 配置：\nquarto render --profile blog\n或者使用默认配置：\nquarto render\n\n\n\n使用 blog 配置发布：\nquarto publish quarto-pub --profile blog\n或者直接发布：\nquarto publish quarto-pub\n\n\n\n\n\n\n\nQuarto blog 网站配置\n包含导航菜单和资源路径\n\n\n\n\n\nQuartoPub 发布配置\n包含发布 token\n\n\n\n\n\nBlog 首页内容\n介绍所有项目和功能\n\n\n\n\n\n\n首次发布：需要先构建所有 React 项目，确保 dist/ 目录存在\nToken 安全：Token 已保存在配置文件中，不要提交到公开仓库\n更新内容：每次更新后需要重新构建和发布\n\n\n\n\n发布成功后，网站将可通过 QuartoPub 提供的 URL 访问。\n\n\n\n如果发布失败： 1. 检查 token 是否正确 2. 确保所有 React 项目已构建 3. 检查 _site/ 目录是否存在 4. 查看 Quarto 错误信息"
   },
   {
-    "objectID": "pyscript.html#构建时计算python-静态输出",
-    "href": "pyscript.html#构建时计算python-静态输出",
-    "title": "匀加速位移计算（Python + JS）",
+    "objectID": "QUARTO_PUBLISH_GUIDE.html#配置信息",
+    "href": "QUARTO_PUBLISH_GUIDE.html#配置信息",
+    "title": "QuartoPub 发布指南",
     "section": "",
-    "text": "下面的代码在构建时执行，并把结果渲染到 HTML 页面中：\n\na = 2.5  # m/s^2\nt = 3.0  # s\nd = 0.5 * a * (t ** 2)\nd\n\n11.25\n\n\n你可以把上面的 a 和 t 改成你想展示的默认示例值，然后重新渲染网站即可更新静态结果。"
+    "text": "已配置 QuartoPub 发布设置，token 已保存在 _publish_blog.yml 中。"
   },
   {
-    "objectID": "pyscript.html#网页端交互js-实时计算",
-    "href": "pyscript.html#网页端交互js-实时计算",
-    "title": "匀加速位移计算（Python + JS）",
+    "objectID": "QUARTO_PUBLISH_GUIDE.html#发布步骤",
+    "href": "QUARTO_PUBLISH_GUIDE.html#发布步骤",
+    "title": "QuartoPub 发布指南",
     "section": "",
-    "text": "在同一页面底部加入一个原生 JS 交互计算器，读者可以输入 a 与 t 并立即看到结果。\n\n\n\n  \n  公式：d = 0.5 × a × t²（假设初速度为 0）\n\n  \n    a (m/s²)\n    \n  \n  \n    t (s)\n    \n  \n\n  计算 d = 0.5 · a · t²\n  位移 d：— m\n\n  提示：输入为空或非法时会给出提示；结果使用 6 位有效数字。\n\n\n\n\n\n\n上面的 Python 代码在构建时运行，适合生成稳定、可复现的演示结果；\n下面的 JS 交互模块不依赖外部 CDN，兼容 Quarto Pub 的 CSP；\n如需更复杂的交互，也可以把 JS 另外拆到本地脚本文件中再引用。"
+    "text": "首先需要构建所有 React 项目：\nWindows:\nbuild-all-react.bat\nLinux/Mac:\nnode build-react-projects.js\n这将构建： - physics-pipeline-react - physics-pipeline-react-1formula - physics-pipeline-react-2formulas - optics-berkeley-react\n\n\n\n使用 Quarto blog 配置：\nquarto render --profile blog\n或者使用默认配置：\nquarto render\n\n\n\n使用 blog 配置发布：\nquarto publish quarto-pub --profile blog\n或者直接发布：\nquarto publish quarto-pub"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_GUIDE.html#配置文件说明",
+    "href": "QUARTO_PUBLISH_GUIDE.html#配置文件说明",
+    "title": "QuartoPub 发布指南",
+    "section": "",
+    "text": "Quarto blog 网站配置\n包含导航菜单和资源路径\n\n\n\n\n\nQuartoPub 发布配置\n包含发布 token\n\n\n\n\n\nBlog 首页内容\n介绍所有项目和功能"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_GUIDE.html#注意事项",
+    "href": "QUARTO_PUBLISH_GUIDE.html#注意事项",
+    "title": "QuartoPub 发布指南",
+    "section": "",
+    "text": "首次发布：需要先构建所有 React 项目，确保 dist/ 目录存在\nToken 安全：Token 已保存在配置文件中，不要提交到公开仓库\n更新内容：每次更新后需要重新构建和发布"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_GUIDE.html#发布-url",
+    "href": "QUARTO_PUBLISH_GUIDE.html#发布-url",
+    "title": "QuartoPub 发布指南",
+    "section": "",
+    "text": "发布成功后，网站将可通过 QuartoPub 提供的 URL 访问。"
+  },
+  {
+    "objectID": "QUARTO_PUBLISH_GUIDE.html#故障排除",
+    "href": "QUARTO_PUBLISH_GUIDE.html#故障排除",
+    "title": "QuartoPub 发布指南",
+    "section": "",
+    "text": "如果发布失败： 1. 检查 token 是否正确 2. 确保所有 React 项目已构建 3. 检查 _site/ 目录是否存在 4. 查看 Quarto 错误信息"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html",
+    "href": "QUICK_START_NETLIFY.html",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "5 步完成自动部署，无需安装 Node.js！\n\n\n\n我已经为你创建了所有配置文件：\n\n✅ netlify.toml - Netlify 配置\n✅ build-all-react.sh - 构建脚本\n✅ build-react-projects.js - Node.js 构建脚本\n✅ package.json - 项目配置\n✅ .gitignore - Git 忽略规则\n✅ 所有 React 项目源代码\n✅ 所有文档\n\n你只需要执行以下 5 步！\n\n\n\n\n\n访问 https://github.com/new\n仓库名称: Quarto_Blog_Calculator\n选择 Public\n不要勾选 “Add README”\n点击 Create repository\n\n⏱️ 耗时: 30 秒\n\n\n\n\n打开 Git Bash 或 命令提示符，在项目目录运行：\n# 如果还没初始化 Git\ngit init\n\n# 添加远程仓库（替换成你的实际 URL）\ngit remote add origin https://github.com/TONGSUOregonState/Quarto_Blog_Calculator.git\n\n# 添加所有文件\ngit add .\n\n# 提交\ngit commit -m \"Initial commit: React + Vite projects with Netlify config\"\n\n# 推送\ngit push -u origin main\n如果是第一次使用 GitHub，可能需要：\n# 配置用户信息\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"your.email@example.com\"\n⏱️ 耗时: 2 分钟\n\n\n\n\n\n访问 https://app.netlify.com\n点击 “Sign up” 或 “Log in”\n选择 “Sign up with GitHub”\n授权 Netlify 访问你的 GitHub\n\n⏱️ 耗时: 1 分钟\n\n\n\n\n\n在 Netlify 仪表板，点击 “Add new site”\n选择 “Import an existing project”\n点击 “Deploy with GitHub”\n选择 Quarto_Blog_Calculator 仓库\n不要修改任何设置（已在 netlify.toml 中配置）\n点击 “Deploy site”\n\nNetlify 现在会自动： - ✅ 安装 Node.js v20 - ✅ 安装 Quarto - ✅ 构建所有 3 个 React 项目 - ✅ 渲染 Quarto 站点 - ✅ 发布到互联网\n⏱️ 耗时: 3-5 分钟（首次构建）\n\n\n\n\n部署完成后，你会看到：\n✅ Your site is live\nhttps://random-name-123456.netlify.app\n\n\n\n点击 “Site settings”\n点击 “Change site name”\n输入你想要的名字，例如：\ntongsu-physics-calc\n你的 URL 变成：\nhttps://tongsu-physics-calc.netlify.app\n\n⏱️ 耗时: 30 秒\n\n\n\n\n\n你的网站现在：\n✅ 在线访问: https://your-site.netlify.app ✅ 自动构建: 每次推送代码自动重新部署 ✅ 全球 CDN: 快速访问 ✅ 免费 HTTPS: 自动配置 ✅ 所有链接正常: React 和 Vanilla JS 版本都能用\n\n\n\n\n非常简单！\n# 1. 修改代码\n# 编辑任何文件...\n\n# 2. 提交并推送\ngit add .\ngit commit -m \"描述你的更改\"\ngit push\n\n# 3. 就这样！\n# Netlify 自动检测并重新部署\n30-60 秒后，你的网站就更新了！✨\n\n\n\n\n在 Netlify 仪表板查看：\n\nDeploys 标签 - 查看部署历史\nDeploy log - 查看构建日志\nFunctions - 如果添加了 serverless 函数\nForms - 如果添加了表单\n\n\n\n\n\n\n\n修改代码 → 手动构建 React → quarto publish → 等待上传\n需要 Node.js ✅    耗时 2-3 分钟    手动操作 ✅\n\n\n\n修改代码 → git push → ☕ 喝杯咖啡 → 完成！\n无需 Node.js ❌    耗时 30-60 秒    全自动 ✅\n\n\n\n\n\n\n\nA: ❌ 不需要！Netlify 服务器会自动处理。\n\n\n\nA: ✅ 可以！Netlify 会成为你的主站点。\n\n\n\nA: 1. 查看 Netlify 的 Deploy log 2. 确保所有文件都推送到 GitHub 3. 检查 netlify.toml 配置\n\n\n\nA: ✅ 可以！在 Netlify 的 Domain settings 配置。\n\n\n\nA: ✅ 是的！Netlify 免费计划完全够用。 - 300 分钟构建时间/月 - 100 GB 流量/月 - 自动 HTTPS - 全球 CDN\n\n\n\n\n\n\n完整部署指南\nReact 项目指南\n项目更新日志\n\n\n\n\n\n你只需要： 1. ✅ 创建 GitHub 仓库（30秒） 2. ✅ 推送代码（2分钟） 3. ✅ 连接 Netlify（1分钟） 4. ✅ 点击部署（3-5分钟） 5. ✅ 完成！\n总计: ~7 分钟\n之后: git push 即可，30-60秒自动部署！\n\n准备好了吗？开始第 1 步吧！ 🚀"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#你已经准备好的",
+    "href": "QUICK_START_NETLIFY.html#你已经准备好的",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "我已经为你创建了所有配置文件：\n\n✅ netlify.toml - Netlify 配置\n✅ build-all-react.sh - 构建脚本\n✅ build-react-projects.js - Node.js 构建脚本\n✅ package.json - 项目配置\n✅ .gitignore - Git 忽略规则\n✅ 所有 React 项目源代码\n✅ 所有文档\n\n你只需要执行以下 5 步！"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#第-1-步-创建-github-仓库",
+    "href": "QUICK_START_NETLIFY.html#第-1-步-创建-github-仓库",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "访问 https://github.com/new\n仓库名称: Quarto_Blog_Calculator\n选择 Public\n不要勾选 “Add README”\n点击 Create repository\n\n⏱️ 耗时: 30 秒"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#第-2-步-推送代码到-github",
+    "href": "QUICK_START_NETLIFY.html#第-2-步-推送代码到-github",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "打开 Git Bash 或 命令提示符，在项目目录运行：\n# 如果还没初始化 Git\ngit init\n\n# 添加远程仓库（替换成你的实际 URL）\ngit remote add origin https://github.com/TONGSUOregonState/Quarto_Blog_Calculator.git\n\n# 添加所有文件\ngit add .\n\n# 提交\ngit commit -m \"Initial commit: React + Vite projects with Netlify config\"\n\n# 推送\ngit push -u origin main\n如果是第一次使用 GitHub，可能需要：\n# 配置用户信息\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"your.email@example.com\"\n⏱️ 耗时: 2 分钟"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#第-3-步-连接-netlify",
+    "href": "QUICK_START_NETLIFY.html#第-3-步-连接-netlify",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "访问 https://app.netlify.com\n点击 “Sign up” 或 “Log in”\n选择 “Sign up with GitHub”\n授权 Netlify 访问你的 GitHub\n\n⏱️ 耗时: 1 分钟"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#第-4-步-部署站点",
+    "href": "QUICK_START_NETLIFY.html#第-4-步-部署站点",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "在 Netlify 仪表板，点击 “Add new site”\n选择 “Import an existing project”\n点击 “Deploy with GitHub”\n选择 Quarto_Blog_Calculator 仓库\n不要修改任何设置（已在 netlify.toml 中配置）\n点击 “Deploy site”\n\nNetlify 现在会自动： - ✅ 安装 Node.js v20 - ✅ 安装 Quarto - ✅ 构建所有 3 个 React 项目 - ✅ 渲染 Quarto 站点 - ✅ 发布到互联网\n⏱️ 耗时: 3-5 分钟（首次构建）"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#第-5-步-获取你的网站",
+    "href": "QUICK_START_NETLIFY.html#第-5-步-获取你的网站",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "部署完成后，你会看到：\n✅ Your site is live\nhttps://random-name-123456.netlify.app\n\n\n\n点击 “Site settings”\n点击 “Change site name”\n输入你想要的名字，例如：\ntongsu-physics-calc\n你的 URL 变成：\nhttps://tongsu-physics-calc.netlify.app\n\n⏱️ 耗时: 30 秒"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#完成",
+    "href": "QUICK_START_NETLIFY.html#完成",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "你的网站现在：\n✅ 在线访问: https://your-site.netlify.app ✅ 自动构建: 每次推送代码自动重新部署 ✅ 全球 CDN: 快速访问 ✅ 免费 HTTPS: 自动配置 ✅ 所有链接正常: React 和 Vanilla JS 版本都能用"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#以后更新网站",
+    "href": "QUICK_START_NETLIFY.html#以后更新网站",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "非常简单！\n# 1. 修改代码\n# 编辑任何文件...\n\n# 2. 提交并推送\ngit add .\ngit commit -m \"描述你的更改\"\ngit push\n\n# 3. 就这样！\n# Netlify 自动检测并重新部署\n30-60 秒后，你的网站就更新了！✨"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#部署状态",
+    "href": "QUICK_START_NETLIFY.html#部署状态",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "在 Netlify 仪表板查看：\n\nDeploys 标签 - 查看部署历史\nDeploy log - 查看构建日志\nFunctions - 如果添加了 serverless 函数\nForms - 如果添加了表单"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#对比",
+    "href": "QUICK_START_NETLIFY.html#对比",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "修改代码 → 手动构建 React → quarto publish → 等待上传\n需要 Node.js ✅    耗时 2-3 分钟    手动操作 ✅\n\n\n\n修改代码 → git push → ☕ 喝杯咖啡 → 完成！\n无需 Node.js ❌    耗时 30-60 秒    全自动 ✅"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#常见问题",
+    "href": "QUICK_START_NETLIFY.html#常见问题",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "A: ❌ 不需要！Netlify 服务器会自动处理。\n\n\n\nA: ✅ 可以！Netlify 会成为你的主站点。\n\n\n\nA: 1. 查看 Netlify 的 Deploy log 2. 确保所有文件都推送到 GitHub 3. 检查 netlify.toml 配置\n\n\n\nA: ✅ 可以！在 Netlify 的 Domain settings 配置。\n\n\n\nA: ✅ 是的！Netlify 免费计划完全够用。 - 300 分钟构建时间/月 - 100 GB 流量/月 - 自动 HTTPS - 全球 CDN"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#详细文档",
+    "href": "QUICK_START_NETLIFY.html#详细文档",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "完整部署指南\nReact 项目指南\n项目更新日志"
+  },
+  {
+    "objectID": "QUICK_START_NETLIFY.html#总结",
+    "href": "QUICK_START_NETLIFY.html#总结",
+    "title": "🚀 Netlify 快速开始指南",
+    "section": "",
+    "text": "你只需要： 1. ✅ 创建 GitHub 仓库（30秒） 2. ✅ 推送代码（2分钟） 3. ✅ 连接 Netlify（1分钟） 4. ✅ 点击部署（3-5分钟） 5. ✅ 完成！\n总计: ~7 分钟\n之后: git push 即可，30-60秒自动部署！\n\n准备好了吗？开始第 1 步吧！ 🚀"
   },
   {
     "objectID": "README-REACT-VITE.html",
@@ -432,5 +817,75 @@
     "title": "Physics Pipeline - React + Vite 版本说明",
     "section": "",
     "text": "Tong Su - @TONGSUOregonState\n\n注意: 首次使用前必须运行构建命令！构建脚本会自动安装依赖并生成可用的 HTML 文件。"
+  },
+  {
+    "objectID": "START_HERE.html",
+    "href": "START_HERE.html",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "我已经为你创建了所有需要的配置文件和文档。\n\n\n\n\n\n\n🔗 访问: https://github.com/new\n仓库名称: Quarto_Blog_Calculator\n描述: Physics calculators with React + Quarto\n可见性: Public ✅\n不要勾选 \"Add README\" ❌\n\n点击 \"Create repository\"\n⏱️ 耗时: 30秒\n\n\n\n\n在你的项目目录打开 Git Bash 或 命令提示符：\n# 初始化 Git（如果还没有）\ngit init\n\n# 添加远程仓库（用你实际的 GitHub URL）\ngit remote add origin https://github.com/TONGSUOregonState/Quarto_Blog_Calculator.git\n\n# 添加所有文件\ngit add .\n\n# 提交\ngit commit -m \"Add Netlify auto-deploy with React + Vite projects\"\n\n# 推送到 GitHub\ngit push -u origin main\n💡 如果是第一次使用 Git，先配置：\ngit config --global user.name \"Tong Su\"\ngit config --global user.email \"your.email@example.com\"\n⏱️ 耗时: 2分钟\n\n\n\n\n🔗 访问: https://app.netlify.com\n\n点击 “Sign up”\n选择 “Sign up with GitHub” ⭐ 推荐\n授权 Netlify 访问你的 GitHub 账号\n\n⏱️ 耗时: 1分钟\n\n\n\n\n在 Netlify 仪表板：\n\n点击 “Add new site”\n选择 “Import an existing project”\n点击 “Deploy with GitHub”\n授权 Netlify（如果需要）\n选择 Quarto_Blog_Calculator 仓库\n不要修改任何设置 ✅（已在 netlify.toml 配置）\n点击 “Deploy site” 🚀\n\nNetlify 现在会自动： - ✅ 安装 Node.js v20 - ✅ 安装 Quarto 1.4.550 - ✅ 构建所有 3 个 React 项目 - ✅ 渲染 Quarto 网站 - ✅ 发布到互联网\n⏱️ 耗时: 3-5分钟（首次构建）\n\n\n\n\n部署完成后，你会看到：\n✅ Site is live!\nhttps://random-name-123456.netlify.app\n可选：自定义网站名称\n\n点击 “Site settings”\n点击 “Change site name”\n输入你想要的名字，例如：tongsu-physics-calc\nURL 变成：https://tongsu-physics-calc.netlify.app\n\n⏱️ 耗时: 30秒\n\n\n\n\n\n你的网站现在：\n✅ 在线访问 ✅ 自动构建（每次 git push） ✅ 免费 HTTPS ✅ 全球 CDN 加速 ✅ 所有 React 项目正常工作 ✅ 所有链接都可用\n\n\n\n\n超级简单！\n# 1. 修改任何代码文件\n# ...编辑 .qmd, .jsx, .css 等文件...\n\n# 2. 提交并推送\ngit add .\ngit commit -m \"描述你的更改\"\ngit push\n\n# 3. 就这样！\n# Netlify 会自动检测并重新部署（30-60秒）\n\n\n\n\n\n📖 QUICK_START_NETLIFY.md - 详细版本指南\n🌐 NETLIFY_DEPLOYMENT_GUIDE.md - 完整部署文档\n⚛️ REACT_PROJECTS_GUIDE.md - React 项目说明\n🏗️ README.md - 项目总览\n\n\n\n\n\n\n\nQ: 部署失败了怎么办？ A: 查看 Netlify 的 Deploy log，找到具体错误信息。\nQ: 某些链接显示 404？ A: 检查 _quarto.yml 的 resources 配置，确保包含了所有需要的文件夹。\nQ: React 项目没有加载？ A: 查看构建日志，确保所有 3 个 React 项目都成功构建了。\n\n\n\n\n\n\n查看 NETLIFY_DEPLOYMENT_GUIDE.md 的故障排除部分\n检查 Netlify 构建日志\n在 GitHub Issues 提问\n\n\n\n\n\n部署前确认：\n\nGitHub 仓库已创建\n所有代码已推送到 GitHub\nNetlify 账号已创建\n已选择正确的仓库\n已点击 “Deploy site”\n\n部署后验证：\n\n网站可以访问\n所有页面链接正常\nReact 项目可以加载\n公式计算功能正常\n文档页面可访问\n\n\n\n\n\n\n收藏你的 Netlify 仪表板 - 方便查看部署状态\n设置部署通知 - 在 Netlify Settings → Notifications\n使用部署预览 - 每个 PR 都会自动生成预览 URL\n配置自定义域名 - 如果有自己的域名\n\n\n准备好了？开始步骤 1 吧！ 🚀\n祝你部署顺利！有任何问题随时问我。"
+  },
+  {
+    "objectID": "START_HERE.html#所有准备工作已完成",
+    "href": "START_HERE.html#所有准备工作已完成",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "我已经为你创建了所有需要的配置文件和文档。"
+  },
+  {
+    "objectID": "START_HERE.html#接下来的-5-个步骤",
+    "href": "START_HERE.html#接下来的-5-个步骤",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "🔗 访问: https://github.com/new\n仓库名称: Quarto_Blog_Calculator\n描述: Physics calculators with React + Quarto\n可见性: Public ✅\n不要勾选 \"Add README\" ❌\n\n点击 \"Create repository\"\n⏱️ 耗时: 30秒\n\n\n\n\n在你的项目目录打开 Git Bash 或 命令提示符：\n# 初始化 Git（如果还没有）\ngit init\n\n# 添加远程仓库（用你实际的 GitHub URL）\ngit remote add origin https://github.com/TONGSUOregonState/Quarto_Blog_Calculator.git\n\n# 添加所有文件\ngit add .\n\n# 提交\ngit commit -m \"Add Netlify auto-deploy with React + Vite projects\"\n\n# 推送到 GitHub\ngit push -u origin main\n💡 如果是第一次使用 Git，先配置：\ngit config --global user.name \"Tong Su\"\ngit config --global user.email \"your.email@example.com\"\n⏱️ 耗时: 2分钟\n\n\n\n\n🔗 访问: https://app.netlify.com\n\n点击 “Sign up”\n选择 “Sign up with GitHub” ⭐ 推荐\n授权 Netlify 访问你的 GitHub 账号\n\n⏱️ 耗时: 1分钟\n\n\n\n\n在 Netlify 仪表板：\n\n点击 “Add new site”\n选择 “Import an existing project”\n点击 “Deploy with GitHub”\n授权 Netlify（如果需要）\n选择 Quarto_Blog_Calculator 仓库\n不要修改任何设置 ✅（已在 netlify.toml 配置）\n点击 “Deploy site” 🚀\n\nNetlify 现在会自动： - ✅ 安装 Node.js v20 - ✅ 安装 Quarto 1.4.550 - ✅ 构建所有 3 个 React 项目 - ✅ 渲染 Quarto 网站 - ✅ 发布到互联网\n⏱️ 耗时: 3-5分钟（首次构建）\n\n\n\n\n部署完成后，你会看到：\n✅ Site is live!\nhttps://random-name-123456.netlify.app\n可选：自定义网站名称\n\n点击 “Site settings”\n点击 “Change site name”\n输入你想要的名字，例如：tongsu-physics-calc\nURL 变成：https://tongsu-physics-calc.netlify.app\n\n⏱️ 耗时: 30秒"
+  },
+  {
+    "objectID": "START_HERE.html#完成",
+    "href": "START_HERE.html#完成",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "你的网站现在：\n✅ 在线访问 ✅ 自动构建（每次 git push） ✅ 免费 HTTPS ✅ 全球 CDN 加速 ✅ 所有 React 项目正常工作 ✅ 所有链接都可用"
+  },
+  {
+    "objectID": "START_HERE.html#以后更新网站",
+    "href": "START_HERE.html#以后更新网站",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "超级简单！\n# 1. 修改任何代码文件\n# ...编辑 .qmd, .jsx, .css 等文件...\n\n# 2. 提交并推送\ngit add .\ngit commit -m \"描述你的更改\"\ngit push\n\n# 3. 就这样！\n# Netlify 会自动检测并重新部署（30-60秒）"
+  },
+  {
+    "objectID": "START_HERE.html#详细文档",
+    "href": "START_HERE.html#详细文档",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "📖 QUICK_START_NETLIFY.md - 详细版本指南\n🌐 NETLIFY_DEPLOYMENT_GUIDE.md - 完整部署文档\n⚛️ REACT_PROJECTS_GUIDE.md - React 项目说明\n🏗️ README.md - 项目总览"
+  },
+  {
+    "objectID": "START_HERE.html#遇到问题",
+    "href": "START_HERE.html#遇到问题",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "Q: 部署失败了怎么办？ A: 查看 Netlify 的 Deploy log，找到具体错误信息。\nQ: 某些链接显示 404？ A: 检查 _quarto.yml 的 resources 配置，确保包含了所有需要的文件夹。\nQ: React 项目没有加载？ A: 查看构建日志，确保所有 3 个 React 项目都成功构建了。"
+  },
+  {
+    "objectID": "START_HERE.html#需要帮助",
+    "href": "START_HERE.html#需要帮助",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "查看 NETLIFY_DEPLOYMENT_GUIDE.md 的故障排除部分\n检查 Netlify 构建日志\n在 GitHub Issues 提问"
+  },
+  {
+    "objectID": "START_HERE.html#快速检查清单",
+    "href": "START_HERE.html#快速检查清单",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "部署前确认：\n\nGitHub 仓库已创建\n所有代码已推送到 GitHub\nNetlify 账号已创建\n已选择正确的仓库\n已点击 “Deploy site”\n\n部署后验证：\n\n网站可以访问\n所有页面链接正常\nReact 项目可以加载\n公式计算功能正常\n文档页面可访问"
+  },
+  {
+    "objectID": "START_HERE.html#小贴士",
+    "href": "START_HERE.html#小贴士",
+    "title": "▶️ 从这里开始！",
+    "section": "",
+    "text": "收藏你的 Netlify 仪表板 - 方便查看部署状态\n设置部署通知 - 在 Netlify Settings → Notifications\n使用部署预览 - 每个 PR 都会自动生成预览 URL\n配置自定义域名 - 如果有自己的域名\n\n\n准备好了？开始步骤 1 吧！ 🚀\n祝你部署顺利！有任何问题随时问我。"
   }
 ]

@@ -1,54 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import PlotOutput from './PlotOutput'
 import TextOutput from './TextOutput'
 import './ProgramRunner.css'
 
-function ProgramRunner({ program }) {
-  const [pyodide, setPyodide] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [loadingStatus, setLoadingStatus] = useState('正在加载 Python 环境和相关库，请稍候...')
+function ProgramRunner({ pyodide, program }) {
   const [running, setRunning] = useState(false)
   const [plotData, setPlotData] = useState(null)
   const [textData, setTextData] = useState('')
   const [params, setParams] = useState(program.defaultParams || {})
-
-  useEffect(() => {
-    async function initPyodide() {
-      try {
-        const script = document.createElement('script')
-        script.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js'
-        script.async = true
-
-        script.onload = async () => {
-          const pyodideInstance = await window.loadPyodide({
-            indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.1/full/'
-          })
-
-          setLoadingStatus('📦 正在加载 NumPy 和 Matplotlib...')
-          await pyodideInstance.loadPackage(['numpy', 'matplotlib'])
-
-          await pyodideInstance.runPythonAsync(`
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import numpy as np
-import io
-import base64
-          `)
-
-          setPyodide(pyodideInstance)
-          setLoading(false)
-        }
-
-        document.body.appendChild(script)
-      } catch (error) {
-        setLoadingStatus('❌ 加载失败: ' + error.message)
-        console.error('Failed to load Pyodide:', error)
-      }
-    }
-
-    initPyodide()
-  }, [])
 
   async function runProgram() {
     if (!pyodide || running) return
@@ -60,7 +19,7 @@ import base64
     try {
       // Build Python code with parameters
       let pythonCode = program.pythonCode
-      
+
       // Replace parameter placeholders
       Object.keys(params).forEach(key => {
         const value = params[key]
@@ -72,77 +31,65 @@ import base64
         }
       })
 
-      // Set up output capture
-      await pyodide.runPythonAsync(`
-import sys
-import io
-output_buffer = io.StringIO()
-sys.stdout = output_buffer
-      `)
+      const wrapped = `
+import sys, io, traceback
+_stdout = io.StringIO()
+_stderr = io.StringIO()
+sys_stdout_bak, sys_stderr_bak = sys.stdout, sys.stderr
+sys.stdout, sys.stderr = _stdout, _stderr
+try:
+    exec(compile(
+        ${JSON.stringify(pythonCode)},
+        '<program>', 'exec'
+    ), globals(), globals())
+except Exception:
+    traceback.print_exc()
+finally:
+    sys.stdout, sys.stderr = sys_stdout_bak, sys_stderr_bak
+out = _stdout.getvalue()
+err = _stderr.getvalue()
+`
 
-      // Execute Python code
+      await pyodide.runPythonAsync(wrapped)
+      const outText = pyodide.globals.get('out')
+      const errText = pyodide.globals.get('err')
+
       let plotDataResult = null
-      let textOutput = ''
-      
-      try {
-        const result = await pyodide.runPythonAsync(pythonCode)
-        
-        // Get text output first
-        textOutput = await pyodide.runPythonAsync(`
-sys.stdout = sys.__stdout__
-output_buffer.getvalue()
-        `).catch(() => '')
-        
-        // Check if output contains plot data
-        if (textOutput && textOutput.includes('data:image/png;base64,')) {
-          const match = textOutput.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/)
-          if (match) {
-            plotDataResult = match[1]
-            // Remove plot data from text output
-            textOutput = textOutput.replace(/data:image\/png;base64,[A-Za-z0-9+/=]+/, '').trim()
-          }
-        }
-        
-        // Also check return value
-        if (result && typeof result === 'string' && result.includes('data:image')) {
-          const match = result.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/)
-          if (match) {
-            plotDataResult = match[1]
-          }
-        }
-      } catch (e) {
-        // Get text output even if there's an error
-        try {
-          textOutput = await pyodide.runPythonAsync(`
-sys.stdout = sys.__stdout__
-output_buffer.getvalue()
-          `).catch(() => '')
-          textOutput = '❌ 错误:\n' + e.message + '\n\n' + (textOutput || '')
-        } catch (e2) {
-          textOutput = '❌ 错误:\n' + e.message
+      let textOutput = outText || ''
+
+      // Check if output contains plot data
+      if (textOutput && textOutput.includes('data:image/png;base64,')) {
+        const match = textOutput.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/)
+        if (match) {
+          plotDataResult = match[1]
+          textOutput = textOutput.replace(/data:image\/png;base64,[A-Za-z0-9+/=]+/, '').trim()
         }
       }
-      
+
       if (plotDataResult) {
         setPlotData(plotDataResult)
       }
-      
-      if (textOutput) {
+
+      if (errText) {
+        setTextData('❌ 错误:\n' + errText + (textOutput ? '\n\n输出:\n' + textOutput : ''))
+      } else if (textOutput) {
         setTextData(textOutput)
+      } else if (!plotDataResult) {
+        setTextData('✅ 程序运行成功')
       }
 
     } catch (error) {
-      setTextData('❌ 错误:\n' + error.message)
+      setTextData('❌ 错误:\n' + (error && error.message ? error.message : String(error)))
       console.error('Error:', error)
     } finally {
       setRunning(false)
     }
   }
 
-  if (loading) {
+  if (!pyodide) {
     return (
       <div className="loading-container">
-        <div className="loading">⏳ {loadingStatus}</div>
+        <div className="loading">⏳ 正在加载...</div>
       </div>
     )
   }
@@ -175,17 +122,18 @@ output_buffer.getvalue()
         </div>
       )}
 
-      <button 
-        onClick={runProgram} 
+      <button
+        onClick={runProgram}
         disabled={running}
         className="run-button"
       >
         {running ? '⏳ 运行中...' : '🚀 运行程序'}
       </button>
 
-      <div className="results-section">
+      <div className="results-section always-visible">
+        <div className="results-header">📊 运行结果</div>
         {plotData && <PlotOutput imageData={plotData} />}
-        {textData && <TextOutput text={textData} />}
+        {textData ? <TextOutput text={textData} /> : <div className="no-output">点击"运行程序"后，结果将显示在这里</div>}
       </div>
     </div>
   )

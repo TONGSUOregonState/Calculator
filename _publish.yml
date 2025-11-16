@@ -1,5 +1,7 @@
--
-  source: .
+- source: .
   quarto-pub:
     token: qpa_Xnl4RFachADNGYzbXxEbxvS3EygykFtL4zWCnzKD7LC1ojjyDbEQw7rsztiLCol0
-
+- source: project
+  quarto-pub:
+    - id: e9e870ee-6e08-4b5b-a223-291034b9c5fd
+      url: https://tongsuoregonstate11.quarto.pub/calculator2

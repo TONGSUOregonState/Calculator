@@ -13,29 +13,108 @@ function matlabToPython(matlabCode, filename) {
   const commentLines = matlabCode.split('\n').filter(line => line.trim().startsWith('%'))
   const description = commentLines.length > 0 ? commentLines[0].replace(/^%\s*/, '') : funcName
   
-  // 基本转换规则
+  // FIRST: Remove global statements (MUST be done before any other replacements!)
+  // This removes entire lines that start with 'global'
+  python = python.replace(/^global\s+.*$/gm, '')
+
+  // Remove function declarations
   python = python.replace(/^function\s+\w+;?\s*$/gm, '')
+  python = python.replace(/^function\s+.*$/gm, '')  // Also remove function definitions with return values
+
+  // Convert comments (both at start of line and inline comments)
   python = python.replace(/^%\s*/gm, '# ')
-  python = python.replace(/;\s*$/gm, '')
-  python = python.replace(/\^/g, '**')
+  python = python.replace(/(\s+)%\s*/g, '$1# ')
+
+  // Convert legend() VERY EARLY - before removing semicolons!
+  // This is CRITICAL: we need to handle multi-line legends correctly
+  // MATLAB allows legend('arg1','arg2') which might span multiple lines
+
+  // First, normalize all whitespace in legend calls to single line
+  python = python.replace(/legend\s*\(([^)]*)\)\s*;?/gs, (match, args) => {
+    if (!args || !args.trim()) {
+      return 'plt.legend()'
+    }
+
+    // Remove ALL whitespace including newlines, then normalize
+    const cleanArgs = args.replace(/\s+/g, ' ').trim()
+
+    // Split by comma, respecting quotes
+    const parts = []
+    let current = ''
+    let inQuote = false
+    let quoteChar = null
+
+    for (let i = 0; i < cleanArgs.length; i++) {
+      const ch = cleanArgs[i]
+      if ((ch === '"' || ch === "'") && (i === 0 || cleanArgs[i-1] !== '\\')) {
+        if (!inQuote) {
+          inQuote = true
+          quoteChar = ch
+        } else if (ch === quoteChar) {
+          inQuote = false
+          quoteChar = null
+        }
+        current += ch
+      } else if (ch === ',' && !inQuote) {
+        if (current.trim()) parts.push(current.trim())
+        current = ''
+      } else {
+        current += ch
+      }
+    }
+    if (current.trim()) parts.push(current.trim())
+
+    // Convert to Python format
+    const pyArgs = parts.map(p => {
+      const text = p.replace(/^['"]|['"]$/g, '').trim()
+      const escaped = text.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+      return `'${escaped}'`
+    })
+
+    return `plt.legend([${pyArgs.join(', ')}])`
+  })
+
+  // 数组创建 - MUST be done before other replacements
+  // Handle ranges like (-100.001:0.07:100) - start:step:end
+  python = python.replace(/\((-?\d+\.?\d*):(-?\d+\.?\d*):(-?\d+\.?\d*)\)/g, 'np.arange($1, $3+$2, $2)')
+  // Handle ranges like (-100:100) - start:end with implicit step 1
+  python = python.replace(/\((-?\d+\.?\d*):(-?\d+\.?\d*)\)/g, 'np.arange($1, $2+1)')
+
+  // Element-wise operations
   python = python.replace(/\.\^/g, '**')
   python = python.replace(/\.\*/g, '*')
   python = python.replace(/\.\//g, '/')
-  python = python.replace(/pi/g, 'np.pi')
-  python = python.replace(/cos\(/g, 'np.cos(')
-  python = python.replace(/sin\(/g, 'np.sin(')
-  python = python.replace(/sqrt\(/g, 'np.sqrt(')
-  python = python.replace(/exp\(/g, 'np.exp(')
-  python = python.replace(/log\(/g, 'np.log(')
-  python = python.replace(/abs\(/g, 'np.abs(')
-  
-  // 数组创建
-  python = python.replace(/\((-?\d+):(\d+):(-?\d+)\)/g, 'np.arange($1, $3+0.1, $2)')
-  python = python.replace(/\((-?\d+):1:(-?\d+)\)/g, 'np.arange($1, $2+1)')
-  python = python.replace(/\((-?\d+):(-?\d+)\)/g, 'np.arange($1, $2+1)')
+
+  // Scalar operations
+  python = python.replace(/\^/g, '**')
+
+  // Math functions
+  // Special handling for 'pi': if it's used as a variable (has assignment), rename all occurrences
+  // Check if 'pi' is assigned as a variable (not the constant)
+  const hasPiVariable = /^(\s*)pi(\s*=\s*[^=])/m.test(python)
+
+  if (hasPiVariable) {
+    // If pi is used as a variable, rename ALL occurrences to pi_val
+    python = python.replace(/\bpi\b/g, 'pi_val')
+  } else {
+    // Otherwise, convert to np.pi (the mathematical constant)
+    python = python.replace(/\bpi\b/g, 'np.pi')
+  }
+
+  python = python.replace(/\bcos\(/g, 'np.cos(')
+  python = python.replace(/\bsin\(/g, 'np.sin(')
+  python = python.replace(/\btan\(/g, 'np.tan(')
+  python = python.replace(/\bsqrt\(/g, 'np.sqrt(')
+  python = python.replace(/\bexp\(/g, 'np.exp(')
+  python = python.replace(/\blog\(/g, 'np.log(')
+  python = python.replace(/\babs\(/g, 'np.abs(')
+  python = python.replace(/\bmax\(/g, 'np.max(')
+  python = python.replace(/\bmin\(/g, 'np.min(')
+  python = python.replace(/\bsum\(/g, 'np.sum(')
+  python = python.replace(/\bmean\(/g, 'np.mean(')
   
   // 循环转换
-  python = python.replace(/for\s+(\w+)=(\d+):(\d+)\s*)/g, 'for $1 in range($2, $3+1):')
+  python = python.replace(/for\s+(\w+)=(\d+):(\d+)\s*/g, 'for $1 in range($2, $3+1):')
   python = python.replace(/for\s+(\w+)=1:length\((\w+)\)/g, 'for $1 in range(len($2)):')
   python = python.replace(/end\s*;?\s*$/gm, '')
   
@@ -59,20 +138,35 @@ ${python.includes('mesh') || python.includes('3d') ? 'from mpl_toolkits.mplot3d 
   }
   
   // 转换 plot 命令
-  python = python.replace(/figure\((\d+)\);?\s*/g, '')
-  python = python.replace(/subplot\((\d+),(\d+),(\d+)\);?\s*/g, 'ax$3 = plt.subplot($1, $2, $3)\n')
-  python = python.replace(/plot\(([^)]+)\);?\s*/g, (match, args) => {
-    // 简单处理，实际需要更复杂的解析
-    return `plt.plot(${args})\n`
+  python = python.replace(/figure\((\d+)\)\s*/g, 'fig = plt.figure($1)\n')
+  python = python.replace(/subplot\((\d+),\s*(\d+),\s*(\d+)\)\s*/g, 'plt.subplot($1, $2, $3)\n')
+  python = python.replace(/\bplot\(([^)]+)\)\s*/g, 'plt.plot($1)\n')
+
+  // Convert axis([xmin xmax ymin ymax]) to xlim and ylim
+  python = python.replace(/axis\(\[([^\]]+)\]\)\s*/g, (match, args) => {
+    const values = args.split(/\s+/).filter(v => v.trim())
+    if (values.length === 4) {
+      return `plt.xlim(${values[0]}, ${values[1]})\nplt.ylim(${values[2]}, ${values[3]})\n`
+    }
+    return match
   })
-  python = python.replace(/axis\(\[([^\]]+)\]\);?\s*/g, (match, args) => {
-    const values = args.split(',').map(v => v.trim())
-    return `plt.xlim(${values[0]}, ${values[1]})\nplt.ylim(${values[2]}, ${values[3]})\n`
-  })
-  python = python.replace(/xlabel\(['"]([^'"]+)['"]\);?\s*/g, "plt.xlabel('$1')\n")
-  python = python.replace(/ylabel\(['"]([^'"]+)['"]\);?\s*/g, "plt.ylabel('$1')\n")
-  python = python.replace(/legend\(([^)]+)\);?\s*/g, "plt.legend($1)\n")
-  python = python.replace(/contour\(([^)]+)\);?\s*/g, "plt.contour($1)\n")
+
+  // legend() already converted above
+
+  // Now remove semicolons (AFTER legend conversion)
+  python = python.replace(/;\s*$/gm, '')
+
+  python = python.replace(/xlabel\(['"]([^'"]+)['"]\)\s*/g, "plt.xlabel('$1')\n")
+  python = python.replace(/ylabel\(['"]([^'"]+)['"]\)\s*/g, "plt.ylabel('$1')\n")
+  python = python.replace(/title\(['"]([^'"]+)['"]\)\s*/g, "plt.title('$1')\n")
+
+  python = python.replace(/grid\s+on\s*/g, 'plt.grid(True)\n')
+  python = python.replace(/grid\s+off\s*/g, 'plt.grid(False)\n')
+  python = python.replace(/hold\s+on\s*/g, '# hold on\n')
+  python = python.replace(/hold\s+off\s*/g, '# hold off\n')
+
+  python = python.replace(/contour\(([^)]+)\)\s*/g, 'plt.contour($1)\n')
+  python = python.replace(/clabel\(([^)]+)\)\s*/g, 'plt.clabel($1)\n')
   python = python.replace(/mesh\(([^)]+)\);?\s*/g, (match, args) => {
     return `ax = plt.gca()\nif not hasattr(ax, 'plot_surface'):\n    fig = plt.figure()\n    ax = fig.add_subplot(111, projection='3d')\n    X, Y = np.meshgrid(np.arange(${args}.shape[1]), np.arange(${args}.shape[0]))\n    ax.plot_surface(X, Y, ${args}, cmap='viridis')\n`
   })
@@ -133,7 +227,7 @@ function cToPython(cCode, filename) {
 
 // 读取所有 MATLAB 文件
 function readMatlabFiles() {
-  const matlabDir = path.join(__dirname, '..', 'physics-pipeline-react', 'OpticsMatlab')
+  const matlabDir = path.join(__dirname, 'OpticsMatlab')
   const programs = []
   
   function walkDir(dir, chapter = '') {
@@ -162,6 +256,7 @@ function readMatlabFiles() {
             chapter: chapterNum,
             source: 'matlab',
             pythonCode: python,
+            matlabCode: content,  // Save original MATLAB code
             defaultParams: {}
           })
         } catch (e) {
@@ -180,7 +275,7 @@ function readMatlabFiles() {
 
 // 读取所有 C 文件
 function readCFiles() {
-  const cDir = path.join(__dirname, '..', 'physics-pipeline-react', 'Berkeley-Extension', 'Intro to C programming', 'HW2')
+  const cDir = path.join(__dirname, 'Berkeley-Extension', 'Intro to C programming', 'HW2')
   const programs = []
   
   if (!fs.existsSync(cDir)) {
@@ -203,6 +298,7 @@ function readCFiles() {
           chapter: null,
           source: 'c',
           pythonCode: python,
+          cCode: content,  // Save original C code
           defaultParams: {}
         })
       } catch (e) {
@@ -258,14 +354,15 @@ export const programs = [
     category: ${JSON.stringify(program.category)},
     chapter: ${program.chapter ? `'${program.chapter}'` : 'null'},
     source: '${program.source}',
-    pythonCode: \`${program.pythonCode.replace(/`/g, '\\`')}\`,
+    pythonCode: \`${program.pythonCode.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`,
+    matlabCode: \`${(program.matlabCode || '').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`,
+    cCode: \`${(program.cCode || '').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`,
     defaultParams: ${JSON.stringify(program.defaultParams)}
   }${index < allPrograms.length - 1 ? ',' : ''}
 `
   })
   
-  jsContent += `]
-`
+  jsContent += `]\n`
   
   // 写入文件
   const outputPath = path.join(__dirname, 'src', 'data', 'programs.js')
