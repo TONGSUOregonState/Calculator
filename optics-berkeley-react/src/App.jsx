@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, Link, useParams } from 'react-router-dom'
+import { Routes, Route, Link, useParams, Navigate } from 'react-router-dom'
 import ProgramRunner from './components/ProgramRunner'
 import ProgramList from './components/ProgramList'
 import SourceCodeDisplay from './components/SourceCodeDisplay'
@@ -75,6 +75,7 @@ import base64
       <Routes>
         <Route path="/" element={<ProgramList />} />
         <Route path="/program/:programId" element={<ProgramPage pyodide={pyodide} />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   )
