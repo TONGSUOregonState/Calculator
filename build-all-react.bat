@@ -16,8 +16,15 @@ call npm run build
 cd ..
 
 echo.
-echo [3/3] Building physics-pipeline-react-2formulas...
+echo [3/4] Building physics-pipeline-react-2formulas...
 cd physics-pipeline-react-2formulas
+call npm install
+call npm run build
+cd ..
+
+echo.
+echo [4/4] Building optics-berkeley-react...
+cd optics-berkeley-react
 call npm install
 call npm run build
 cd ..
@@ -31,5 +38,6 @@ echo Built files are in:
 echo   - physics-pipeline-react/dist/
 echo   - physics-pipeline-react-1formula/dist/
 echo   - physics-pipeline-react-2formulas/dist/
+echo   - optics-berkeley-react/dist/
 echo.
 pause

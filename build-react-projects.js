@@ -12,7 +12,8 @@ const path = require('path');
 const projects = [
   'physics-pipeline-react',
   'physics-pipeline-react-1formula',
-  'physics-pipeline-react-2formulas'
+  'physics-pipeline-react-2formulas',
+  'optics-berkeley-react'
 ];
 
 console.log('🚀 开始构建所有 React 项目...\n');

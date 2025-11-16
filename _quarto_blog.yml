@@ -1,0 +1,43 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Optics & Berkeley Extension Calculator"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - text: "🔬 Optics Programs"
+        menu:
+          - href: optics-berkeley-react/dist/index.html
+            text: "Optics & Berkeley Programs"
+          - text: "--- Categories ---"
+          - href: optics-berkeley-react/dist/index.html#optics-geometrical
+            text: "Geometrical Optics"
+          - href: optics-berkeley-react/dist/index.html#optics-interference
+            text: "Interference"
+          - href: optics-berkeley-react/dist/index.html#optics-diffraction
+            text: "Diffraction"
+      - text: "⚛️ React Projects"
+        menu:
+          - href: physics-pipeline-react/dist/index.html
+            text: "Physics Pipeline"
+          - href: donkey-react/dist/index.html
+            text: "Python Runner"
+          - href: dsp-rz-react/dist/index.html
+            text: "DSP R(z) Analysis"
+      - text: "📚 About"
+        menu:
+          - href: README.md
+            text: "Project README"
+          - href: optics-berkeley-react/README.md
+            text: "Optics Programs README"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    include-in-header:
+      - _includes/plausible.html
+
