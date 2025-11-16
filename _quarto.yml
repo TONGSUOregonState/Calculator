@@ -11,6 +11,8 @@ project:
     - "physics-pipeline-react/dist/**"
     - "physics-pipeline-react-1formula/dist/**"
     - "physics-pipeline-react-2formulas/dist/**"
+    - "donkey-react/dist/**"
+    - "dsp-rz-react/dist/**"
 
 website:
   title: "calculator"
@@ -21,7 +23,9 @@ website:
       - href: pyscript.qmd
         text: Calculator (Py+JS)
       - href: donkey.html
-        text: Python Runner
+        text: Python Runner (Vanilla JS)
+      - href: donkey-react/dist/index.html
+        text: Python Runner (React)
       - href: pyscript.html
         text: Calculator
       - href: blocks-drag-io.html
@@ -29,7 +33,9 @@ website:
       - href: blocks-sequencer.html
         text: Block Sequencer
       - href: dsp_rz.html
-        text: DSP R(z) Analysis
+        text: DSP R(z) Analysis (Vanilla JS)
+      - href: dsp-rz-react/dist/index.html
+        text: DSP R(z) Analysis (React)
       - href: dsp_tutorial.html
         text: DSP Tutorial
       - href: drawflow-demo.html

@@ -1,0 +1,126 @@
+.block-chain {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.block-chain h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+}
+
+.block-chain > p {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.chain-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.chain-inputs label {
+  flex: 1 1 160px;
+  font-size: 0.9rem;
+  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.chain-inputs input {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.95rem;
+}
+
+.chain-blocks {
+  padding-left: 1.25rem;
+  color: #4b5563;
+  margin: 1rem 0;
+}
+
+.chain-blocks li {
+  margin: 0.25rem 0;
+}
+
+.chain-controls {
+  margin: 1rem 0;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chain-controls button {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.chain-controls button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.chain-controls button.secondary {
+  border-color: #6b7280;
+  background: #6b7280;
+}
+
+.chain-controls button.secondary:hover:not(:disabled) {
+  background: #4b5563;
+}
+
+.chain-controls button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.chain-status {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.chain-output {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  white-space: pre-wrap;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.chain-output:empty {
+  display: none;
+}
+
+.chain-error {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  white-space: pre-wrap;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 13px;
+}
+
+.chain-error:empty {
+  display: none;
+}

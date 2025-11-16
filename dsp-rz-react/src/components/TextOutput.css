@@ -1,0 +1,20 @@
+.text-output {
+  background: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 20px;
+  min-height: 100px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.text-output.error {
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+}
