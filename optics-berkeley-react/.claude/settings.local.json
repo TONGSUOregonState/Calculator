@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node convert-programs.js:*)",
+      "Bash(node:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm install)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
