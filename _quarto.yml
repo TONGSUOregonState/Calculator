@@ -20,36 +20,55 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: pyscript.qmd
-        text: Calculator (Py+JS)
-      - href: donkey.html
-        text: Python Runner (Vanilla JS)
-      - href: donkey-react/dist/index.html
-        text: Python Runner (React)
-      - href: pyscript.html
-        text: Calculator
-      - href: blocks-drag-io.html
-        text: Drag Blocks Demo
-      - href: blocks-sequencer.html
-        text: Block Sequencer
-      - href: dsp_rz.html
-        text: DSP R(z) Analysis (Vanilla JS)
-      - href: dsp-rz-react/dist/index.html
-        text: DSP R(z) Analysis (React)
-      - href: dsp_tutorial.html
-        text: DSP Tutorial
-      - href: drawflow-demo.html
-        text: Drawflow Visual Calc
-      - href: block-formula-demo.html
-        text: Block Formula Demo
-      - href: block-drag-connect.html
-        text: Block Drag & Connect
-      - href: physics-blocks.html
-        text: Physics Formula Blocks
-      - href: physics-pipeline/index.html
-        text: Physics Pipeline
-      - href: physics-pipeline-react/dist/index.html
-        text: Physics Pipeline (React)
+      - text: "⚛️ React Projects"
+        menu:
+          - href: physics-pipeline-react/dist/index.html
+            text: "Physics Pipeline"
+          - href: donkey-react/dist/index.html
+            text: "Python Runner"
+          - href: dsp-rz-react/dist/index.html
+            text: "DSP R(z) Analysis"
+      - text: "🧪 Learning Demos"
+        menu:
+          - text: "--- React Demos ---"
+          - href: physics-pipeline-react-1formula/dist/index.html
+            text: "React 1-Formula Demo"
+          - href: physics-pipeline-react-2formulas/dist/index.html
+            text: "React 2-Formulas Demo"
+          - text: "--- Vanilla JS Demos ---"
+          - href: physics-pipeline-1formula/index.html
+            text: "Vanilla 1-Formula"
+          - href: physics-pipeline-2formulas/index.html
+            text: "Vanilla 2-Formulas"
+      - text: "🎯 Interactive Tools"
+        menu:
+          - text: "--- Block-based Tools ---"
+          - href: block-formula-demo.html
+            text: "Block Formula Demo"
+          - href: block-drag-connect.html
+            text: "Block Drag & Connect"
+          - href: physics-blocks.html
+            text: "Physics Formula Blocks"
+          - text: "--- DSP Tools ---"
+          - href: dsp_tutorial.html
+            text: "DSP Tutorial"
+          - text: "--- Other Demos ---"
+          - href: drawflow-demo.html
+            text: "Drawflow Visual Calc"
+          - href: blocks-sequencer.html
+            text: "Block Sequencer"
+          - href: blocks-drag-io.html
+            text: "Blocks Drag I/O"
+          - href: pyscript.html
+            text: "PyScript Calculator"
+      - text: "📦 Vanilla Versions"
+        menu:
+          - href: physics-pipeline/index.html
+            text: "Physics Pipeline (Vanilla)"
+          - href: donkey.html
+            text: "Python Runner (Vanilla)"
+          - href: dsp_rz.html
+            text: "DSP R(z) Analysis (Vanilla)"
 
 format:
   html:
